@@ -249,7 +249,6 @@ for ( let business of businesses ) {
                 
                 for ( let item of item_list ) {
                     let o_item = '' + tmplt
-console.log(item.name)
                     for (let i = 0; i < field_fs.length; i++ ) {
                         let fld = fields[i]
                         let repl_fld = field_fs[i]
@@ -257,7 +256,7 @@ console.log(item.name)
                         value = value === undefined ? "" : value
                         o_item = o_item.replace(repl_fld,value)
                     }
-                    out_parts.push(o_item)
+                    out_parts.push(encodeURIComponent(o_item))
                 }
 
                 let output = out_parts.join('')
@@ -312,13 +311,8 @@ console.log(item.name)
                 for ( let symbol_ky of symbolic_keys ) {
                     //
                     let value = descr.subst_l1[symbol_ky]
-
                     //
                     if ( symbol_ky.includes('{') ) {
-
-console.log("MAP : : " + symbol_ky)
-console.dir(value)
-
                         let smap = value
                         if ( symbol_ky.includes('{}') ) {
                             for ( let symb_ky in smap ) {
@@ -332,17 +326,13 @@ console.dir(value)
                             if ( value !== undefined ) {
                                 //
                                 if ( sym_formula.includes('[]') ) {
-console.log("sym_formula " + sym_formula)
                                     let value_ky_list = descr.subst_l1[sym_formula]
                                     let n = value_ky_list.length
-console.log(value_ky_list)
                                     for ( let i = 0; i < n; i++ ) {
                                         let v_ky = value_ky_list[i]
                                         let value = smap[v_ky]
-console.log(value)   
                                         let sym_formula_i = sym_formula.replace('[]',`[${i}]`)
                                         let sym_map_key = symbol_ky.replace(sym_formula,sym_formula_i)
-console.log(sym_map_key)                                        
                                         template_str_3 = subst_str(template_str_3,sym_map_key,value)
                                     }
                                 } else {
@@ -354,9 +344,6 @@ console.log(sym_map_key)
                             }
                         }
                     } else if ( symbol_ky.includes('[') ) {
-console.log("ARRAY : : " + symbol_ky)
-console.dir(value)
-                        
                         let vlist = value
                         let n = vlist.length
                         for ( let i = 0; i < n; i++ ) {
@@ -365,9 +352,6 @@ console.dir(value)
                             template_str_3 = subst_str(template_str_3,nxt_symbol,value)
                         }
                     } else {
-console.log("TEXT : : " + symbol_ky)
-console.log(value)
-                        
                         if ( encoded_fields.indexOf(symbol_ky) >= 0 ) {
                             value = decodeURIComponent(value)
                         }
@@ -380,12 +364,8 @@ console.log(value)
             let outfile = odir + filename
             console.log(outfile)
             fs.writeFileSync(outfile,output)
-
-
+            //
         }
     }
-
-
-
     //
 }
