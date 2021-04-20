@@ -234,35 +234,67 @@ for ( let business of businesses ) {
             console.log(odir)
             //
             let item_input = descr.array.replace("${business_key}",business)
-            let out_parts = []
+
             try {
                 let ifile = item_input
                 let item_list = fs.readFileSync(ifile).toString()
                 item_list = JSON.parse(item_list)
                 // fail if not array
                 //
-                let tmplt_file = input_dir + descr.input
-                let tmplt = fs.readFileSync(tmplt_file).toString()
-                let field_fs = extract_fields_forms(tmplt)
-                let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
-
-                
-                for ( let item of item_list ) {
-                    let o_item = '' + tmplt
-                    for (let i = 0; i < field_fs.length; i++ ) {
-                        let fld = fields[i]
-                        let repl_fld = field_fs[i]
-                        let value = decodeURIComponent(item[fld])
-                        value = value === undefined ? "" : value
-                        o_item = o_item.replace(repl_fld,value)
+                if ( typeof descr.input === "string" ) {
+                    let out_parts = []
+                    let tmplt_file = input_dir + descr.input
+                    let tmplt = fs.readFileSync(tmplt_file).toString()
+                    let field_fs = extract_fields_forms(tmplt)
+                    let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
+    
+                    for ( let item of item_list ) {
+                        let o_item = '' + tmplt
+                        for (let i = 0; i < field_fs.length; i++ ) {
+                            let fld = fields[i]
+                            let repl_fld = field_fs[i]
+                            let value = decodeURIComponent(item[fld])
+                            value = value === undefined ? "" : value
+                            o_item = o_item.replace(repl_fld,value)
+                        }
+                        out_parts.push(encodeURIComponent(o_item))
                     }
-                    out_parts.push(encodeURIComponent(o_item))
+
+                    let output = out_parts.join('')
+                    let outfile = odir + filename
+                    console.log(outfile)
+                    fs.writeFileSync(outfile,output)
+
+                } else {
+                    if ( Array.isArray(descr.input) ) {
+                        out_parts = []
+                        descr.input.forEach(file => {
+                            let tmplt_file = input_dir + file
+                            let tmplt = fs.readFileSync(tmplt_file).toString()
+                            let field_fs = extract_fields_forms(tmplt)
+                            let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
+                            //
+                            for ( let item of item_list ) {
+                                let o_item = '' + tmplt
+                                for (let i = 0; i < field_fs.length; i++ ) {
+                                    let fld = fields[i]
+                                    let repl_fld = field_fs[i]
+                                    let value = decodeURIComponent(item[fld])
+                                    value = value === undefined ? "" : value
+                                    o_item = o_item.replace(repl_fld,value)
+                                }
+                                out_parts.push(encodeURIComponent(o_item))
+                            }
+                            //
+                            let output = out_parts.join('')
+                            let outfile = odir + descr.output[file]
+                            console.log(outfile)
+                            fs.writeFileSync(outfile,output)
+                            //
+                        })
+                    }
                 }
 
-                let output = out_parts.join('')
-                let outfile = odir + filename
-                console.log(outfile)
-                fs.writeFileSync(outfile,output)
             } catch(e) {
                 console.log(e)
             }
