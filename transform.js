@@ -229,7 +229,7 @@ for ( let business of businesses ) {
         if ( descr.out_dir !== undefined ) {
             odir = descr.out_dir.replace("${business_key}",business)
         }
-        if ( descr.special_items !== undefined && descr.special_items ) {
+        if ( (descr.special_items !== undefined) && descr.special_items ) {
             console.log(filename)
             console.log(odir)
             //
@@ -249,7 +249,9 @@ for ( let business of businesses ) {
                     let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
     
                     for ( let item of item_list ) {
-                        let o_item = '' + tmplt
+                        let o_item = ''
+                        //
+                        o_item += tmplt
                         for (let i = 0; i < field_fs.length; i++ ) {
                             let fld = fields[i]
                             let repl_fld = field_fs[i]
@@ -257,6 +259,7 @@ for ( let business of businesses ) {
                             value = value === undefined ? "" : value
                             o_item = o_item.replace(repl_fld,value)
                         }
+                        //
                         out_parts.push(encodeURIComponent(o_item))
                     }
 
@@ -267,27 +270,59 @@ for ( let business of businesses ) {
 
                 } else {
                     if ( Array.isArray(descr.input) ) {
-                        out_parts = []
                         descr.input.forEach(file => {
+                            out_parts = []
                             let tmplt_file = input_dir + file
+                            //
                             let tmplt = fs.readFileSync(tmplt_file).toString()
                             let field_fs = extract_fields_forms(tmplt)
                             let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
                             //
+                            let output_descr = descr.output[file]
+                            if ( output_descr === undefined ) return
+                            //
                             for ( let item of item_list ) {
-                                let o_item = '' + tmplt
-                                for (let i = 0; i < field_fs.length; i++ ) {
-                                    let fld = fields[i]
-                                    let repl_fld = field_fs[i]
-                                    let value = decodeURIComponent(item[fld])
-                                    value = value === undefined ? "" : value
-                                    o_item = o_item.replace(repl_fld,value)
+                                let o_item = ''
+                                if ( output_descr.reject !== undefined ) {
+                                    let check_r = item[output_descr.reject]
+                                    if ( (check_r !== undefined) && check_r ) {
+                                        continue
+                                    }
                                 }
-                                out_parts.push(encodeURIComponent(o_item))
+                                // "reject" : "no_subst"
+                                if ( item.no_subst ) {
+                                    let nosubst_desc = descr.no_subst
+                                    let wrap = input_dir + nosubst_desc.wrapper
+                                    let tmplt_w = fs.readFileSync(wrap).toString()
+                                    let field_fs_w = extract_fields_forms(tmplt_w)
+                                    let fields_w = field_fs_w.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
+                                    o_item += tmplt_w
+                                    for (let i = 0; i < field_fs_w.length; i++ ) {
+                                        let fld = fields_w[i]
+                                        let repl_fld = field_fs_w[i]
+                                        let value = decodeURIComponent(item[fld])
+                                        value = value === undefined ? "" : value
+                                        o_item = o_item.replace(repl_fld,value)
+                                    }
+                                } else {
+                                    o_item = '' + tmplt
+                                    for (let i = 0; i < field_fs.length; i++ ) {
+                                        let fld = fields[i]
+                                        let repl_fld = field_fs[i]
+                                        let value = decodeURIComponent(item[fld])
+                                        value = value === undefined ? "" : value
+                                        o_item = o_item.replace(repl_fld,value)
+                                    }
+                                }
+                                if ( output_descr.encoded ) {       // list of output parts
+                                    out_parts.push(encodeURIComponent(o_item))
+                                } else {
+                                    out_parts.push(o_item)
+                                }
                             }
                             //
                             let output = out_parts.join('')
-                            let outfile = odir + descr.output[file]
+                            let outfile = odir + output_descr.file 
                             console.log(outfile)
                             fs.writeFileSync(outfile,output)
                             //
@@ -300,7 +335,7 @@ for ( let business of businesses ) {
             }
 
         } else {
-            console.dir(descr)
+            //console.dir(descr)
             //
             let template_file = (input_dir + descr.input)
             let template_str = fs.readFileSync(template_file).toString()
