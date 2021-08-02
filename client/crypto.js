@@ -35,6 +35,11 @@ export function from_base64(base64text) {
     return bytesAsText
 }
 
+export function initializer() {
+    window.do_hash = do_hash
+}
+
+
 // https://docs.ipfs.io/concepts/content-addressing/
 // -- https://github.com/multiformats/multicodec/blob/master/table.csv
 // MULTI BASE FOR IPFS Support 

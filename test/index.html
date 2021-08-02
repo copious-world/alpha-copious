@@ -649,8 +649,10 @@
 </style>
 </head>
 <script type="module">
-    import {do_hash,from_hash,to_base64,from_base64}  from "../client/crypto.js"
+    import {initializer, do_hash,from_hash,to_base64,from_base64}  from "../client/crypto.js"
     (async () => {
+		initializer()
+		//
         let k = await do_hash("this is a test")
         document.write(k)
         document.write('<br>')
@@ -660,6 +662,14 @@
         let input = from_base64(k)
         document.write(input)
     })()
+</script>
+<script>
+	let hasher = async () => {
+		let p = await do_hash("this")
+		document.write('<br>')
+		document.write(p)	
+	}
+	setTimeout(hasher,2000)
 </script>
 <body>
 
