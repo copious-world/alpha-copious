@@ -4,6 +4,13 @@ function matches_url(maybe_url) {
 	return g_url_match.test(maybe_url)
 }
 
+
+function ext_of_file(file_name) {
+	let idx = file_name.lastIndexOf('.')
+	let ext = file_name.substr(idx+1)
+	return ext
+}
+
 // not_https_switch 
 // switch to HTTPS before doing any ops that may require a data exchange
 function not_https_switch() {
