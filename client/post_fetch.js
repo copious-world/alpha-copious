@@ -25,6 +25,32 @@ async function fetchEndPoint(endpoint,port) {
 	}
 }
 
+
+	//  fetchUrl
+	// //
+	// fetch with GET method
+	async function fetchUrl(endpoint) {
+		let myRequest = new Request(endpoint);
+		try {
+			const body = await fetch(myRequest, {
+										method: 'GET', // *GET, POST, PUT, DELETE, etc.
+										mode: 'cors', // no-cors, *cors, same-origin
+										cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+										credentials: 'omit', // include, *same-origin, omit
+										redirect: 'follow', // manual, *follow, error
+										referrerPolicy: 'no-referrer', // no-referrer, *client
+									});
+			//
+			let infoObj = await body.json();
+			return(infoObj)
+			//
+		} catch (e) {
+			console.log(e.message)
+			return(false)
+		}
+	}
+
+
 //  postData
 // //
 //  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
