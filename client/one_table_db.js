@@ -61,8 +61,7 @@ class AppDBWrapper {
     }
 
 
-    async init_database(db_name) {
-        //
+    init_database(db_name) {
         this.name = db_name
 
         let p = new Promise((resolve,reject) => {
@@ -98,7 +97,6 @@ class AppDBWrapper {
             //
             };
         })  // end of promise
-        //
         return p
     }
 
@@ -108,7 +106,6 @@ class AppDBWrapper {
     //  -- a generic that calls success_callback when an element matches the index, or not_found_callback otherwise.
     //
     apply_find_by_name(sess_name, store, success_callback, not_found_callback) {
-        //
         var nameIndex = store.index('name');
         nameIndex.get(sess_name).onsuccess = (evt) => {
             var value = evt.target.result;
@@ -118,11 +115,9 @@ class AppDBWrapper {
                 if ( not_found_callback ) not_found_callback();
             }
         };
-        //
     }
     
     add_session_to_db(dataStore,application_op) {
-        //
         let sessionObj = {
             'name' : this.current_session_name,
             'sess_date_time' : '' + Date.now(),
@@ -142,7 +137,6 @@ class AppDBWrapper {
     // add_data -- make this fairly generic
     // section id could be a layer....
     add_data(blob_data,section_id) {
-        //
         if ( !(this.db) ) {
           console.log(`db not initialized :: AppDBWrapper.add_data`)
           return;
@@ -210,14 +204,12 @@ class AppDBWrapper {
         }
         //
         this.apply_find_by_name(this.current_session_name, dataStore, update_list_callback, add_new_callback)
-        //
     }
 
 
 
 
-    async get_data(sess_name) {
-        //
+    get_data(sess_name) {
         if ( this.db === null ) {
           console.log("db not initialized :: get_data")
           return;
@@ -260,7 +252,7 @@ class AppDBWrapper {
         let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
         let dataStore = transaction.objectStore(this.DATA_STORE);
       
-        let remove_from_list_callback = (value,dbIndex) => {
+        let remove_from_list_callback = async (value,dbIndex) => {
           let keyRangeValue = IDBKeyRange.only(value.name);
           dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
             var cursor = event.target.result;
@@ -283,8 +275,7 @@ class AppDBWrapper {
           warn(`The session ${sess_name} is not in the database`)
         }
       
-        apply_find_audio_session(sess_name, dataStore, remove_from_list_callback, not_found_callback)
-      
+        this.apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
     }
       
       
@@ -339,14 +330,14 @@ class AppDBWrapper {
           }
         };
         //
-      }
+    }
 
 
     application_data_update(blob_url,section_id,blob_data) {
         // implemented by derived method (override)
     }
 
-    app_secure_total_session(sess_name) {
+    async app_secure_total_session(sess_name) {
          // implemented by derived method (override)
     }
 
