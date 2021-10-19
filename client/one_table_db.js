@@ -43,49 +43,39 @@ class AppDBWrapper {
         // DATA_STORE
         // DB_VERSION
         // describe_data
-        for ( let ky in conf ) {
-            self[ky] = conf[ky]
+        if ( conf ) {
+            for ( let ky in conf ) {
+                self[ky] = conf[ky]
+            }    
         }
         //
         this.db = false
         this.current_session_name = 'none'
-        this.session_name_list = []
+        this._session_name_list = []
         this.name = name
         //
     }
 
 
-    get session_name_list() {
-        return this.session_name_list
+    set session_name(name) {
+        this.current_session_name = name
     }
 
-
-    load_name_list() {
-        if ( !(this.db) ) return
-        //
-        let transaction = this.db.transaction(this.DATA_STORE, "readonly");
-        let dataStore = transaction ? transaction.objectStore(this.DATA_STORE) : false
-        //
-        if ( !(dataStore) ) return
-        //
-        this.session_name_list = []
-        let myIndex = dataStore.index('name');
-        myIndex.openCursor().onsuccess = (event) => {
-          let cursor = event.target.result;
-          if ( cursor ) {
-            this.session_name_list.push(cursor.value.name)
-            cursor.continue();
-          } else {
-            this.application_update_session_name_selections(this.current_session_name,this.session_name_list)
-          }
-        };
-        //
+    get session_name() {
+        return this.current_session_name
     }
+
+    get name_list() {
+        return this._session_name_list
+    }
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
     init_database() {
         //
         if ( !(this._can_process_db) ) return false
         let self = this
+        let db_name = this.name
         //
         let p = new Promise((resolve,reject) => {
 
@@ -128,6 +118,34 @@ class AppDBWrapper {
     }
 
 
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    //      load_name_list
+    // -- 
+    load_name_list() {
+        if ( !(this.db) ) return
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readonly");
+        let dataStore = transaction ? transaction.objectStore(this.DATA_STORE) : false
+        //
+        if ( !(dataStore) ) return false
+        let p = new Promise((resolve,reject) => {
+            this._session_name_list = []
+            let myIndex = dataStore.index('name');
+            myIndex.openCursor().onsuccess = (event) => {
+                let cursor = event.target.result;
+                if ( cursor ) {
+                    this._session_name_list.push(cursor.value.name)
+                    cursor.continue();
+                } else {
+                    this.application_update_session_name_selections(this.current_session_name,this._session_name_list)
+                    resolve(true)
+                }
+            }
+        })
+        //
+        return p
+    }
 
     // _apply_find_by_name
     //  -- a generic that calls success_callback when an element matches the index, or not_found_callback otherwise.
@@ -144,8 +162,10 @@ class AppDBWrapper {
         };
     }
 
-
-    _add_session_to_db(dataStore,application_op) {
+    // _add_session_to_db
+    //  -- adds the session object to the db, sets up the basic fields... 
+    //
+    _add_session_to_db(dataStore,application_op,part_id) {
         //
         let sessionObj = {
             'name' : this.current_session_name,
@@ -155,6 +175,8 @@ class AppDBWrapper {
             'edit_order' : []
         }
         //
+        if ( part_id ) sessionObj.edit_order.push(part_id)
+        //
         if ( (application_op !== undefined) && (typeof application_op === 'function') ) {
             application_op(sessionObj)
         }
@@ -162,6 +184,8 @@ class AppDBWrapper {
         return request
     }
   
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
     // add_data -- 
     //  Parameters: blob_data -- data stored as part of the session
@@ -178,79 +202,211 @@ class AppDBWrapper {
         let dataStore = transaction.objectStore(this.DATA_STORE);
         if ( !(dataStore) ) return false
 
-        // update_list_callback
-        let update_list_callback = (value,dbIndex) => {     // if found update
-            if ( !dbIndex || (typeof value === "undefined") ) return;
-            let keyRangeValue = IDBKeyRange.only(value.name);
-            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
-                let cursor = event.target.result;
-                if ( cursor ) {
-                    // existing session 
-                    let sessionObj = cursor.value
+        let p = new Promise((resolve,reject) => {
+            let self = this
+            // update_list_callback
+            let update_list_callback = (value,dbIndex) => {     // if found update
+                if ( !dbIndex || (typeof value === "undefined") ) {
+                    resolve(false)
+                    return;
+                }
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        // existing session 
+                        let sessionObj = cursor.value
+                        //
+                        let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                        // map_id = part_id
+                        // store revised data
+                        sessionObj.data[part_id] = blob_data
+                        // make sure the structure has been set up if not already
+                        if ( sessionObj.hashes[part_id] === undefined ) {
+                            sessionObj.hashes[part_id] = {}
+                        }
+                        if ( sessionObj.hashes[part_id].op_history === undefined ) {
+                            sessionObj.hashes[part_id].op_history = []
+                        }
+                        // record the order in which sessions (layers) have been edited
+                        sessionObj.edit_order.push(part_id)
+                        //
+                        // update IndexedDB
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            try {
+                                self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                            } catch (e) {
+                                console.log(e)
+                            } finally {
+                                resolve(true)
+                            }
+                        };
+
+                        request.onerror = (event) => {
+                            resolve(false)
+                        }
+                        //
+                    } else {
+                        resolve(false)
+                    }
+                }
+            }
+            // add_new_callback
+            let add_new_callback = () => {          // if not found add a new one
+                //
+                let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                //
+                let application_op = (sessionObj) => {
                     //
-                    let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
-                    // map_id = part_id
-                    // store revised data
                     sessionObj.data[part_id] = blob_data
-                    // make sure the structure has been set up if not already
                     if ( sessionObj.hashes[part_id] === undefined ) {
                         sessionObj.hashes[part_id] = {}
                     }
-                    if ( sessionObj.hashes[part_id].op_history === undefined ) {
-                        sessionObj.hashes[part_id].op_history = []
-                    }
-                    // record the order in which sessions (layers) have been edited
-                    sessionObj.edit_order.push(part_id)
+                    sessionObj.hashes[part_id].op_history = []
                     //
-                    // update IndexedDB
-                    const request = cursor.update(sessionObj);
-                    request.onsuccess = async () => {
-                        this.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                } 
+                //
+                let request = self._add_session_to_db(dataStore,application_op,part_id)
+                if ( request ) {
+                    request.onsuccess = (event) => {
+                        self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                        resolve(true)
                     };
-                    //
+                    request.onerror = (event) => {
+                        resolve(false)
+                    }
                 }
-            }
-        }
-
-        // add_new_callback
-        let add_new_callback = () => {          // if not found add a new one
-            //
-            let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
-            //
-            let application_op = (sessionObj) => {
                 //
-                sessionObj.data[part_id] = blob_data
-                if ( sessionObj.hashes[part_id] === undefined ) {
-                    sessionObj.hashes[part_id] = {}
-                }
-                sessionObj.hashes[part_id].op_history = []
-                //
-            } 
-            //
-            let request = this._add_session_to_db(dataStore,application_op)
-            if ( request ) {
-                request.onsuccess = function(event) {
-                    sessionObj.edit_order.push(part_id)
-                    this.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
-                };
             }
             //
-        }
+            this._apply_find_by_name(this.current_session_name, dataStore, update_list_callback, add_new_callback)    
+        })
         //
-        this._apply_find_by_name(this.current_session_name, dataStore, update_list_callback, add_new_callback)
+        return p
     }
 
 
-    //  get_data: 
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    remove_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let remove_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        delete sessionObj.data[part_id]
+                        //
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            //  item has been removed
+                            console.log(`deleted ${part_id}`)
+                            await this.app_secure_total_session(sess_name)
+                            resolve(true)
+                        };
+                        //
+                        request.onerror = (e) => {
+                            resolve(false)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+        
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+        
+            this._apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    get_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let get_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        let value =  sessionObj.data[part_id]
+                        if ( value === undefined ) {
+                            resolve(false)
+                        } else {
+                            resolve(value)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+        
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+        
+            this._apply_find_by_name(sess_name, dataStore, get_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
+ 
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    //  get_session: 
     //      Parameters: sess_name -- A session or separate project or publication...
     //  Returns the object controlling all the data within the session.
-    get_data(sess_name) {
+    get_session(sess_name) {
         //
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
           console.log("db not initialized :: get_data")
-          return;
+          return false;
         }
         //
         let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
@@ -270,6 +426,8 @@ class AppDBWrapper {
               if ( cursor ) {
                 let sessionObj = cursor.value
                 resolve(sessionObj)
+              } else {
+                reject(null)
               }
             }
           }
@@ -284,54 +442,8 @@ class AppDBWrapper {
         //
         return p
     }
-      
-    //  remove_data: 
-    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
-    //                  sess_name -- A session or separate project or publication...
-    //
-    remove_data(part_id,sess_name) {
-        //
-        if ( !(this._can_process_db) ) return false
-        //
-        if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
-          return;
-        }
-        //
-        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
-        if ( !(transaction) ) return false
-        let dataStore = transaction.objectStore(this.DATA_STORE);
-        if ( !(dataStore) ) return false
-        //
-        // remove_from_list_callback
-        let remove_from_list_callback = async (value,dbIndex) => {
-          let keyRangeValue = IDBKeyRange.only(value.name);
-          dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
-            let cursor = event.target.result;
-            if ( cursor ) {
-              let sessionObj = cursor.value
-              delete sessionObj.data[part_id]
-              //
-              const request = cursor.update(sessionObj);
-              request.onsuccess = async () => {
-                //  item has been removed
-                console.log(`deleted ${part_id}`)
-                await this.app_secure_total_session(sess_name)
-              };
-              //
-            }
-          }
-        }
-      
-        // not_found_callback 
-        let not_found_callback = () => {
-          warn(`The session ${sess_name} is not in the database`)
-        }
-      
-        this._apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
-    }
-      
-      
+
+     
     //  delete_session: 
     //      Parameters: sess_name -- A session or separate project or publication...
     //
@@ -342,7 +454,7 @@ class AppDBWrapper {
         if ( sess_name !== 'none ') {
             if ( this.db === null ) {
                 console.log("db not initialized :: delete_session")
-                return;
+                return false;
             }
             //
             let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
@@ -350,33 +462,42 @@ class AppDBWrapper {
             let dataStore = transaction.objectStore(this.DATA_STORE);
             if ( !(dataStore) ) return false
         
-            // delete_from_list_callback
-            let delete_from_list_callback = (value,dbIndex) => {
-                //
-                let keyRangeValue = IDBKeyRange.only(value.name);
-                //
-                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
-                    let cursor = event.target.result;
-                    if ( cursor ) {
-                        let request = cursor.delete();
-                        request.onsuccess = () => {
-                            this.current_session_name = 'none'   /// here last
-                            this.load_name_list()
-                            this.application_revise_current_session(this.current_session_name)
-                        };
+            let p = new Promise((resolve,reject) => {
+                // delete_from_list_callback
+                let delete_from_list_callback = (value,dbIndex) => {
+                    //
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    //
+                    dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            let request = cursor.delete();
+                            request.onsuccess = () => {
+                                this.current_session_name = 'none'   /// here last
+                                this.load_name_list()
+                                this.application_revise_current_session(this.current_session_name)
+                                resolve(true)
+                            };
+                        }
+                        resolve(false)
                     }
                 }
-            }
-        
-            let not_found_callback = () => {
-                warn(`The session ${sess_name} is not in the database`)
-            }
-        
-            this._apply_find_by_name(sess_name, dataStore, delete_from_list_callback, not_found_callback)    
+                //
+                let not_found_callback = () => {
+                    warn(`The session ${sess_name} is not in the database`)
+                    resolve(false)
+                }
+                //
+                this._apply_find_by_name(sess_name, dataStore, delete_from_list_callback, not_found_callback)    
+            })
+            //
+            return p
         }
+        return false
     }
 
 
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
     application_data_update(blob_url,part_id,blob_data) {
         // implemented by derived method (override)
@@ -391,7 +512,7 @@ class AppDBWrapper {
     }
 
     application_update_session_name_selections(sess_name,name_list) {
-        // implemented by derived method (override)
+
     }
 
 }
