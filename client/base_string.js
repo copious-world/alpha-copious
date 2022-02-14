@@ -1,28 +1,28 @@
+
 //>--
-export function hex_fromArrayOfBytes(arrayOfBytes) {
+function hex_fromArrayOfBytes(arrayOfBytes) {
     const hexstr = arrayOfBytes.map(b => b.toString(16).padStart(2, '0')).join('');
     return(hexstr)
 }
 //--<
 
 //>--
-export function hex_fromTypedArray(byteArray){
+function hex_fromTypedArray(byteArray){
     let arrayOfBytes = Array.from(byteArray)
     return(hex_fromArrayOfBytes(arrayOfBytes))
 }
 //--<
 
 
-
 //>--
-export function hex_fromByteArray(byteArray){
+function hex_fromByteArray(byteArray){
     return hex_fromTypedArray(ArrayOfBytes_toByteArray(byteArray))
 }
 //--<
 
 
 //>--
-export function hex_toArrayOfBytes(hexString) {
+function hex_toArrayOfBytes(hexString) {
     let result = [];
     for ( let i = 0; i < hexString.length; i += 2 ) {
       result.push(parseInt(hexString.substr(i, 2), 16));
@@ -32,21 +32,21 @@ export function hex_toArrayOfBytes(hexString) {
 //--<
 
 //>--
-export function ArrayOfBytes_toByteArray(arrayOfBytes) {
+function ArrayOfBytes_toByteArray(arrayOfBytes) {
     let byteArray = new Uint8Array(arrayOfBytes)
     return(byteArray)
 }
 //--<
 
 //>--
-export function hex_toByteArray(hexstr) {
+function hex_toByteArray(hexstr) {
     let aob = hex_toArrayOfBytes(hexstr)
     return ArrayOfBytes_toByteArray(aob)
 }
 //--<
 
 //>--
-export function bufferToArrayBufferCycle(buffer) {
+function bufferToArrayBufferCycle(buffer) {
   var ab = new ArrayBuffer(buffer.length);
   var view = new Uint8Array(ab);
   for (var i = 0; i < buffer.length; ++i) {
@@ -56,7 +56,7 @@ export function bufferToArrayBufferCycle(buffer) {
 }
 //--<
 
-export function string_from_buffer(bytes) {
+function string_from_buffer(bytes) {
 	let s = ""
 	let n = bytes.length
 	for ( let i = 0; i < n; i++ ) {
@@ -66,13 +66,14 @@ export function string_from_buffer(bytes) {
 	return s
 }
 
-export function buffer_from_cvs_array(number_els) {
+function buffer_from_cvs_array(number_els) {
 	let els = number_els.split(',').map(el => parseInt(el))
 	let buf = new Uint8Array(els)
 	return buf
 }
 
-export function buffer_from_b64_csv(b64_number_els) {
+function buffer_from_b64_csv(b64_number_els) {
 	let numbers = atob(b64_number_els)
 	return buffer_from_cvs_array(numbers)
 }
+

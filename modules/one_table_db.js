@@ -30,7 +30,7 @@ function warn(str) {
 // a session object (sessionObject) is stored in the DB and may contain parts of data
 // part_id identifies a part of the data (e.g. a layer or a component)
 
-class AppDBWrapper {
+export class AppDBWrapper {
 
     constructor(name,conf) {
         this._can_process_db = true
@@ -331,13 +331,13 @@ class AppDBWrapper {
                     resolve(false)
                 }
             }
-
+        
             // not_found_callback 
             let not_found_callback = () => {
                 warn(`The session ${sess_name} is not in the database`)
                 resolve(false)
             }
-
+        
             this._apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
         })
 
