@@ -733,6 +733,12 @@ a {
 	font-weight: 600;
 }
 
+.status-style {
+	color:rgb(27, 77, 27);
+	font-size: smaller;
+	font-style: italic;
+}
+
 </style>
 </head>
 <script>
@@ -822,9 +828,11 @@ a {
 	<ul class="footer-list">
 		<li>
 			<a href="{{canonical}}" target="{{canonical}}-again">copyright &copy; {{copyRightYear}} {{companyShortLink}}</a>
+			<span class="status-style" id="page-error-message">status: good</span>
 		</li>
 	</ul>
 </footer>
+
 
 <div id="squashMenuContainer" >
 	this is a test;
@@ -934,7 +942,21 @@ a {
 	// CONTENT EXCHANGE
 	// === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
-	
+
+let prev_msg = false
+function errorMessage(msg) {
+	let msg_box = document.getElementById('page-error-message')
+	if ( msg_box ) {
+		msg_box.innerHTML = msg
+		if ( prev_msg ) {
+			clearTimeout(prev_msg)
+			prev_msg = false
+		}
+		console.log(msg)		/// for the developer
+		prev_msg = setTimeout( () => { msg_box.innerHTM = "status good" }, 60000 )   // one minute
+	}
+}
+
 
 var g_url_match = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
 function matches_url(maybe_url) {
@@ -1613,12 +1635,21 @@ function releaseMenu(mHandle) {
 
 
 
+function launch_simple_link(default_url,window_name) {
+	let launched = window.open(`https://${default_url}/`,window_name)
+	if ( !launched ) {
+		errorMessage(`could not open window or tab for link ${default_url}`)
+	}
+}
+
+
+
 function launch_app_window_for_human(target_window,human_public_identity,service_tandems,display_page,window_name) {
 	if ( target_window && !(target_window.closed) ) {
 		target_window.onload = (ev) => {
 			let the_message = {
 				"relationship" : 'of-this-world-opener',
-				"revise_source" : `https://${g_siteURL}/static/${display_page}.html`,
+				"revise_source" : `https://${g_siteURL}/${display_page}`,		/// don't forget resource is translate by nginx or other
 				"tandems" : service_tandems,
 				"huamn_check" : human_public_identity
 			}
@@ -1628,13 +1659,13 @@ function launch_app_window_for_human(target_window,human_public_identity,service
 		target_window.focus()
 		return target_window
 	} else {
-		let launched = window.open(`http://${human_public_identity}/index.html`,window_name)
+		let launched = window.open(`https://${human_public_identity}/index.html`,window_name)
 		if ( launched ) {
 			let t_window = launched
 			launched.onload = (ev) => {
 				let the_message = {
 					"relationship" : 'of-this-world-opener',
-					"revise_source" : `https://${g_siteURL}/static/${display_page}.html`,
+					"revise_source" : `https://${g_siteURL}/${display_page}`,	/// don't forget resource is translate by nginx or other
 					"tandems" : service_tandems,
 					"huamn_check" : human_public_identity
 				}
@@ -2056,6 +2087,15 @@ function loginView(accountData) {
 	}
 	resize()
 }
+
+
+// --------- CHAT BLOG DEMOS FUNCTION //   --- open in a human frame or else
+// links on this page...
+
+let chat_opener = () => {}
+let blog_opener = () => {}
+let demos_opener = () => {}
+
 
 // // // ----------------- // // // ----------------- // // // -----------------
 // // // ----------------- // // // ----------------- // // // -----------------
