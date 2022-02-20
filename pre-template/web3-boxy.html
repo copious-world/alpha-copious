@@ -2097,6 +2097,31 @@ let blog_opener = () => {}
 let demos_opener = () => {}
 
 
+
+// // // ----------------- // // // ----------------- // // // -----------------
+// // // ----------------- // // // ----------------- // // // -----------------
+
+
+var human_extension_id = false    /// if a URL to a web resource will be required
+var human_extension_url = ""
+window.addEventListener("message", (event) => {
+	if ( event.data === undefined )  return;
+	// ...
+	let ext_data =  event.data
+	if ( ext_data.category === "extension-present" ) {
+		if ( ext_data.direction === "from-content-script" ) {
+			let message = ext_data.message
+			let [browser_type,dat_type,dat] = message.split("::",3)
+			if ( dat_type === 'EXTID' ) {
+				human_extension_id = dat_type
+				human_extension_url = `${browser_type}-${dat_type}://${human_extension_id}/`
+			}
+		}
+	}
+}, false);
+
+
+
 // // // ----------------- // // // ----------------- // // // -----------------
 // // // ----------------- // // // ----------------- // // // -----------------
 
