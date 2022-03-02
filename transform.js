@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path')
 
 //function stay_healthy_function() {}
-
+// https://www.youtube.com/watch?v=s86-Z-CbaHA
 
 // FROM STACK EXCHANGE
 Object.defineProperty(global, '__stack', {
@@ -203,6 +203,11 @@ function key_complexity(k1,k2) {
 }
 
 
+
+
+
+///  TAKE THE NAME OF THE CONFIG FILE FROM COMMAND LINE   node transform myfile.json  (or other ext)
+
 let input_file = process.argv[2]
 
 console.log(input_file)
@@ -211,6 +216,52 @@ let data = fs.readFileSync(input_file).toString()
 data = JSON.parse(data)
 //
 console.dir(data)
+
+
+/*
+
+{
+    "businesses" : [
+        "copious.world",
+        "popsong.now"
+    ],
+    "in_dir" : "string",
+    "out_dir" : "string/${business_key}",
+    "file1-eg" : {
+        "out_dir"  : "special-case/${business_key}",
+        "special_items" : true,
+        "array" : "JSON FILE THAT IS ARRAY/${business_key}"
+        "input" : "a file name in in-dir :: a template file"
+    },
+    "file2-eg" : {
+        "out_dir"  : "special-case/${business_key}",
+        "special_items" : true,
+        "array" : "JSON FILE THAT IS ARRAY/${business_key}"
+        "input" : [
+            "a file name in in-dir :: a template file",
+            "a file name in in-dir :: a template file"
+        ]
+    },
+    "file3" :  : {
+        "out_dir"  : false,
+        "special_items" : false,
+        "input" : "a file name in in-dir :: a template file",
+        "import" : {
+            "inmport-file-name" : {
+
+            }
+        },
+        "import_app" : {
+
+        },
+        "subst_l1" : {
+            
+        }
+    },
+    "file3" : {}
+}
+
+*/
 
 let businesses = data.businesses
 let input_dir = data.in_dir
@@ -235,7 +286,7 @@ for ( let business of businesses ) {
             //
             let item_input = descr.array.replace("${business_key}",business)
 
-            try {
+            try {       // read in the files that will have parts inserted
                 let ifile = item_input
                 let item_list = fs.readFileSync(ifile).toString()
                 item_list = JSON.parse(item_list)
@@ -244,14 +295,15 @@ for ( let business of businesses ) {
                 if ( typeof descr.input === "string" ) {
                     let out_parts = []
                     let tmplt_file = input_dir + descr.input
-                    let tmplt = fs.readFileSync(tmplt_file).toString()
+                    let tmplt = fs.readFileSync(tmplt_file).toString()  // THE TEMPLATE FILE
+                    // build an array of targets
                     let field_fs = extract_fields_forms(tmplt)
                     let fields = field_fs.map( fld => { return(fld.replace("{{",'').replace("}}",''))} )
     
                     for ( let item of item_list ) {
                         let o_item = ''
                         //
-                        o_item += tmplt
+                        o_item += tmplt   // a string copy (reusing the template)
                         for (let i = 0; i < field_fs.length; i++ ) {
                             let fld = fields[i]
                             let repl_fld = field_fs[i]
