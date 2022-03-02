@@ -1,6 +1,7 @@
 {
     "business_url" : "copious.world",
-    "pre_template" : "./pre-templates/web3-boxy.html",
+    "pre_template" : "./pre-template/web3-boxy.html",
+    "out_dir" : "./templates",
     "key_values" : {
         "$$AUTHOR" : "Richard Leddy",
         "INSERT" : ""
@@ -100,7 +101,7 @@
                 "script/flexy_items_A-layout-and-menu.js" : 11,
                 "script/flexy_items_A-animation.js" : 12,
                 "for-humans/client-auth-opener.js" : 13,
-                "script/flexy_items_A-app-finalize" : 14
+                "script/flexy_items_A-app-finalize.js" : 14
             }
         }
     }
