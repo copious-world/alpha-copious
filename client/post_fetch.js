@@ -1,6 +1,4 @@
-
-
-//  fetchEndPoint
+//$>>	fetchEndPoint
 // //
 // fetch with GET method
 async function fetchEndPoint(endpoint,port) {
@@ -26,7 +24,7 @@ async function fetchEndPoint(endpoint,port) {
 }
 
 
-//  fetchUrl
+//$>>	fetchUrl
 // //
 // fetch with GET method
 async function fetchUrl(endpoint) {
@@ -51,7 +49,7 @@ async function fetchUrl(endpoint) {
 }
 
 
-//  postData
+//$>>	postData
 // //
 //  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
 //  default content type 'application/json'

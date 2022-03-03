@@ -857,103 +857,101 @@ var g_global_web3_public_identity = false
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="contact_box" class="fade_able" style="z-index:116" $INSERT >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('contact_box')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{contact_box.content}}}
 	</div>
 </div>
 
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="about_box" class="fade_able" style="z-index:102" $INSERT >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('about_box')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{about_box.content}}}
 	</div>
 </div>
 
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="thankyou_box" class="fade_able" style="z-index:106" onclick='hide_thankyou_box(this)' >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('thankyou_box')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{thankyou_box.content}}}
 	</div>
 </div>
 
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="topicBox_1" class="fade_able" style="z-index:103" $INSERT >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('topicBox_1')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{topicBox_1.content}}}
 	</div>
 </div>
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="topicBox_2" class="fade_able" style="z-index:104" $INSERT >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('topicBox_2')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{topicBox_2.content}}}
 	</div>
 </div>
 
 
 
-<div id="$BOX_NAME" class="fade_able" style="z-index:$Z_INDEX" $INSERT >
+<div id="topicBox_3" class="fade_able" style="z-index:105" $INSERT >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closefader('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closefader('topicBox_3')">x</span>
 	</div>
 	<div class="fade_able_content" >
-		{{{$BOX_NAME.content}}}
+		{{{topicBox_3.content}}}
 	</div>
 </div>
 
 
 
-<div id="$BOX_NAME" class="solid_able" style="z-index:$Z_INDEX" >
+<div id="register" class="solid_able" style="z-index:107" >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closesolid('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closesolid('register')">x</span>
 	</div>
 	<div class="fade_able_content" >
 		<div style="min-width: 400px;min-height: 300px;">
-			{{{$BOX_NAME.content}}}
+			{{{register.content}}}
 		</div>
 	</div>
 </div>
 
 
 
-<div id="$BOX_NAME" class="solid_able" style="z-index:$Z_INDEX" >
+<div id="login" class="solid_able" style="z-index:108" >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
-		<span class="closer_x" onmousedown="closesolid('$BOX_NAME')">x</span>
+		<span class="closer_x" onmousedown="closesolid('login')">x</span>
 	</div>
 	<div class="fade_able_content" >
 		<div style="min-width: 400px;min-height: 300px;">
-			{{{$BOX_NAME.content}}}
+			{{{login.content}}}
 		</div>
 	</div>
 </div>
 
 
 {{{advertPopups.content}}}
-{{{yourProileLinks.content}}}
-{{{yourDashboardLinks.content}}}
 </body>
 </html>
 <script>
@@ -1137,60 +1135,7 @@ getCookie
 
 
 
-
-
-//  fetchEndPoint
-// //
-// fetch with GET method
-async function fetchEndPoint(endpoint,port) {
-	port = !(port) ? '' : ( port.length ? `:${port}`   : '')
-	let myRequest = new Request(`${location.protocol}//${g_siteURL}${port}/${endpoint}`);
-	try {
-		const body = await fetch(myRequest, {
-									method: 'GET', // *GET, POST, PUT, DELETE, etc.
-									mode: 'cors', // no-cors, *cors, same-origin
-									cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-									credentials: 'omit', // include, *same-origin, omit
-									redirect: 'follow', // manual, *follow, error
-									referrerPolicy: 'no-referrer', // no-referrer, *client
-								});
-		//
-		let infoObj = await body.json();
-		return(infoObj)
-		//
-	} catch (e) {
-		console.log(e.message)
-		return(false)
-	}
-}
-
-
-//  fetchUrl
-// //
-// fetch with GET method
-async function fetchUrl(endpoint) {
-	let myRequest = new Request(endpoint);
-	try {
-		const body = await fetch(myRequest, {
-									method: 'GET', // *GET, POST, PUT, DELETE, etc.
-									mode: 'cors', // no-cors, *cors, same-origin
-									cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-									credentials: 'omit', // include, *same-origin, omit
-									redirect: 'follow', // manual, *follow, error
-									referrerPolicy: 'no-referrer', // no-referrer, *client
-								});
-		//
-		let infoObj = await body.json();
-		return(infoObj)
-		//
-	} catch (e) {
-		console.log(e.message)
-		return(false)
-	}
-}
-
-
-//  postData
+//$>>	postData
 // //
 //  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
 //  default content type 'application/json'

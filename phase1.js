@@ -1,13 +1,37 @@
 
 
 const fs = require('fs')
-const { type } = require('os')
 const path = require('path')
 
 //$$files::header.html<<
 const g_inserts_match = /\$\$files\:\:(\w|_|-|\+)+\/*(\w|_|-|\+)+\.(\w|_|-\+)+\<\</g 
 const g_names_inserts_match = /\$\$files\:\:name\:\:(\w|_|-|\+)+\/*(\w|_|-|\+)+\<\</g 
 
+let target = process.argv[2]
+if ( target ) {
+    console.log(target)
+    let tfile_name = `./pre-template-configs/${target}.json`
+    try {
+        let jdef = fs.readFileSync(tfile_name,'ascii').toString()
+        let tconf = JSON.parse(jdef)
+        phase_one_config(tconf,"index.html")
+    } catch (e) {
+        console.log("CONFIG: " + tfile_name + " does not exists or does not have permissions or is not formatted correctly")
+        console.log(e)
+    }
+} else {
+    console.log("no target given on command line")
+}
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+//
+
+function subst(fdata,key,value) {
+    while ( fdata.indexOf(key) >= 0 ) {
+        fdata = fdata.replace(key,value)
+    }
+    return fdata
+}
 
 function mapify(a1,a2,key_edit) {
     let the_map = {}
@@ -39,21 +63,28 @@ function find_map(part_form,the_map) {
 }
 
 
-let target = process.argv[2]
-if ( target ) {
-    console.log(target)
-    let tfile_name = `./pre-template-configs/${target}.json`
-    try {
-        let jdef = fs.readFileSync(tfile_name,'ascii').toString()
-        let tconf = JSON.parse(jdef)
-        phase_one_config(tconf,"index.html")
-    } catch (e) {
-        console.log("CONFIG: " + tfile_name + " does not exists or does not have permissions or is not formatted correctly")
-        console.log(e)
+
+function key_map_sub(file_data,key_values,vars) {
+    let fdata = '' + file_data
+    for ( let key in key_values ) {
+        let value = key_values[key]
+        if ( value[0] === '>' ) {
+            let varname = value.substr(1)
+            let i = vars.indexOf(varname)
+            if ( i >= 0 ) {
+                value = vars.substr(i + varname.length + '::'.length)
+                if ( value.indexOf('::') > 0 ) {
+                    value = value.substr(0,value.indexOf('::'))
+                }
+                value = value.trim()
+            }
+        }
+        fdata = subst(fdata,`$$${key}`,value)
     }
-} else {
-    console.log("no target given on command line")
+    //
+    return fdata
 }
+
 
 
 function file_replacement(key_string,conf,file_key) {
@@ -95,12 +126,67 @@ function named_replacer_replacement(key_string,conf,file_key) {
     console.log(the_file)
     try {
         let file_data = fs.readFileSync(the_file).toString()
+        //
+        if ( typeof named_file_def.key_values === 'object' ) {
+            file_data = key_map_sub(file_data,named_file_def.key_values,clean_key)
+        }
+        //
         return file_data    
     } catch (e) {
         console.log(e)
     }
     return ""
 }
+
+
+
+function filter_file_data(file_data,script_filters) {
+    let exclusions = script_filters.exclude
+    let inclusions = script_filters.include
+
+    let file_data_update = ""
+
+    let exportations = file_data.split('$$EXPORTABLE::')[1]
+    if ( exportations ) {
+        //
+        exportations = exportations.trim()
+        exportations = exportations.replace('/*').replace('*/').trim()
+        exportations = exportations.split('\n')
+        exportations = exportations.map(line => { return line.trim() })
+        //
+        if ( exclusions === '*' ) return ""
+        if ( inclusions === '*' ) return file_data
+        if ( exclusions ) {
+            exportations = exportations.filter((exprt) => { return (exclusions.indexOf(exprt) < 0) })
+        }
+        if ( inclusions ) {
+            exportations = exportations.filter((exprt) => { return (inclusions.indexOf(exprt) >= 0) })
+        }
+    console.log(exportations)
+        //
+
+        let file_parts = file_data.split('//$>>')
+        file_parts.shift()
+        let file_parts_map = {}
+        for ( let part of file_parts ) {
+            let key = part.substr(0,part.indexOf('\n'))
+            key = key.trim()
+            file_parts_map[key] = '//$>>' + part
+        }
+
+        file_data_update = ""
+
+        for ( let ky of exportations ) {
+            file_data_update += file_parts_map[ky]
+        }
+        //
+    } else {
+        file_data_update = file_data
+    }
+
+    return file_data_update
+}
+
 
 
 function load_scripts(conf,file_key) {
@@ -125,6 +211,12 @@ function load_scripts(conf,file_key) {
         try {
             let file_data = fs.readFileSync(the_file).toString()
             let m_file_key = `script::${clean_key}`
+            //
+            let script_filters = script_list[clean_key]
+            if ( typeof script_filters === "object" ) {
+                file_data = filter_file_data(file_data,script_filters)
+            }
+            //
             the_map[m_file_key] = file_data
         } catch (e) {
             console.log(e)
@@ -133,6 +225,8 @@ function load_scripts(conf,file_key) {
     //
     return the_map
 }
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
 function phase_one_config(conf,current_file_key) {

@@ -92,7 +92,11 @@
                 "common.js" : 2,
                 "field_checks.js" : 3,
                 "https_checks.js" : 4,
-                "post_fetch.js" : 5,
+                "post_fetch.js" : {
+                    "order" : 14,
+                    "include" : ["postData"],
+                    "exclude" : false
+                },
                 "uploader_class.js" : 6,
                 "validation_class.js" : 7,
                 "login-logout.js" : 8,
