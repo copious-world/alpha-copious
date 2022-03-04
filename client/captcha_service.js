@@ -1,6 +1,9 @@
 
 // Wrapper for captcha ...
 
+
+//$>>	processUI_captchaService
+
 var g_ComponentErrorsActivated = false
 var g_CurContainer = null
 
@@ -56,3 +59,10 @@ async function processUI_captchaService(handlerDefsValidator,calcAppDataDB,compl
 		}
 	}
 }
+
+
+
+//$$EXPORTABLE::
+/*
+processUI_captchaService
+*/

@@ -3,7 +3,7 @@
 // --------- LOGIN // REGISTER
 // links on this page...
 
-
+//$>>	login_process
 var g_login_Handling = null
 function login_process() {
 	let login = document.querySelector("#login")
@@ -24,7 +24,7 @@ function login_process() {
 	login_opening_view()	// app implements
 }
 
-
+//$>>	hide_login_process
 function hide_login_process() {
 	if ( g_login_Handling ) {
 		g_login_Handling.switchCaptchaDisplay(false)
@@ -37,6 +37,7 @@ function hide_login_process() {
 	}
 }
 
+//$>>	retry_password
 var g_login_failure = null
 function retry_password() {
 	login_process()
@@ -48,6 +49,7 @@ function retry_password() {
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
+//$>>	logout
 async function logout(originator = true) {
 	// send synch message
 	g_LoggedIn = await app_process_logout(originator)
@@ -67,6 +69,7 @@ async function logout(originator = true) {
 	resize()
 }
 
+//$>>	loginView
 function loginView(accountData) {
 	hide_login_process()
 	g_LoggedIn = true
@@ -85,7 +88,8 @@ function loginView(accountData) {
 }
 
 
-
+//$>>	setupLogoutRestoration
+//                                          <<var-depends>> greetAndMeetContainer1,greetAndMeetContainer2
 function setupLogoutRestoration() {
 	let g_originalGreetAndMeet1 = greetAndMeetContainer1.innerHTML
 	let g_originalGreetAndMeet2 = greetAndMeetContainer2.innerHTML
@@ -109,3 +113,14 @@ function setupLogoutRestoration() {
 	dashboardHTML.textContent = '';
 }
 
+
+
+//$$EXPORTABLE::
+/*
+login_process
+hide_login_process
+retry_password
+logout
+loginView
+setupLogoutRestoration
+*/

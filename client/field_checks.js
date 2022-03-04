@@ -1,9 +1,11 @@
+
+//$>>	matches_url
 var g_url_match = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
 function matches_url(maybe_url) {
 	return g_url_match.test(maybe_url)
 }
 
-
+//$>>	checkEmailField
 var g_reEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 function checkEmailField(efield) {
 	let email = efield.value
@@ -13,8 +15,7 @@ function checkEmailField(efield) {
 	return(true)
 }
 
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+//$>>	getVal
 function getVal(the_field) {
 	if ( the_field ) {
 		let val = the_field.value;
@@ -26,6 +27,7 @@ function getVal(the_field) {
 	return("")
 }
 
+//$>>	is_empty
 function is_empty(the_field) {
 	if ( the_field && ( the_field.value.length > 0 ) ) {
 		return(false)
@@ -33,7 +35,7 @@ function is_empty(the_field) {
 	return(true)
 }
 
-
+//$>>	errorMessage
 let prev_msg = false
 function errorMessage(msg) {
 	let msg_box = document.getElementById('page-error-message')
@@ -48,8 +50,19 @@ function errorMessage(msg) {
 	}
 }
 
-
+//$>>	colorize
 function colorize(theField,colr) {
 	theField.style.borderColor = colr;
 }
 
+
+
+//$$EXPORTABLE::
+/*
+matches_url
+checkEmailField
+getVal
+is_empty
+errorMessage
+colorize
+*/

@@ -3,7 +3,8 @@
 // VALIDATION
 // -- -- -- -- -- -- -- -- -- -- -- -- -- 
 //
-
+//$>>	ValidationContainer
+//                                          <<var-depends>> g_ComponentErrorsActivated (?)
 class ValidationContainer {
     // 
     constructor(props) {
@@ -137,3 +138,8 @@ class ValidationContainer {
 
 
 
+
+//$$EXPORTABLE::
+/*
+ValidationContainer
+*/

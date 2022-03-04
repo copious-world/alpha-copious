@@ -3,6 +3,11 @@
 // CAPTCHA
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- 
 
+
+//$>>	captchaCheck
+//                                          <<var-depends>> g_CurContainer
+
+
 var g_currenCaptchaTOKEN = null; 	// delivered by the authorization handler, which maps this interaction to a session.
 var g_captaFinalResolution = null;  // will be a function for completing a captcha
 
@@ -36,6 +41,10 @@ async function captchaCheck(callBack) {
 	}
 	//
 }
+
+
+
+//$>>	doCaptcha
 
 function captchaPromises() {
 	return new Promise((resolve,reject) => {
@@ -83,7 +92,8 @@ async function doCaptcha(port,proxyPath) {
 	}
 }
 
-
+//$>>	setupCaptchaClose
+//                                          <<var-depends>> g_CurContainer,g_captaFinalResolution
 // Get the <span> element that closes the modal
 function setupCaptchaClose() {
 	let closerList = document.getElementsByClassName("close");
@@ -97,3 +107,13 @@ function setupCaptchaClose() {
 	}
 }
 
+
+
+
+
+//$$EXPORTABLE::
+/*
+captchaCheck
+doCaptcha
+setupCaptchaClose
+*/

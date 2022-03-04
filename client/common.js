@@ -1,14 +1,17 @@
 
+//$>>	gen_nonce
 function gen_nonce() {
 	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
 }
 
+//$>>	ext_of_file
 function ext_of_file(file_name) {
 	let idx = file_name.lastIndexOf('.')
 	let ext = file_name.substr(idx+1)
 	return ext
 }
 
+//$>>	clonify
 function clonify(obj) {
 	if ( typeof obj === 'string' ) return(obj)
 	try {
@@ -19,7 +22,7 @@ function clonify(obj) {
 	}
 }
 
-
+//$>>	addscript
 // attach a script to a DOM element
 function addscript(script,whereScipt) {
 	var scriptEl = document.createElement('script');
@@ -32,7 +35,7 @@ function addscript(script,whereScipt) {
 }
 
 
-
+//$>>	addstyle
 function addstyle(script) {
     var styleEl = document.createElement('style');
     styleEl.type = 'text/css';
@@ -43,13 +46,15 @@ function addstyle(script) {
     }
 }
 
-
+//$>>	launch_simple_link
+//                                                  <<depends>> errorMessage
 function launch_simple_link(default_url,window_name) {
 	let launched = window.open(`https://${default_url}/`,window_name)
 	if ( !launched ) {
 		errorMessage(`could not open window or tab for link ${default_url}`)
 	}
 }
+
 
 
 //$$EXPORTABLE::

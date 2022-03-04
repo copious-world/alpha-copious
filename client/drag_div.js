@@ -1,5 +1,6 @@
 // Make the DIV element draggagle:
 
+//$>>	dragElement
 function dragElement(floater_id,float_header_id) {
 
 	let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -58,3 +59,11 @@ function dragElement(floater_id,float_header_id) {
 	}
 
 }
+
+
+
+
+//$$EXPORTABLE::
+/*
+dragElement
+*/

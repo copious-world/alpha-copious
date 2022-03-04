@@ -1,9 +1,11 @@
 
-var g_uploader_cache = {}
+
 
 const DEFINED_CHUNK_SIZE = 5000000
 const DEFINED_MAX_SIZE = 9000000
 
+
+//$>>	finalize_small_media_storage
 async function finalize_small_media_storage(primary_response) {
 	if ( primary_response.transition && primary_response.transition.token ) {
 		let transaction_token = primary_response.transition.token
@@ -22,8 +24,9 @@ async function finalize_small_media_storage(primary_response) {
 	return [false,false]
 }
 
-//
-// finalize_media_storage
+
+//$>>	finalize_media_storage
+//                                                  <<depends>> postData
 //	There are likely faster ways of sending the data. But, this way requires some permission and safe guarding by the server sid.
 async function finalize_media_storage(primary_response,formdata,blob,obj) {
 
@@ -81,9 +84,10 @@ async function finalize_media_storage(primary_response,formdata,blob,obj) {
 }
 
 
-// data:[<MIME-type>][;charset=<encoding>][;base64],<data>
 
-async function upload_small(obj,blob_already) {			// 	obj.media_type
+//$>>	upload_small
+//                                                  <<depends>> postData,finalize_small_media_storage
+async function upload_small(obj,blob_already) {			// 	obj.media_type  // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
 	obj.email = g_dashboard_info.email
 	let url = `http://${g_siteURL}/uploaders/transition/do_param_upload`
 	const mime = obj.mime
@@ -120,7 +124,8 @@ async function upload_small(obj,blob_already) {			// 	obj.media_type
 	}
 }
 
-
+//$>>	upload_big
+//                                                  <<depends>> postData,finalize_media_storage
 async function upload_big(obj,blob_already) {
 	obj.email = g_dashboard_info.email
 	let url = `http://${g_siteURL}/uploaders/transition/do_param_upload`
@@ -158,6 +163,8 @@ async function upload_big(obj,blob_already) {
 	}
 }
 
+//$>>	upload_audio
+//                                                  <<depends>> upload_big,upload_small
 // ---- ---- ---- ---- ---- ---- ----
 async function upload_audio(obj) {
 	let blob_data
@@ -174,6 +181,7 @@ async function upload_audio(obj) {
 	}
 }
 
+//$>>	upload_image
 // ---- ---- ---- ---- ---- ---- ----
 async function upload_image(obj) {
 	if ( !(blob_already) )  {
@@ -188,13 +196,17 @@ async function upload_image(obj) {
 	}
 }
 
+//$>>	upload_video
+//                                                  <<depends>> upload_big
 // ---- ---- ---- ---- ---- ---- ----
 async function upload_video(obj) {
 	return await upload_big(obj)
 }
 
-
+//$>>	prep_upload_for
+//                                                  <<depends>> uploader_fun
 // ---- ---- ---- ---- ---- ---- ----
+var g_uploader_cache = {}
 function prep_upload_for(obj,uploader_fun) {
 	//
 	g_uploader_cache[obj._dash_entry_id] = async () => {
@@ -203,8 +215,9 @@ function prep_upload_for(obj,uploader_fun) {
 	//
 }
 
-
-// ---- ---- ---- ---- ---- ---- ----
+//$>>	do_media_upload
+//                                                  <<depends>> prep_upload_for
+//                                                  <<var-depends>> g_uploader_cache
 async function do_media_upload(obj) {		// earlier a link was made for the media, which will be uploaded if ever the user "save"s it.
 	let id = obj._dash_entry_id
 	let _uploader = g_uploader_cache[id]	// _uploader from map
@@ -214,3 +227,16 @@ async function do_media_upload(obj) {		// earlier a link was made for the media,
 	}
 }
 
+
+//$$EXPORTABLE::
+/*
+finalize_small_media_storage
+finalize_media_storage
+upload_small
+upload_big
+upload_audio
+upload_image
+upload_video
+prep_upload_for
+do_media_upload
+*/

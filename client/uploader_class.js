@@ -1,5 +1,6 @@
 
 
+//$>>	Uploader
 // CONTENT FETCHING CLASS
 class Uploader {
     //
@@ -119,3 +120,9 @@ class Uploader {
         document.querySelector(this.errorDiv).style.color = "blue"
     }
 }
+
+
+//$$EXPORTABLE::
+/*
+Uploader
+*/
