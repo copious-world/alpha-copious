@@ -87,30 +87,57 @@ function key_map_sub(file_data,key_values,vars) {
 
 
 
-function file_replacement(key_string,conf,file_key) {
-    let file_map = conf.files
-    let file_defs = file_map[file_key]
-    //
+function alphas_file_paths(clean_key,conf) {
     let the_file = ""
-    let clean_key = key_string.replace("$$files::","")
-    clean_key = clean_key.replace("<<",'')
     if ( clean_key.indexOf('/') > 0 ) {
-        //let ext_dir = clean_key.substr(0,clean_key.indexOf('/'))
         the_file = "./" + clean_key
     } else {
         let ext = path.extname(clean_key)
         let src_dir = conf.ext_default_dir[ext]
         the_file = src_dir + '/' + clean_key
     }
-    console.log(the_file)
+    return the_file
+}
+
+
+function sub_file_replace(file_data,defs,conf) {
+    for ( let file in defs ) {
+        try {
+            let the_file = alphas_file_paths(file,conf)
+            let sub_file = fs.readFileSync(the_file).toString()
+            let marker = `$$file::${file}<<`
+            file_data = file_data.replace(marker,sub_file)
+        } catch(e) {
+        }
+    }
+    return file_data
+}
+
+
+
+function sub_file_processing(clean_key,file_def,conf) {
+    let the_file = alphas_file_paths(clean_key,conf)
     try {
         let file_data = fs.readFileSync(the_file).toString()
+        if ( typeof file_def === 'object' ) {
+            file_data = sub_file_replace(file_data,file_def,conf)
+        }
         return file_data    
     } catch (e) {
         console.log(e)
     }
     return ""
 }
+
+
+function file_replacement(key_string,conf,file_key) {
+    let file_map = conf.files
+    let file_defs = file_map[file_key]
+    let clean_key = key_string.replace("$$files::","")
+    clean_key = clean_key.replace("<<",'')
+    return sub_file_processing(clean_key,file_defs[clean_key],conf)
+}
+
 
 function named_replacer_replacement(key_string,conf,file_key) {
     let file_map = conf.files

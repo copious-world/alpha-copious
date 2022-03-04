@@ -15,15 +15,14 @@
         "index.html" : {
             "header.html" : 1,
             "html/styles1.css" : 2,
-            "html/top_vars.js" : {
-                "order" : 3,
-                "mushroom-menu-icon.svg" : "3.1"
+            "html/top_vars.js" : 3,
+            "nav_bar_A.html" : {
+                "mushroom-menu-icon.svg" : "4.1"
             },
-            "flexy_items_A-main.html" : 4,
-            "footer_A.html" : 5,
-            "squashable_menu_A.html" : 6,
+            "flexy_items_A-main.html" : 5,
+            "footer_A.html" : 6,
+            "squashable_menu_A.html" : 7,
             "name::contact_box" : {
-                "order" : 7,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 116,
@@ -31,7 +30,6 @@
                 }
             },
             "name::about_box" : {
-                "order" : 8,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 102,
@@ -39,7 +37,6 @@
                 }
             },
             "name::topicBox_1" : {
-                "order" : 9,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 103,
@@ -47,7 +44,6 @@
                 }
             },
             "name::topicBox_2" : {
-                "order" : 10,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 104,
@@ -55,7 +51,6 @@
                 }
             },
             "name::topicBox_3" : {
-                "order" : 11,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 105,
@@ -63,7 +58,6 @@
                 }
             },
             "name::thankyou_box" : {
-                "order" : 12,
                 "file" : "fadable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 106,
@@ -72,7 +66,6 @@
                 }
             },
             "name::register" : {
-                "order" : 13,
                 "file" : "solidable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 107,
@@ -80,7 +73,6 @@
                 }
             },
             "name::login" : {
-                "order" : 14,
                 "file" : "solidable_box.html",
                 "key_values" : {
                     "Z_INDEX" : 108,

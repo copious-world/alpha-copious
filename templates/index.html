@@ -775,7 +775,9 @@ var g_global_web3_public_identity = false
 						</a>
 					</li>
 					<li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
-						$file::mushroom-menu-icon.svg$
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<path class="heroicon-ui" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+</svg>
 					</li>
 				</ul>
 			</td>
@@ -973,16 +975,19 @@ const DEFAULT_PLAIN_TEXT_COLOR = "black"
 
 
 
+//$>>	gen_nonce
 function gen_nonce() {
 	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
 }
 
+//$>>	ext_of_file
 function ext_of_file(file_name) {
 	let idx = file_name.lastIndexOf('.')
 	let ext = file_name.substr(idx+1)
 	return ext
 }
 
+//$>>	clonify
 function clonify(obj) {
 	if ( typeof obj === 'string' ) return(obj)
 	try {
@@ -993,7 +998,7 @@ function clonify(obj) {
 	}
 }
 
-
+//$>>	addscript
 // attach a script to a DOM element
 function addscript(script,whereScipt) {
 	var scriptEl = document.createElement('script');
@@ -1006,7 +1011,7 @@ function addscript(script,whereScipt) {
 }
 
 
-
+//$>>	addstyle
 function addstyle(script) {
     var styleEl = document.createElement('style');
     styleEl.type = 'text/css';
@@ -1017,13 +1022,15 @@ function addstyle(script) {
     }
 }
 
-
+//$>>	launch_simple_link
+//                                                  <<depends>> errorMessage
 function launch_simple_link(default_url,window_name) {
 	let launched = window.open(`https://${default_url}/`,window_name)
 	if ( !launched ) {
 		errorMessage(`could not open window or tab for link ${default_url}`)
 	}
 }
+
 
 
 //$EXPORTABLE::
@@ -1038,12 +1045,14 @@ launch_simple_link
 
 
 
+
+//$>>	matches_url
 var g_url_match = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
 function matches_url(maybe_url) {
 	return g_url_match.test(maybe_url)
 }
 
-
+//$>>	checkEmailField
 var g_reEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 function checkEmailField(efield) {
 	let email = efield.value
@@ -1053,8 +1062,7 @@ function checkEmailField(efield) {
 	return(true)
 }
 
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+//$>>	getVal
 function getVal(the_field) {
 	if ( the_field ) {
 		let val = the_field.value;
@@ -1066,6 +1074,7 @@ function getVal(the_field) {
 	return("")
 }
 
+//$>>	is_empty
 function is_empty(the_field) {
 	if ( the_field && ( the_field.value.length > 0 ) ) {
 		return(false)
@@ -1073,7 +1082,7 @@ function is_empty(the_field) {
 	return(true)
 }
 
-
+//$>>	errorMessage
 let prev_msg = false
 function errorMessage(msg) {
 	let msg_box = document.getElementById('page-error-message')
@@ -1088,16 +1097,28 @@ function errorMessage(msg) {
 	}
 }
 
-
+//$>>	colorize
 function colorize(theField,colr) {
 	theField.style.borderColor = colr;
 }
 
 
 
+//$EXPORTABLE::
+/*
+matches_url
+checkEmailField
+getVal
+is_empty
+errorMessage
+colorize
+*/
 
 
-// not_https_switch 
+
+
+
+//$>>	not_https_switch
 // switch to HTTPS before doing any ops that may require a data exchange
 function not_https_switch() {
 	if (location.protocol !== 'https:') {           // start from a secure page
@@ -1109,6 +1130,7 @@ function not_https_switch() {
 }
 
 
+//$>>	getCookie
 // simple check on cookies, searching by ';' delimited string with the cookie name at the start of the trimmed line.
 function getCookie(cname) {  // modified from w3school
 	var name = cname + "=";
@@ -1185,6 +1207,7 @@ postData
 
 
 
+//$>>	Uploader
 // CONTENT FETCHING CLASS
 class Uploader {
     //
@@ -1306,12 +1329,20 @@ class Uploader {
 }
 
 
+//$EXPORTABLE::
+/*
+Uploader
+*/
+
+
+
 
 // === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 // VALIDATION
 // -- -- -- -- -- -- -- -- -- -- -- -- -- 
 //
-
+//$>>	ValidationContainer
+//                                          <<var-depends>> g_ComponentErrorsActivated (?)
 class ValidationContainer {
     // 
     constructor(props) {
@@ -1446,10 +1477,18 @@ class ValidationContainer {
 
 
 
+//$EXPORTABLE::
+/*
+ValidationContainer
+*/
+
 
 
 
 // Wrapper for captcha ...
+
+
+//$>>	processUI_captchaService
 
 var g_ComponentErrorsActivated = false
 var g_CurContainer = null
@@ -1507,6 +1546,12 @@ async function processUI_captchaService(handlerDefsValidator,calcAppDataDB,compl
 	}
 }
 
+
+
+//$EXPORTABLE::
+/*
+processUI_captchaService
+*/
 //
 
 
@@ -1514,7 +1559,7 @@ async function processUI_captchaService(handlerDefsValidator,calcAppDataDB,compl
 // --------- LOGIN // REGISTER
 // links on this page...
 
-
+//$>>	login_process
 var g_login_Handling = null
 function login_process() {
 	let login = document.querySelector("#login")
@@ -1535,7 +1580,7 @@ function login_process() {
 	login_opening_view()	// app implements
 }
 
-
+//$>>	hide_login_process
 function hide_login_process() {
 	if ( g_login_Handling ) {
 		g_login_Handling.switchCaptchaDisplay(false)
@@ -1548,6 +1593,7 @@ function hide_login_process() {
 	}
 }
 
+//$>>	retry_password
 var g_login_failure = null
 function retry_password() {
 	login_process()
@@ -1559,6 +1605,7 @@ function retry_password() {
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
+//$>>	logout
 async function logout(originator = true) {
 	// send synch message
 	g_LoggedIn = await app_process_logout(originator)
@@ -1578,6 +1625,7 @@ async function logout(originator = true) {
 	resize()
 }
 
+//$>>	loginView
 function loginView(accountData) {
 	hide_login_process()
 	g_LoggedIn = true
@@ -1596,7 +1644,8 @@ function loginView(accountData) {
 }
 
 
-
+//$>>	setupLogoutRestoration
+//                                          <<var-depends>> greetAndMeetContainer1,greetAndMeetContainer2
 function setupLogoutRestoration() {
 	let g_originalGreetAndMeet1 = greetAndMeetContainer1.innerHTML
 	let g_originalGreetAndMeet2 = greetAndMeetContainer2.innerHTML
@@ -1620,6 +1669,17 @@ function setupLogoutRestoration() {
 	dashboardHTML.textContent = '';
 }
 
+
+
+//$EXPORTABLE::
+/*
+login_process
+hide_login_process
+retry_password
+logout
+loginView
+setupLogoutRestoration
+*/
 
 
 
@@ -1973,6 +2033,11 @@ function resize() {
 // CAPTCHA
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- 
 
+
+//$>>	captchaCheck
+//                                          <<var-depends>> g_CurContainer
+
+
 var g_currenCaptchaTOKEN = null; 	// delivered by the authorization handler, which maps this interaction to a session.
 var g_captaFinalResolution = null;  // will be a function for completing a captcha
 
@@ -2006,6 +2071,10 @@ async function captchaCheck(callBack) {
 	}
 	//
 }
+
+
+
+//$>>	doCaptcha
 
 function captchaPromises() {
 	return new Promise((resolve,reject) => {
@@ -2053,7 +2122,8 @@ async function doCaptcha(port,proxyPath) {
 	}
 }
 
-
+//$>>	setupCaptchaClose
+//                                          <<var-depends>> g_CurContainer,g_captaFinalResolution
 // Get the <span> element that closes the modal
 function setupCaptchaClose() {
 	let closerList = document.getElementsByClassName("close");
@@ -2067,6 +2137,16 @@ function setupCaptchaClose() {
 	}
 }
 
+
+
+
+
+//$EXPORTABLE::
+/*
+captchaCheck
+doCaptcha
+setupCaptchaClose
+*/
 
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
