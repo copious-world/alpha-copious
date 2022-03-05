@@ -1,19 +1,22 @@
 
 
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 
 //$$files::header.html<<
 const g_inserts_match = /\$\$files\:\:(\w|_|-|\+)+\/*(\w|_|-|\+)+\.(\w|_|-\+)+\<\</g 
-const g_names_inserts_match = /\$\$files\:\:name\:\:(\w|_|-|\+)+\/*(\w|_|-|\+)+\<\</g 
+const g_names_inserts_match = /\$\$files\:\:name\:\:(\w|_|-|\+)+\/*(\w|_|-|\+)+\<\</g
 
-let target = process.argv[2]
-if ( target ) {
-    console.log(target)
-    let tfile_name = `./pre-template-configs/${target}.json`
+
+
+let g_target = process.argv[2]
+if ( g_target ) {
+    console.log(g_target)
+    let tfile_name = `./pre-template-configs/${g_target}.json`
     try {
         let jdef = fs.readFileSync(tfile_name,'ascii').toString()
         let tconf = JSON.parse(jdef)
+        phase1_ensure_directory(tconf.out_dir,g_target)
         phase_one_config(tconf,"index.html")
     } catch (e) {
         console.log("CONFIG: " + tfile_name + " does not exists or does not have permissions or is not formatted correctly")
@@ -32,6 +35,12 @@ function subst(fdata,key,value) {
     }
     return fdata
 }
+
+
+function phase1_ensure_directory(out_dir,target) {
+    fs.ensureDirSync(`${out_dir}/${target}`)
+}
+
 
 function mapify(a1,a2,key_edit) {
     let the_map = {}
@@ -304,7 +313,7 @@ function phase_one_config(conf,current_file_key) {
 
         let sdata = results.join('\n')
 
-        let output_file = conf.out_dir + '/' + current_file_key
+        let output_file = conf.out_dir + '/' + g_target + '/' + current_file_key
         fs.writeFileSync(output_file,sdata)
 
     } catch(e) {
