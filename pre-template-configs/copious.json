@@ -79,6 +79,7 @@
                     "BOX_NAME" : ">name"
                 }
             },
+            "intergalactic-explain.html" : "1",
             "script" : {
                 "script/flexy_items_A-top.js" : 1,
                 "common.js" : 2,

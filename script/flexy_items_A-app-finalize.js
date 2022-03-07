@@ -6,6 +6,18 @@ let chat_opener = () => {}
 let blog_opener = () => {}
 let demos_opener = () => {}
 
+
+function show_intergalactic_explain() {
+	let explainer = document.getElementById('intergalactic-explain')
+	if ( explainer ) {
+		explainer.style.visibility = "visible"
+		explainer.style.display = "block"
+	}
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 // initial validation application is contact
 g_CurContainer = null // will be initilialized within the finalizers
 
