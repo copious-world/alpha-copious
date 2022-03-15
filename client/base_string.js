@@ -1,3 +1,8 @@
+//$>>	gen_nonce
+function gen_nonce() {
+	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
+}
+
 
 //$>>	hex_fromArrayOfBytes
 //>--
@@ -101,6 +106,7 @@ function buffer_from_b64_csv(b64_number_els) {
 
 //$$EXPORTABLE::
 /*
+gen_nonce
 hex_fromArrayOfBytes
 hex_fromTypedArray
 hex_fromByteArray

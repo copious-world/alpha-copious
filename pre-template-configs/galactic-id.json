@@ -1,0 +1,113 @@
+{
+    "business_url" : "copious.world",
+    "pre_template" : "./pre-template/galatic.html",
+    "out_dir" : "./templates",
+    "key_values" : {
+        "$$AUTHOR" : "Richard Leddy",
+        "INSERT" : ""
+    },
+    "ext_default_dir" : {
+        ".html" : "./html",
+        ".js" : "./client",
+        ".svg" : "./icons"
+    },
+    "absolutes" : {
+        "<git>" : {
+            "offset" : "universal-content/intergalactic-content/ucwid-ui/template/scripts",
+            "root" : "/Users/richardalbertleddy/Documents/GitHub"
+        }
+    },
+    "files" : {
+        "index.html" : {
+            "header.html" : 1,
+            "html/styles1.css" : 2,
+            "html/top_vars.js" : 3,
+            "nav_bar_A.html" : {
+                "mushroom-menu-icon.svg" : "4.1"
+            },
+            "flexy_items_A-main.html" : 5,
+            "footer_A.html" : 6,
+            "squashable_menu_A.html" : 7,
+            "name::contact_box" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 116,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::about_box" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 102,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::topicBox_1" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 103,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::topicBox_2" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 104,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::topicBox_3" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 105,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::thankyou_box" : {
+                "file" : "fadable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 106,
+                    "BOX_NAME" : ">name",
+                    "INSERT" : "onclick='hide_thankyou_box(this)'"
+                }
+            },
+            "name::register" : {
+                "file" : "solidable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 107,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "name::login" : {
+                "file" : "solidable_box.html",
+                "key_values" : {
+                    "Z_INDEX" : 108,
+                    "BOX_NAME" : ">name"
+                }
+            },
+            "intergalactic-explain.html" : "1",
+            "script" : {
+                "script/flexy_items_A-top.js" : 1,
+                "common.js" : 2,
+                "field_checks.js" : 3,
+                "https_checks.js" : 4,
+                "post_fetch.js" : {
+                    "order" : 14,
+                    "include" : ["postData"],
+                    "exclude" : false
+                },
+                "uploader_class.js" : 6,
+                "validation_class.js" : 7,
+                "login-logout.js" : 8,
+                "captcha_service.js" : 9,
+                "captcha_app.js" : 10,
+                "<git>//user_db.js" : 1,
+                "script/flexy_items_A-layout-and-menu.js" : 11,
+                "script/flexy_items_A-animation.js" : 12,
+                "for-humans/client-auth-opener.js" : 13,
+                "script/flexy_items_A-app-finalize.js" : 14,
+                "<git>//window_app.js<" : 2
+            }
+        }
+    }
+}

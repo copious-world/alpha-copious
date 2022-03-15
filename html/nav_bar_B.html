@@ -1,0 +1,30 @@
+<nav id="mainNav">
+	<table style="width:100%">
+		<tr>
+			<td style="width:62;height:63">
+				<a class="nav-link" href="/"  target="{{canonical}}-again" >
+					{{{svgLogo.content}}}
+				</a>
+			</td>
+			<td>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="{{relatedAsset.link}}" target="{{relatedAsset.name}}" >
+							{{{relatedAsset.content}}}
+						</a>
+					</li>
+					<li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
+						$$file::mushroom-menu-icon.svg<<
+					</li>
+				</ul>
+			</td>
+			<td style="text-align: center;">
+				<h2>{{{intergalactic.content}}}</h2> 
+				<span id="active-user-title">ucwid</span>  :: ----
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+</nav>

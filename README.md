@@ -4,7 +4,7 @@
 **included or subsituted code** 
 
 **Purpose:**
-> ***generations of templates as input to static page generators***
+> ***ground truth for rolling base code and components into templates and server side processes***
 
 
 All directories, config files and tools, found here allow for selective workflows and minimal code choices for static targets. 

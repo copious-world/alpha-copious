@@ -1,9 +1,3 @@
-
-//$>>	gen_nonce
-function gen_nonce() {
-	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
-}
-
 //$>>	ext_of_file
 function ext_of_file(file_name) {
 	let idx = file_name.lastIndexOf('.')
@@ -24,14 +18,37 @@ function clonify(obj) {
 
 //$>>	addscript
 // attach a script to a DOM element
-function addscript(script,whereScipt) {
+window._script_added_cout = 0
+const MAX_SCRIPTS_ADDED = 1
+
+function remove_last_appended_script_child(whereScipt) {
+	if ( whereScipt ) {
+		let n = whereScipt.childNodes.length
+		if ( n > 0 ) {
+			let child = whereScipt.childNodes[n-1]
+			// check that it is a script....
+			if ( child.type === 'text/javascript' ) {
+				whereScipt.removeChild(child)
+			}
+		}
+	}
+}
+
+// attach a script to a DOM element
+function addscript(script,whereScipt,remove_old) {
 	var scriptEl = document.createElement('script');
 	scriptEl.type = 'text/javascript';
 	scriptEl.text = script;
-    if ( typeof whereScipt === "string" ) {
-        whereScipt = document.getElementById(whereScipt)
-    }
-	whereScipt.appendChild(scriptEl);
+	if ( typeof whereScipt === "string" ) {
+		whereScipt = document.getElementById(whereScipt)
+		if ( whereScipt ) {
+			window._script_added_cout++
+			if ( MAX_SCRIPTS_ADDED <= window._script_added_cout ) {
+				remove_last_appended_script_child(whereScipt)
+			}
+			whereScipt.appendChild(scriptEl);
+		}
+	}
 }
 
 
