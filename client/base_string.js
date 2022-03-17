@@ -1,3 +1,5 @@
+// MODULE: BASE STRING (windowized)
+
 //$>>	gen_nonce
 function gen_nonce() {
 	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))

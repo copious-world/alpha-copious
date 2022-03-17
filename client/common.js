@@ -76,7 +76,6 @@ function launch_simple_link(default_url,window_name) {
 
 //$$EXPORTABLE::
 /*
-gen_nonce
 ext_of_file
 clonify
 addscript
