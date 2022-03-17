@@ -48,36 +48,23 @@ function set_user_title(u_name) {
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
-function pc_getLocation() {
-  if (navigator.geolocation) {
-    var x = document.getElementById("wv-geo-location");
-    navigator.geolocation.watchPosition((position) => {  // watch position updates location at a system defined interval
-      x.innerHTML = `${position.coords.latitude},${position.coords.longitude}`
-      g_pc_current_locaion = { "latitude" : position.coords.latitude, "longitude" : position.coords.longitude }  // clone
-      pc_update_geo_location(g_pc_current_locaion)
-    });
-  } else { 
-    alert("Geolocation is not supported by this browser.");
-  }
-}
-
-
+$$script::pc_location.js<<
 
 $$script::common.js<<
-$$script::base_string.js<<
 
+$$script::app-dir/base_string.js<<
 
 $$script::https_checks.js<<
 
-$$script::crypto_wraps.js<<
+$$script::app-dir/crypto-hash.js<<
 
+$$script::app-dir/crypto-wraps.js<<
 
 $$script::one_table_db.js<<
 
-
 $$script::file_ops.js<<
 
-$$script::<git>//user_db.js<<
+$$script::app-dir/user_db.js<<
 
 // ---- ---- ---- ---- ---- 
 
@@ -89,7 +76,7 @@ $$script::captcha_service.js<<
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
-$$script::<git>//window_app.js<<
+$$script::app-dir/window_app.js<<
 
 // independent floating box..
 
