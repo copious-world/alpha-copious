@@ -1,3 +1,6 @@
+// MODULE: common (windowized)
+
+
 //$>>	ext_of_file
 function ext_of_file(file_name) {
 	let idx = file_name.lastIndexOf('.')

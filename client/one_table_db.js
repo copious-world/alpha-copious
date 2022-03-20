@@ -1,3 +1,5 @@
+// MODULE: ONE TABLE(windowized)
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 //>>  AppDBWrapper
@@ -10,7 +12,6 @@ window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndex
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
-
 
 
 /*
@@ -139,6 +140,7 @@ class AppDBWrapper {
                 let cursor = event.target.result;
                 if ( cursor ) {
                     this._session_name_list.push(cursor.value.name)
+                    this.application_total_entry(cursor.value)
                     cursor.continue();
                 } else {
                     this.application_update_session_name_selections(this.current_session_name,this._session_name_list)
@@ -516,6 +518,10 @@ class AppDBWrapper {
 
     application_update_session_name_selections(sess_name,name_list) {
 
+    }
+
+    application_total_entry(sess_obj) {
+        
     }
 
 }

@@ -1,5 +1,4 @@
-// MODULE: CRYPTO HASH (windowized)
-
+// MODULE: GLOBAL CRYPTO (windowized)
 
 //$>>	setup_window_crypto
 function setup_window_crypto() {

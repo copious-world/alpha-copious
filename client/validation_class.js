@@ -1,8 +1,11 @@
+// MODULE: VALIDATION CLASS (windowized)
 
 // === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 // VALIDATION
 // -- -- -- -- -- -- -- -- -- -- -- -- -- 
 //
+
+
 //$>>	ValidationContainer
 //                                          <<var-depends>> g_ComponentErrorsActivated (?)
 class ValidationContainer {

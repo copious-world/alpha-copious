@@ -1,3 +1,5 @@
+// MODULE: DRAG DIV (windowized)
+
 // Make the DIV element draggagle:
 
 //$>>	dragElement

@@ -1,3 +1,4 @@
+// MODULE: FILE OPS (windowized)
 
 //$>>	get_file_from_file_element
 // called in response to a file selection through the system file browser

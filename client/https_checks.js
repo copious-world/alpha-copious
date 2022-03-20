@@ -1,4 +1,4 @@
-
+// MODULE: HTTPS CHECKS (windowized)
 
 //$>>	not_https_switch
 // switch to HTTPS before doing any ops that may require a data exchange
