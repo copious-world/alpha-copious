@@ -5,7 +5,7 @@ const HASH_SEP = '!'
 
 // >> import
 //modularize>> import * as base64 from "../modules/base64.js";
-//modularize>> import * as base64 from "../modules/base_string.js";
+//modularize>> import * as base_string from "../modules/base_string.js";
 //<<
 
 
