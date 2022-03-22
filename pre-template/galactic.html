@@ -30,22 +30,8 @@ $$files::nav_bar_B.html<<
 $$files::footer_A.html<<
 </body>
 </html>
-<script type="module" >
-	import * as UCWID from "./UCWID"
-	UCWID.windowize()
-</script>
 <script>
 
-
-
-function set_user_title(u_name) {
-	let el = document.getElementById('active-user-title')
-	if ( el  && u_name && (typeof u_name === "string") ) {
-		el.innerHTML = u_name
-	}
-}
-
-// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
 $$script::pc_location.js<<
@@ -54,23 +40,34 @@ $$script::common.js<<
 
 $$script::https_checks.js<<
 
+$$script::post_fetch.js<<
+
+// ---- ---- ---- ---- ---- 
+
 $$script::app-dir/base64.js<<
 
 $$script::app-dir/crypto-hash.js<<
 
 $$script::app-dir/crypto-wraps.js<<
 
+$$script::app-dir/cwid.js<<
+
+$$script::app-dir/ucwid.js<<
+
 $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
 $$script::app-dir/user_db.js<<
 
-// ---- ---- ---- ---- ---- 
-
-$$script::post_fetch.js<<
-
-//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+function set_user_title(u_name) {
+	let el = document.getElementById('active-user-title')
+	if ( el  && u_name && (typeof u_name === "string") ) {
+		el.innerHTML = u_name
+	}
+}
 
 $$script::app-dir/window_app.js<<
 
