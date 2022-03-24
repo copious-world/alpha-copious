@@ -1,3 +1,11 @@
+<style>
+	.glactic-id-link {
+		margin: 6px;
+		padding: 2px;
+		cursor: pointer;
+		font-weight: bold;
+	}
+</style>
 <div id="intergalactic-explain" class="solid_able" style="z-index:1000" >
 	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
 		<span class="closer_x" onmousedown="closesolid('intergalactic-explain')">x</span>
@@ -63,8 +71,58 @@
 		</div>
 		<div style="padding-left:2%;background-color: rgb(255, 254, 245);color:rgb(7, 104, 7);" >
 			<!-- link goes here -->
-			<a href="https://www.copious.world/intergalatic-ID" target="_blank">Follow this link to create your intergalactic identity</a>
+			<span class="glactic-id-link" onclick="galactic_id_opener()">Follow this link to create your intergalactic identity</span>
 		</div>
 		<br><br><br><br><br><br><br>&nbsp;
 	</div>
 </div>
+<script>
+	window.addEventListener("message", (ev) => {
+		let mobj = ev.data
+		if ( mobj && (mobj.category === "ucwid") ) {
+			if ( mobj.direction === "from-ucwid-builder" ) {
+				let ucwid = ev.data.ucwid
+				if ( mobj.action === "close" ) {
+					ev.source.close();
+				} else if ( mobj.action === "inject" ) {
+					if ( typeof contact_value_insert === "function" ) {
+						contact_value_insert(ucwid)
+					}
+					if ( typeof login_value_insert === "function" ) {
+						login_value_insert(ucwid)
+					}
+				}
+			}
+		}
+	});
+	
+	
+	function galactic_id_opener() {
+		let child = window.open("{{intergalactic_id}}", "IGID");
+		if ( child ) {
+			let interval = setInterval(() => {
+				try {
+					if ( child.frames ) {
+						// we're here when the child window returned to our domain
+						clearInterval(interval);
+						child.postMessage({ message: "requestResult" }, "*");
+					}
+				}
+				catch(e) {
+					// we're here when the child window has been navigated away or closed
+					if (child.closed) {
+						clearInterval(interval);
+						alert("closed");
+						return; 
+					}
+					// navigated to another domain  
+					leftDomain = true;
+				}
+			}, 500);
+		} else {
+			console.log("no child window")
+		}
+		//
+	}
+	</script>
+	
