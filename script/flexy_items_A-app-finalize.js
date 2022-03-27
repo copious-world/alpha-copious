@@ -2,9 +2,37 @@
 // // // ----------------- // // // ----------------- // // // -----------------
 // // // ----------------- // // // ----------------- // // // -----------------
 
-let chat_opener = () => {}
-let blog_opener = () => {}
-let demos_opener = () => {}
+let login_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info === false ) {
+		await open_intergalactic_session_window("login",human_info,{})
+	}
+}
+let chat_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info !== false ) {
+		await open_intergalactic_session_window("chat",human_info,human_info.session)
+	} else {
+		if ( typeof suggest_login === "function" ) suggest_login("chat")
+		else alert("login to chat")
+	}
+}
+let blog_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info !== false ) {
+		await open_intergalactic_session_window("blog",human_info,human_info.session)
+	} else {
+		open_public_window("blog")
+	}
+}
+let demos_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info !== false ) {
+		await open_intergalactic_session_window("demos",human_info,human_info.session)
+	} else {
+		open_public_window("demos")
+	}
+}
 
 
 function show_intergalactic_explain() {
@@ -44,7 +72,7 @@ async function run_finalizers() {
 }
 //
 run_finalizers()
-setupLogoutRestoration()
+if ( typeof setupLogoutRestoration === "function" ) setupLogoutRestoration()
 
 //
 window.onresize = resize;

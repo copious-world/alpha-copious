@@ -3,9 +3,10 @@
 //$>>	get_file_from_file_element
 // called in response to a file selection through the system file browser
 //
-function get_file_from_file_element(file_el) {
+function get_file_from_file_element(file_el_id) {
 	let p = new Promise((resolve,reject) => {
-		let file_el = document.getElementById(file_el)
+		let file_el = document.getElementById(file_el_id)
+		if ( !file_el ) reject(false)
 		file_el.addEventListener('change',(ev) => {
 			//
 			let file = file_el.files[0]
@@ -28,6 +29,7 @@ function get_file_from_file_element(file_el) {
 }
 
 
+
 //$>>	generic_downloader
 function generic_downloader(dataStr) {
 	let downloadlink = document.getElementById("identity-download-link")
@@ -47,6 +49,6 @@ function generic_downloader(dataStr) {
 
 //$$EXPORTABLE::
 /*
-get_file
+get_file_from_file_element
 generic_downloader
 */

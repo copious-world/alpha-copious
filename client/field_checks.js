@@ -53,7 +53,7 @@ function errorMessage(msg) {
 
 //$>>	colorize
 function colorize(theField,colr) {
-	theField.style.borderColor = colr;
+	if ( theField ) theField.style.borderColor = colr;
 }
 
 

@@ -22,7 +22,7 @@ function login_process() {
 			register.style.display = "none";
 		}
 	}
-	login_opening_view()	// app implements
+	if ( typeof login_opening_view === "function" ) login_opening_view()	// app implements
 }
 
 //$>>	hide_login_process

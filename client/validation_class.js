@@ -56,14 +56,6 @@ class ValidationContainer {
         this.formErrorMessage(msg);
     }
 
-    emailFormatError() {
-        this.formErrorMessage("Email does not match a known email format.");
-    }
-
-    passwordFieldError(whichFields) {
-        this.formErrorMessage(`${whichFields} are required to have the same value`);
-    }
-
     //
     checkFormValid() {
         //
@@ -92,16 +84,46 @@ class ValidationContainer {
             return(false)
         }
         //
-        let emailFields = this.checks.email
-        emailFields.forEach(e_field => {
-            let c = this.fields[e_field]
-            if ( !checkEmailField(c) ) {
-                this.emailFormatError();
-                colorize(c,this.error_text_color)
-                return(false);
-            }
-        })
+        if ( !this.checkEmails() ) return false
+        if ( !this.checkPasswords() ) return false
         //
+        return(true);
+    }
+
+    checkEmails() { return false }
+    checkPasswords() { return true }
+    
+    switchCaptchaDisplay(on_off) {
+        if ( on_off ) {
+            this.modal.style.display = "block";  // show captcha
+            this.form.style.display = "none"
+        } else {
+            this.modal.style.display = "none";  // show captcha
+            this.form.style.display = "block"
+        }
+    }
+}
+
+
+//$>>	ValidationContainerPassword
+//
+class ValidationContainerPassword extends ValidationContainer {
+
+    constructor(props) {
+        super(props)
+    }
+
+    //
+    passwordFieldError(whichFields) {
+        this.formErrorMessage(`${whichFields} are required to have the same value`);
+    }
+
+    emailFormatError() {
+        this.formErrorMessage("Email does not match a known email format.");
+    }
+
+    //
+    checkPasswords() {
         if ( this.password_rules && (typeof this.password_rules === "function") ) {
             if ( this.checks.passwords && (this.checks.passwords.length) ) {
                 let pvalues = this.checks.passwords.map(pfield => {
@@ -124,25 +146,42 @@ class ValidationContainer {
                 this.hideFormErrorMessage()
             }
         }
-        //
-        return(true);
+        return true
     }
-    
-    switchCaptchaDisplay(on_off) {
-        if ( on_off ) {
-            this.modal.style.display = "block";  // show captcha
-            this.form.style.display = "none"
-        } else {
-            this.modal.style.display = "none";  // show captcha
-            this.form.style.display = "block"
-        }
-    }
+
 }
 
+
+//$>>	ValidationContainerPassword_Email
+//
+class ValidationContainerPassword_Email extends ValidationContainerPassword {
+
+    constructor(props) {
+        super(props)
+    }
+
+    checkEmails() {
+        let emailFields = this.checks.email
+        if ( emailFields ) {
+            emailFields.forEach(e_field => {
+                let c = this.fields[e_field]
+                if ( !checkEmailField(c) ) {
+                    this.emailFormatError();
+                    colorize(c,this.error_text_color)
+                    return(false);
+                }
+            })    
+        }
+        return true
+    }
+
+}
 
 
 
 //$$EXPORTABLE::
 /*
+ValidationContainerPassword_Email
+ValidationContainerPassword
 ValidationContainer
 */

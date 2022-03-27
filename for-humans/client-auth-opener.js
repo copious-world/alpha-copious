@@ -1,34 +1,26 @@
 
+function human_app_window_initializer_message(target_window,human_public_identity,display_page,service_tandems) {
+	let the_message = {
+		"relationship" : 'of-this-world-opener',
+		"revise_source" : `https://${g_siteURL}/${display_page}`,		/// don't forget resource is translated by nginx or other
+		"tandems" : service_tandems,
+		"human_check" : human_public_identity
+	}
+	let the_message_str = JSON.stringify(the_message)
+	target_window.postMessage(the_message_str)
+	target_window.focus()
+}
 
 function launch_app_window_for_human(target_window,human_public_identity,service_tandems,display_page,window_name) {
 	if ( target_window && !(target_window.closed) ) {
 		target_window.onload = (ev) => {
-			let the_message = {
-				"relationship" : 'of-this-world-opener',
-				"revise_source" : `https://${g_siteURL}/${display_page}`,		/// don't forget resource is translate by nginx or other
-				"tandems" : service_tandems,
-				"huamn_check" : human_public_identity
-			}
-			let the_message_str = JSON.stringify(the_message)
-			target_window.postMessage(the_message_str)
+			human_app_window_initializer_message(target_window,human_public_identity,display_page,service_tandems)
 		}
-		target_window.focus()
 		return target_window
 	} else {
 		let launched = window.open(`https://${human_public_identity}/index.html`,window_name)
 		if ( launched ) {
-			let t_window = launched
-			launched.onload = (ev) => {
-				let the_message = {
-					"relationship" : 'of-this-world-opener',
-					"revise_source" : `https://${g_siteURL}/${display_page}`,	/// don't forget resource is translate by nginx or other
-					"tandems" : service_tandems,
-					"huamn_check" : human_public_identity
-				}
-				let the_message_str = JSON.stringify(the_message)
-				t_window.postMessage(the_message_str)
-			}
-			launched.focus()
+			human_app_window_initializer_message(launched,human_public_identity,display_page,service_tandems)
 			return launched
 		}
 		return false
@@ -58,3 +50,13 @@ window.addEventListener("message", (event) => {
 }, false);
 
 
+
+async function public_intergalactic_id_upload() {
+	try {
+		let json = await get_file_from_file_element("galactic-upload-id")
+		let public_id = JSON.parse(json)
+		await injest_identity_to_current_id(public_id)
+	} catch(e) {
+
+	}
+}
