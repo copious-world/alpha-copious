@@ -3,31 +3,6 @@
 // sometimes code doesn't want to be a module. But, there is a module version of this in npm crypto-wraps
 //
 
-//$>>	gen_public_key
-async function gen_public_key(user_info,store_info) {
-	let keys = await galactic_user_starter_keys()
-	//
-	user_info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
-	user_info.signer_public_key = keys.signer_pk_str
-	//
-	let aes_key = await gen_cipher_key()
-	let storable_key = await aes_to_str(aes_key) 
-	let nonce = gen_nonce()
-	//
-	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
-		'priv_key' : keys.priv_key,
-		'signer_priv_key' : keys.signer_priv_key,
-		'signature_protect' : {
-			"key" : storable_key,
-			"nonce" : nonce
-		}
-	}
-	user_info.biometric = await protect_hash(privates,aes_key,nonce,user_info.biometric)
-	store_info(user_info,privates)
-}
-
-
-
 // ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -373,6 +348,7 @@ async function gen_public_key(info,store_info) {
 	//
 	info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
 	info.signer_public_key = keys.signer_pk_str
+	info.axiom_public_key = keys.axiom_pk_str
 	//
 	let aes_key = await gen_cipher_key()
 	let storable_key = await aes_to_str(aes_key) 
@@ -381,6 +357,7 @@ async function gen_public_key(info,store_info) {
 	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
 		'priv_key' : keys.priv_key,
 		'signer_priv_key' : keys.signer_priv_key,
+		'axiom_priv_key' : keys.axiom_priv_key,
 		'signature_protect' : {
 			"key" : storable_key,
 			"nonce" : nonce
@@ -389,7 +366,6 @@ async function gen_public_key(info,store_info) {
 	info.biometric = await protect_hash(privates,aes_key,nonce,info.biometric)
 	if ( store_info ) store_info(info,privates)
 }
-
 
 //$>>	unwrapped_aes_key
 /*
@@ -433,7 +409,7 @@ async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
 //            -- local_private : as a buffer the result of importing the key
 // Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
 */
-function derive_aes_key(remote_pub_key_buffer,local_private) {
+async function derive_aes_key(remote_pub_key_buffer,local_private) {
 	let derived_aes = await g_crypto.deriveKey(
 	  {
 		name: "ECDH",

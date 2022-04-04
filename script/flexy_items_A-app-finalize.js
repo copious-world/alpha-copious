@@ -5,7 +5,7 @@
 let login_opener = async (evt) => {
 	let human_info = await intergalactic_session_going()
 	if ( human_info === false ) {
-		await open_intergalactic_session_window("login",human_info,{})
+		await open_intergalactic_session_window("login",human_info,false)
 	}
 }
 let chat_opener = async (evt) => {
@@ -45,6 +45,12 @@ function show_intergalactic_explain() {
 
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+if ( typeof visual_session_indicator === "function" ) {
+	visual_session_indicator = (boolval) => {
+				/// show hide indicator
+	}
+}
 
 // initial validation application is contact
 g_CurContainer = null // will be initilialized within the finalizers

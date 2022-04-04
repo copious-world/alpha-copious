@@ -1,5 +1,5 @@
 //
-// MODULE: CRYPTO WRAPS (windowized)
+// MODULE: CWID (windowized)
 
 const HASH_SEP = '!'
 
@@ -14,14 +14,15 @@ let formats = false;
 let multibase = false;
 
 async function fetch_tables() {
-
-    formats = await fetch('../assets/formats.json')
-    .then(response => response.json());
-
-    multibase = await fetch('../assets/multibase.json')
+    try {
+        formats = await fetch('../assets/formats.json')
         .then(response => response.json());
-
-    return true
+    
+        multibase = await fetch('../assets/multibase.json')
+            .then(response => response.json());
+        return true
+    } catch (e) {}
+    return false
 }
 
 setTimeout(fetch_tables,0)

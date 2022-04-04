@@ -66,20 +66,29 @@ function addstyle(script) {
     }
 }
 
+
+
 //$>>	launch_simple_link
-//                                                  <<depends>> errorMessage
-function launch_simple_link(default_url,window_name) {
-	let launched = false
+//
+function normalized_launch_url(default_url) {
+	let uri_of_launch = ""
 	if ( default_url.indexOf('http://') === 0 ) {
-		launched = window.open(default_url,window_name)
+		uri_of_launch = default_url
 	} else {
-		launched = window.open(`https://${default_url}/`,window_name)
+		uri_of_launch = `https://${default_url}/`
 	}
+	return uri_of_launch
+}
+
+//                                                  <<depends>> errorMessage, normalized_launch_url
+function launch_simple_link(default_url,window_name) {
+	let uri_of_launch = normalized_launch_url(default_url)
+	let launched = window.open(uri_of_launch,window_name)
 	//
 	if ( !launched ) {
-		errorMessage(`could not open window or tab for link ${default_url}`)
+		errorMessage(`could not open window or tab for link ${uri_of_launch}`)
 	}
-	return launched
+	return [launched,uri_of_launch]
 }
 
 //$>>	service_url
@@ -94,10 +103,11 @@ function service_url(application) {
 function open_public_window(application) {
     let tab_title = application.toUpperCase()
 	let w_url = service_url(application)
-	let child = launch_simple_link(w_url, ("{{origin}}" + tab_title))
+	let [child,uri_of_launch]  = launch_simple_link(w_url, ("{{origin}}" + tab_title))
     if ( child ) {
         if ( typeof child.no_session === "function" ) child.no_session()      // same domain can call child method
     }
+	return uri_of_launch
 }
 
 
@@ -105,7 +115,7 @@ function open_public_window(application) {
 const MAX_WINDOW_OPENER_TRYS_common = 10
 //
 function open_cors_window(default_url,window_name) {
-	let child = launch_simple_link(default_url,window_name)
+	let [child,uri_of_launch] = launch_simple_link(default_url,window_name)
 	if ( child ) {
         let p = new Promise((resolve,reject) => {
 			let count = 0
@@ -114,8 +124,7 @@ function open_cors_window(default_url,window_name) {
                 try {
                     if ( child.frames ) {
                         clearInterval(interval);
-                        child.postMessage({ "category": "q-alive" }, "*");
-                        resolve(child)
+                        resolve([child,uri_of_launch])
                     } else if ( count > MAX_WINDOW_OPENER_TRYS_common ) {
 						clearInterval(interval);
 						resolve(false)

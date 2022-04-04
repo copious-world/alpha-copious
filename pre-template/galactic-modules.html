@@ -44,29 +44,25 @@ $$script::post_fetch.js<<
 
 // ---- ---- ---- ---- ---- 
 
-$$script::base64.js<<
+$$script::app-dir/base64.js<<
 
-$$script::crypto-hash.js<<
+$$script::app-dir/crypto-hash.js<<
 
-$$script::crypto-wraps.js<<
+$$script::app-dir/crypto-wraps.js<<
 
-$$script::cwid.js<<
+$$script::app-dir/cwid.js<<
 
-$$script::ucwid.js<<
+$$script::app-dir/ucwid.js<<
 
 $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
-$$script::app-dir/user_db.js<<
-
-$$script::for-humans/shared_constants.js<<
-
-$$script::for-humans/human_frame_client.js<<
-
-$$script::for-humans/id_builder_page_tab_com.js<<
+$$for-humans::human_frame_client.js<<
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
+$$script::app-dir/user_db.js<<
 
 function set_user_title(u_name) {
 	let el = document.getElementById('active-user-title')

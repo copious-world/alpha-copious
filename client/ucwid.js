@@ -1,6 +1,6 @@
 
 //
-// MODULE: CRYPTO WRAPS (windowized)
+// MODULE: UCWID (windowized)
 
 // >> import
 //modularize>> import {CWID} from './client/hashing.js';

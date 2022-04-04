@@ -91,9 +91,61 @@ async function postData(url = '', data = {}, creds = 'omit', do_stringify = true
 }
 
 
+//$>>	post_submit
+function hide_interface_box() {
+	let display = document.getElementById('interface-box')
+	if ( display ) {
+		display.style.visibility = "hidden"
+		display.style.display = "none"
+	}
+}
+
+function hide_box(bxname) {
+	let display = document.getElementById(bxname)
+	if ( display ) {
+		display.style.visibility = "hidden"
+		display.style.display = "none"
+	}
+}
+
+function show_box(bxname) {
+	let display = document.getElementById(bxname)
+	if ( display ) {
+		display.style.visibility = "visible"
+		display.style.display = "block"
+	}
+}
+
+hide_box('error-box')
+hide_box('success-box')
+
+async function post_submit(fields) {
+	let bdy = {}
+	fields.forEach(element => {
+		let fld = document.getElementById(element)
+		if ( fld ) {
+			bdy[element] = fld.value
+		}
+	});
+	let url = bdy.post_url
+	if ( url ) {
+		delete bdy.post_url
+		//
+		let resp = await postData(url, bdy)
+		//
+		if ( resp ) hide_interface_box()
+		if ( resp && (resp.OK === 'true') ) {
+			show_box('success-box')
+		} else {
+			show_box('error-box')
+		}
+	}
+}
+
 //$$EXPORTABLE::
 /*
 fetchEndPoint
 fetchUrl
 postData
+post_submit
 */
