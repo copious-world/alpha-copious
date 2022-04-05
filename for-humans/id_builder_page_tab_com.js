@@ -92,6 +92,8 @@ function install_frame_page_response() {
             let action = mobj.action
             let direction = mobj.direction
             //
+
+            FRAME_PAGE_TO_BUILDER    
             if ( direction === FRAME_PAGE_TO_BUILDER ) {
                 if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                     if ( action === FRAME_COMPONENT_RESPONDING ) {
@@ -125,7 +127,7 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
         g_frame_cors_uri = uri_of_launch
         let message = {
             "category": FRAME_COMPONENT_SAY_ALIVE,
-            "action" : FRAME_COMPONENT_RESPONDING,
+            "action" : FRAME_COMPONENT_RESPOND,
             "data" : false
         }
         let p = alive_response("human_frame")
@@ -163,7 +165,7 @@ function tell_site_page(message) {
     msg.relationship = BUILDER_RELATES_TO_SITE
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_site_page.postMessage(message_str,'*')
     return true
@@ -176,7 +178,7 @@ function tell_frame_page(message) {
     msg.relationship = BUILDER_ACTION_TO_FRAME
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
     return true

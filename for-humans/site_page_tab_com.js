@@ -187,7 +187,7 @@ function tell_id_builder_page(message) {
     msg.relationship = SITE_RELATES_TO_BUILDER
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_id_builder_page.postMessage(message_str,g_id_builder_cors_uri)
     return true
@@ -200,7 +200,7 @@ function tell_frame_page(message) {
     msg.relationship = SITE_RELATES_TO_FRAME
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,g_frame_cors_uri)
     return true
@@ -214,7 +214,7 @@ function relay_to_pages(message) {
     msg.relationship = SITE_RELATES_TO_ALL
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
 }

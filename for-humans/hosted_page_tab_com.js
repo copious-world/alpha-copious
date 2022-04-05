@@ -97,7 +97,7 @@ function tell_frame_page(message) {
     msg.relationship = APP_RELATES_TO_FRAME
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
     return true
@@ -110,7 +110,7 @@ function relay_to_pages(message) {
     msg.relationship = APP_RELATES_TO_ALL
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
 }

@@ -14,6 +14,7 @@ if ( typeof g_message_template === undefined ) {
 
 let g_site_page = false
 let g_hosted_app_page = false       // child iframe
+let g_id_builder_page = false
 let g_frame_page_service_worker = false
 
 //
@@ -24,11 +25,13 @@ let human_frame_application_id_installation = (id_data) => {}
 let human_frame_hosted_page_use_cases = (relationship,action,data) => {}
 //
 function human_frame_application_load_app_page(data) {
-    let data = mobj.revise_source
-    let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
-    if ( frame ) {
-        frame.src = source
-    }   
+    let source = data.revise_source
+    if ( source ) {
+        let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
+        if ( frame ) {
+            frame.src = source
+        }    
+    }
 }
 
 
@@ -79,6 +82,7 @@ function install_site_page_response() {
                 let direction = mobj.direction
                 //
                 if ( direction === SITE_PAGE_TO_FRAME ) {
+                    g_site_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
                             site_reponding_alive()
@@ -154,6 +158,7 @@ function install_id_builder_page_response() {
                 let direction = mobj.direction
                 //
                 if ( direction === BUILDER_PAGE_TO_FRAME ) {
+                    g_id_builder_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
                             builder_reponding_alive()
@@ -161,10 +166,12 @@ function install_id_builder_page_response() {
                     } else if ( relationship === BUILDER_ACTION_TO_FRAME ) {
                         let data = mobj.data
                         switch ( category ) {
-                            case FAME_ACTION_INSTALL : {
-                                human_frame_application_id_installation(data)
+                            case FRAME_COMPONENT_MANAGE_ID : {
+                                if ( action === FAME_ACTION_INSTALL ) {
+                                    human_frame_application_id_installation(data)
+                                }
                                 break;
-                            }
+                            }                            
                             default: {
                                 break;
                             }
@@ -203,7 +210,7 @@ function tell_site_page(message) {
     msg.relationship = FRAME_PAGE_RELATES_TO_SITE
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_site_page.postMessage(message_str,'*')
     return true
@@ -217,7 +224,7 @@ function tell_hosted_app_page(message,relationship) {
     msg.relationship = (relationship === undefined) ?  FRAME_ACTION_TO_APP : relationship
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_hosted_app_page.postMessage(message_str,'*')
     return true
@@ -237,7 +244,7 @@ function tell_service_worker(message) {
     msg.relationship = FRAME_PAGE_RELATES_TO_SERVICE_WORKER
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page_service_worker.postMessage(message_str,'*')
     return true
@@ -258,9 +265,9 @@ function tell_id_builder_page(message) {
     msg.relationship = FRAME_PAGE_RELATES_TO_BUILDER
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
-    g_id_builder_page.postMessage(message_str,g_id_builder_cors_uri)
+    g_id_builder_page.postMessage(message_str,'*') //g_id_builder_cors_uri)
     return true
 }
 
