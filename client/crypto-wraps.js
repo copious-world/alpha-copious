@@ -6,6 +6,7 @@
 // ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ----
 
+let cwraps = window 
 
 //$>>	gen_nonce
 /*
@@ -82,7 +83,7 @@ function pc_keypair_promise() {  // return
 function axiom_keypair_promise() {
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
-            'name': "ECDSA",
+            'name': "ECDH",
             'namedCurve': "P-384"
         },
         true,
@@ -220,7 +221,6 @@ async function galactic_user_starter_keys(selector) {
 		let sign_priv_exported = await g_crypto.exportKey("jwk",signer_priv_key);
 		sign_priv_key_str =  JSON.stringify(sign_priv_exported);
 	}
-
 
 	let axiom_pub_key_str = false
 	let axiom_priv_key_str = false

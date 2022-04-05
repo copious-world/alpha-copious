@@ -20,7 +20,7 @@ class UCWID {
         this.normalizer_wait = false
         this.normalizer_promise = false
         // For non module code not relying on a server to provide lazy import (Normalized must be specified)
-        if ( typeof this.normalizer === "function" ) {
+        if ( typeof conf.normalizer === "function" ) {
             this.normalizer = conf.normalizer(conf)
         } else {
             throw new Error("no normalizer")

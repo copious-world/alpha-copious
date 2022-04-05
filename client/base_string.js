@@ -1,5 +1,8 @@
 // MODULE: BASE STRING (windowized)
 
+
+let base_string = window
+
 //$>>	gen_nonce
 function gen_nonce() {
 	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
