@@ -127,11 +127,11 @@ function open_cors_window(default_url,window_name) {
                         resolve([child,uri_of_launch])
                     } else if ( count > MAX_WINDOW_OPENER_TRYS_common ) {
 						clearInterval(interval);
-						resolve(false)
+						resolve([false,false])
 					}
                 } catch(e) {
                     clearInterval(interval);
-                    resolve(false)
+                    resolve([false,false])
                 }
             }, 500);
         })
@@ -139,7 +139,7 @@ function open_cors_window(default_url,window_name) {
     } else {
         console.log("no child window")
     }
-	return false
+	return [false,false]
 }
 
 

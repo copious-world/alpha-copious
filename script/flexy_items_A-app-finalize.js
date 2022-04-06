@@ -5,7 +5,7 @@
 let login_opener = async (evt) => {
 	let human_info = await intergalactic_session_going()
 	if ( human_info === false ) {
-		await open_intergalactic_session_window("login",human_info,false)
+		await open_intergalactic_session_window("login",g_current_pub_identity,false)
 	}
 }
 let chat_opener = async (evt) => {
