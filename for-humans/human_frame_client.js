@@ -1,4 +1,4 @@
-
+//  human client frame
 async function intergalactic_session_going() {
     try {
         let human_public_identity = await exists_galactic_identity()
@@ -17,8 +17,8 @@ async function intergalactic_session_going() {
 
 
 //
-function set_current_galactic_identity(public_id) {
-    g_current_user_id = public_id.ucwid
+function set_current_galactic_user(public_id) {
+    g_current_user_id = public_id.ccwid
     g_current_user_name = public_id.name
     g_current_pub_identity = public_id
 }
@@ -29,13 +29,27 @@ async function exists_galactic_identity() {
     if ( g_current_pub_identity !== false ) {
         return g_current_pub_identity
     }
-    let public_id = await g_human_user_storage.get_user(name_key)
-    if ( public_id ) {
-        set_current_galactic_identity(public_id)
-        return g_current_pub_identity
+    let name_key = false
+    let users = await get_known_users()
+    if ( Array.isArray(users) ) {
+        for ( let u of users ) {
+            let u_obj = u[0]
+            if ( u_obj !== undefined ) {  // and is this the current user??
+                let name_key = u_obj.name
+                let public_id = await g_human_user_storage.get_user(name_key)
+                if ( public_id ) {
+                    if ( (typeof public_id.data === "object") && (typeof public_id.data["user-meta"] === "string")) {
+                        public_id = JSON.parse(public_id.data["user-meta"])
+                    }
+                    set_current_galactic_user(public_id)
+                    return g_current_pub_identity
+                }
+            }
+        }
     }
     return false
 }
+
 
 async function add_galactic_identity(public_identity) {
     if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
@@ -72,7 +86,7 @@ function set_current_galactic_identity(descr) {
 
 async function injest_identity_to_current_id(public_id) {
 	await add_galactic_identity(public_id)
-	set_current_galactic_identity(public_id)
+	set_current_galactic_user(public_id)
 	set_contact_identity()
 	initLogin()
 }
