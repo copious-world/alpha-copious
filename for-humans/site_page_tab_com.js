@@ -142,6 +142,7 @@ let url_for_use = (frame_use) => {
     return false
 }
 
+
 async function open_app_page_in_human_frame(human_frame_url,frame_use) {
     let [child,uri_of_launch] = await open_cors_window(human_frame_url,("HUMAN-FRAME-" + frame_use))
     if ( child ) {
