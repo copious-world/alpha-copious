@@ -94,6 +94,19 @@ function install_site_page_response() {
                                 human_frame_application_load_app_page(data)
                                 break;
                             }
+                            case SITE_TO_FRAME_SESSIONS: {
+                                let session = data
+                                let msg = {
+                                    "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                    "action" : FRAME_START_SESSION,
+                                    "data" : {
+                                        "session" : session,
+                                        "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                    }
+                                }
+                                tell_hosted_app_page(msg)
+                                break;
+                            }
                             default: {
                                 break;
                             }

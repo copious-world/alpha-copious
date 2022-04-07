@@ -2,7 +2,7 @@
 // SHARED CONSTANTS
 
 
-// SITE PATE
+// SITE PAGE
 //
 const SITE_PAGE_TO_FRAME = "site_page_to_frame"
 const SITE_PAGE_TO_BUILDER = "site_page_to_builder"
@@ -46,10 +46,15 @@ const FAME_ACTION_INSTALL = "install-id"
 const FAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
+const FRAME_WANTS_SESSION = "get-session"
 
 // categories
 const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
 const FRAME_COMPONENT_MANAGE_ID = "m-igid"
+const HOST_APP_PERSONALIZATION = "personalization"
+const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
+const SITE_TO_FRAME_SESSIONS = "transfer-session"
+const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 
 
 

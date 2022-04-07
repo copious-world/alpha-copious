@@ -63,7 +63,7 @@ let application_specific_handlers = (category,action,relationship,params) => {}
 
 async function hosted_page_application_handlers(category,action,relationship,params) {
     switch ( category ) {
-        case "personalization" : {
+        case HOST_APP_PERSONALIZATION : {
             if ( typeof injest_personalization === "function" ) {
                 await injest_personalization(action,params)
                 let message = {
@@ -75,7 +75,7 @@ async function hosted_page_application_handlers(category,action,relationship,par
             }
             break;
         }
-        case "session" : {          /// a hosted page that does not start a session.
+        case FRAME_TO_HOSTED_APP_SESSIONS : {          /// a hosted page that does not start a session.
             if ( typeof injest_session === "function" ) {
                 await injest_session(action,params)
             }
