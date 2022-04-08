@@ -47,6 +47,8 @@ const FAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
 const FRAME_WANTS_SESSION = "get-session"
+const FRAME_HAS_PERSONALIZATION = "has-personalization"
+const SITE_WANTS_SIGNATURE = "send-sig-remote"
 
 // categories
 const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
@@ -55,6 +57,7 @@ const HOST_APP_PERSONALIZATION = "personalization"
 const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
 const SITE_TO_FRAME_SESSIONS = "transfer-session"
 const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
+const FRAME_TO_APP_SIGNATURE = "signed-data"
 
 
 

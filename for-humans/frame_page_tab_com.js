@@ -64,7 +64,22 @@ function builder_reponding_alive() {
     tell_id_builder_page(message)
 }
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+var g_current_session = false
+// PERSONALIZATION MESSAGES
+function update_preferences_frame(session) {
+    let msg = {
+        "category" : HOST_APP_PERSONALIZATION,
+        "action" : FRAME_HAS_PERSONALIZATION,
+        "data" : {
+            "session" : session,
+            "personalization" : g_current_pub_identity ? g_current_pub_identity.preferences : false
+        }
+    }
+    tell_hosted_app_page(msg)
+
+}
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // MESSAGE HANDLERS
@@ -96,6 +111,8 @@ function install_site_page_response() {
                             }
                             case SITE_TO_FRAME_SESSIONS: {
                                 let session = data
+                                g_current_session = session
+                                //
                                 let msg = {
                                     "category" : FRAME_TO_HOSTED_APP_SESSIONS,
                                     "action" : FRAME_START_SESSION,
@@ -105,6 +122,8 @@ function install_site_page_response() {
                                     }
                                 }
                                 tell_hosted_app_page(msg)
+                                //
+                                update_preferences_frame(session)
                                 break;
                             }
                             default: {

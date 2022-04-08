@@ -53,7 +53,6 @@ function install_frame_page_response() {
             }    
         }
     })
-
 }
 
 
@@ -61,17 +60,13 @@ let injest_personalization = false
 let injest_session = false
 let application_specific_handlers = (category,action,relationship,params) => {}
 
+let personalization = (post_params) => {}
+
 async function hosted_page_application_handlers(category,action,relationship,params) {
     switch ( category ) {
         case HOST_APP_PERSONALIZATION : {
             if ( typeof injest_personalization === "function" ) {
                 await injest_personalization(action,params)
-                let message = {
-                    "category": "credentials",
-                    "action" : "responding",
-                    "data" : false
-                }
-                tell_frame_page(message)
             }
             break;
         }
@@ -86,7 +81,6 @@ async function hosted_page_application_handlers(category,action,relationship,par
             break;
         }
     }
-
 }
 
 
