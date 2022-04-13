@@ -723,6 +723,33 @@ async function encipher_message(message,aes_key,nonce) {
 // 
 
 
+
+
+//$>>	derived_encipher_message
+/*
+// derived_encipher_message
+// Parameters:
+//        -- message :  a text string
+//        -- aes_key :  as CryptoKey
+//        -- nonce : as a string storing a buffer base64url
+// Returns: a base64url encoding of the enciphered buffer
+*/
+async function derived_encipher_message(message,remote_public_ky,local_private_ky,nonce) {
+	try {
+		if ( remote_public_ky && local_private_ky ) {
+			let aes_key = await derive_aes_key(remote_public_ky,local_private_ky)
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
+			let b8a = new Uint8Array(enciphered)
+			return to_base64_from_uint8array(b8a)
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+// 
+
 //$>>	decipher_message
 /*
 // decipher_message
@@ -803,6 +830,7 @@ aes_from_str
 key_signer
 verifier
 encipher_message
+derived_encipher_message
 decipher_message
 derived_decipher_message
 */

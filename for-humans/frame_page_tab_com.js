@@ -16,6 +16,9 @@ let g_site_page = false
 let g_hosted_app_page = false       // child iframe
 let g_id_builder_page = false
 let g_frame_page_service_worker = false
+let g_frame_broadcast_channel = false
+
+let g_this_page_instance_is_session_owner = false
 
 //
 const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
@@ -30,7 +33,7 @@ function human_frame_application_load_app_page(data) {
         let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
         if ( frame ) {
             frame.src = source
-        }    
+        }
     }
 }
 
@@ -41,6 +44,16 @@ function site_reponding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" :FRAME_COMPONENT_RESPONDING,
+        "data" : false
+    }
+    tell_site_page(message)
+}
+
+
+function worker_reponding_alive() {
+    let message = {
+        "category": FRAME_COMPONENT_SAY_ALIVE,
+        "action" : FRAME_COMPONENT_RESPONDING,
         "data" : false
     }
     tell_site_page(message)
@@ -112,6 +125,7 @@ function install_site_page_response() {
                             case SITE_TO_FRAME_SESSIONS: {
                                 let session = data
                                 g_current_session = session
+                                g_this_page_instance_is_session_owner = true
                                 //
                                 let msg = {
                                     "category" : FRAME_TO_HOSTED_APP_SESSIONS,
@@ -121,7 +135,8 @@ function install_site_page_response() {
                                         "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
                                     }
                                 }
-                                tell_hosted_app_page(msg)
+                                // tell_hosted_app_page(msg)
+                                tell_service_worker(msg)  // need to 
                                 //
                                 update_preferences_frame(session)
                                 break;
@@ -217,17 +232,125 @@ function install_id_builder_page_response() {
 }
 
 
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// OPENERS
 
 
 function install_service_worker_response() {
-
+    g_frame_page_service_worker.port.addEventListener("message", (event) => {
+        let page_source = event.origin
+        if ( page_source !== '*' ) {
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+                if ( direction === WORKER_TO_FRAME ) {
+                    if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+                        if ( action === FRAME_COMPONENT_RESPOND ) {
+                            worker_reponding_alive()
+                        }
+                    } else if ( relationship === WORKER_RELATES_TO_FRAME ) {
+                        let data = mobj.data
+                        switch ( category ) {
+                            // ??
+                            default: {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+            }    
+        }
+    })
 }
 
-//
-function load_service_worker() {
 
+function install_broadcast_channel() {
+    g_frame_broadcast_channel = new BroadcastChannel("human_frame_broadcast")
+    //
+    g_frame_broadcast_channel.onmessage = (event) => {
+        try {
+            let mobj = JSON.parse(event.data)
+            let category = mobj.category
+            let relationship = mobj.relationship
+            let action = mobj.action
+            let direction = mobj.direction
+            //
+            if ( direction === WORKER_TO_FRAME ) {
+                g_site_page = event.source
+                if ( relationship === WORKER_RELATES_TO_FRAME ) {
+                    let data = mobj.data
+                    switch ( category ) {
+                        case WORKER_TO_FRAME_SESSIONS: {
+                            let session = data
+                            switch ( action ) {
+                                case FRAME_STOP_SESSION: {
+                                    if (  g_current_session === session ) {
+                                        let msg = {
+                                            "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                            "action" : FRAME_STOP_SESSION,
+                                            "data" : {
+                                                "session" : session,
+                                                "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                            }
+                                        }
+                                        tell_hosted_app_page(msg)
+                                        g_current_session = false
+                                        if ( g_this_page_instance_is_session_owner ) {
+                                            msg.category = FRAME_TO_SITE_MANAGE_SESSION
+                                            tell_site_page(msg)
+                                        }
+                                    }
+                                    break;
+                                }
+                                case FRAME_WANTS_SESSION: 
+                                default: {
+                                    g_current_session = session
+                                    //
+                                    let msg = {
+                                        "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                        "action" : FRAME_START_SESSION,
+                                        "data" : {
+                                            "session" : session,
+                                            "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                        }
+                                    }
+                                    tell_hosted_app_page(msg)
+                                    update_preferences_frame(session)
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+        }
+    };
+}
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// WORKER
+
+
+//
+function load_human_frame_worker() {
+    g_frame_page_service_worker = new SharedWorker('./human_frame_worker.js');
+    if ( g_frame_page_service_worker ) {
+        try {
+            g_frame_page_service_worker.port.start();
+            install_service_worker_response()        
+        } catch (e) {
+            console.log(e)
+        }
+    }
 }
 
 
@@ -278,7 +401,7 @@ function tell_service_worker(message) {
     msg.category = message.category
     msg.data = message.data
     let message_str = JSON.stringify(msg)
-    g_frame_page_service_worker.postMessage(message_str,'*')
+    g_frame_page_service_worker.port.postMessage(message_str,'*')
     return true
 
 }
