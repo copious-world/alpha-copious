@@ -27,6 +27,10 @@ const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
 let human_frame_application_id_installation = (id_data) => {}
 let human_frame_hosted_page_use_cases = (relationship,action,data) => {}
 //
+//  human_frame_application_load_app_page
+//  -- Frame application loader -- loads the pages and then steps back
+//  -- It is up to the loaded page to initialize communication...
+//
 function human_frame_application_load_app_page(data) {
     let source = data.revise_source
     if ( source ) {

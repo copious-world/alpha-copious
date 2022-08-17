@@ -1,7 +1,7 @@
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // OPENERS
 
-let url_for_use = (frame_use) => {
+let url_for_use = (frame_use) => {   // default set later by app
     return false
 }
 

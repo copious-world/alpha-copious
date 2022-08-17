@@ -47,9 +47,9 @@ const WORKER_RELATES_TO_FRAME = "worker_request_action"
 // actions
 const FRAME_COMPONENT_RESPOND = "respond"
 const FRAME_COMPONENT_RESPONDING = "responding"
-const FAME_ACTION_LOAD_APP = "load-app"
-const FAME_ACTION_INSTALL = "install-id"
-const FAME_ACTION_INJECT = "inject"
+const FRAME_ACTION_LOAD_APP = "load-app"
+const FRAME_ACTION_INSTALL = "install-id"
+const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
 const FRAME_WANTS_SESSION = "get-session"
@@ -68,7 +68,7 @@ const WORKER_TO_FRAME_SESSIONS = "w-transfer-session"
 const FRAME_WORKER_TO_SESSIONS = "transfer-session"
 const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
-
+const FRAME_SIGNED = "yep-signed"
 
 let g_current_user_id = false
 let g_current_user_name = false
