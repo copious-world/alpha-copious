@@ -26,10 +26,21 @@ const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
 // 
 let human_frame_application_id_installation = (id_data) => {}
 let human_frame_hosted_page_use_cases = (relationship,action,data) => {}
+
+
 //
 //  human_frame_application_load_app_page
 //  -- Frame application loader -- loads the pages and then steps back
 //  -- It is up to the loaded page to initialize communication...
+//
+let g_captured_domain = false
+
+function if_logging_in_capture(source) {
+    if ( source.indexOf("login")  > 0 ) {
+        g_captured_domain = source.replace("login","$$$$")
+    }
+}
+
 //
 function human_frame_application_load_app_page(data) {
     let source = data.revise_source
@@ -37,7 +48,8 @@ function human_frame_application_load_app_page(data) {
         let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
         if ( frame ) {
             frame.src = source
-        }
+            if_logging_in_capture(source)
+        }    
     }
 }
 
@@ -84,6 +96,7 @@ function builder_reponding_alive() {
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 var g_current_session = false
+
 // PERSONALIZATION MESSAGES
 function update_preferences_frame(session) {
     let msg = {
@@ -122,7 +135,7 @@ function install_site_page_response() {
                     } else if ( relationship === SITE_RELATES_TO_FRAME ) {
                         let data = mobj.data
                         switch ( category ) {
-                            case FAME_ACTION_LOAD_APP : {
+                            case FRAME_ACTION_LOAD_APP : {
                                 human_frame_application_load_app_page(data)
                                 break;
                             }
@@ -218,7 +231,7 @@ function install_id_builder_page_response() {
                         let data = mobj.data
                         switch ( category ) {
                             case FRAME_COMPONENT_MANAGE_ID : {
-                                if ( action === FAME_ACTION_INSTALL ) {
+                                if ( action === FRAME_ACTION_INSTALL ) {
                                     human_frame_application_id_installation(data)
                                 }
                                 break;
@@ -236,6 +249,8 @@ function install_id_builder_page_response() {
 }
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// OPENERS
 
 
 function install_service_worker_response() {
@@ -436,3 +451,7 @@ function tell_id_builder_page(message) {
 
 install_application_page_response()
 install_id_builder_page_response()
+
+
+//
+// END OF FRAME PAGE TAB COM

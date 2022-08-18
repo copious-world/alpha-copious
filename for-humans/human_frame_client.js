@@ -1,4 +1,10 @@
+
+// ---->>>   FOR HUMANS  >> HUMAN FRAME CLIENT .JS
+
 //  human client frame
+
+let g_my_current_session = false
+
 async function intergalactic_session_going() {
     try {
         let human_public_identity = await exists_galactic_identity()
@@ -30,7 +36,7 @@ async function exists_galactic_identity() {
         return g_current_pub_identity
     }
     let name_key = false
-    let users = await get_known_users()
+    let users = await g_human_user_storage.get_known_users()
     if ( Array.isArray(users) ) {
         for ( let u of users ) {
             let u_obj = u[0]
@@ -92,3 +98,4 @@ async function injest_identity_to_current_id(public_id) {
 }
 
 
+// <<<----  ((END))  FOR HUMANS  >> HUMAN FRAME CLIENT .JS

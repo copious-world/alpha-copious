@@ -24,7 +24,7 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
                 if ( frame_user_url ) {
                     let app_message = {
                         "category": FRAME_ACTION_LOAD_APP,
-                        "action" : FAME_ACTION_LOAD_APP,
+                        "action" : FRAME_ACTION_LOAD_APP,
                         "data" : {
                             "revise_source" : frame_user_url,
                             "use" : frame_use

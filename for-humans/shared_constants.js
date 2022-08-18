@@ -52,10 +52,21 @@ const FRAME_ACTION_INSTALL = "install-id"
 const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
+const FRAME_NEEDS_SIGNATURE = "get-signature"
 const FRAME_WANTS_SESSION = "get-session"
 const FRAME_STOP_SESSION = "stop-session"
 const FRAME_HAS_PERSONALIZATION = "has-personalization"
 const SITE_WANTS_SIGNATURE = "send-sig-remote"
+
+
+const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
+const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
+const FRAME_ACTION_REMOVE = "id-manager-remove-id"
+const FRAME_ACTION_UPLOAD = "id-manager-upload-id"
+const FRAME_ACTION_DOWNLOAD = "id-manager-download-id"
+const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
+const FRAME_ACTION_ATTACH = "manager-asset-attach"
+
 
 // categories
 const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
@@ -70,6 +81,8 @@ const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
 const FRAME_SIGNED = "yep-signed"
 
+//
+let g_user_current_session = false
 let g_current_user_id = false
 let g_current_user_name = false
 let g_current_pub_identity = false

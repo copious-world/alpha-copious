@@ -20,15 +20,21 @@
             font-weight: 700;
             background-color: rgb(255, 254, 248);
             color: rgb(74, 83, 55);
+            max-height:32px;
         }
         .content-container {
             border: solid 1px rgb(0, 6, 85);
             padding: 2px;
             padding-left: 1px;
-            background-color: rgb(230, 222, 210);
+            background-color: white;
+            position: absolute;
+            top: 34px;
+            bottom: 0;
+            width : 100%;
         }
         .super-container {
             width: calc(100% - 2px);
+            min-height: 100%;
         }
         .owner_name {
             font-weight: bolder;
@@ -46,20 +52,63 @@
         #content-frame {
             border: 1px solid rgba(245, 245, 245, 0.897);
         }
+        #outer {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+        }
+        .selected-frame {
+                border-color: green;
+        }
+        #application_container {
+            display:block
+        }
+        #manager_container {
+            display:none
+        }
+        #db_container {
+            display:none
+        }
     </style>
 </head>
 <body>
 <div class="super-header" >
-    <span class="owner_name">{{who_am_I}}</span> :: control page :: 
-    <button>security parameters</button>&nbsp;
-    <button>local data</button>&nbsp;
-    <button>idenity manager</button>
+    <span class="owner_name">{{who_am_I}}</span>
+    <div id="open-controls" style="display:inline-block;">
+        <button onclick="show_controls()">&gt;&gt;</button>
+    </div>
+    <div id="user-controls" style="display:none;">
+        :: control page :: 
+        <button id="db_container-btn" onclick="show_local_data()">local data</button>&nbsp;
+        <button id="manager_container-btn" onclick="show_id_manager()">identity manager</button>&nbsp;
+        <button id="application_container-btn" onclick="show_application()" class="selected-frame">application</button>
+        <button onclick="hide_controls()">&lt;&lt;</button>
+    </div>
 </div>
-<div class="content-container" >
-<iframe id="content-frame" src="" class="super-container" >
-Source will open here
-</iframe>
+
+<div id="application_container" class="content-container" >
+    <iframe id="content-frame" src="" class="super-container" >
+    Source will open here
+    </iframe>
 </div>
+
+<div id="manager_container" class="content-container" >
+    <iframe id="id-manager-frame" src="https://www.of-this.world/manager" class="super-container" onload="info_to_manager_container()">
+    manager frame
+    </iframe>
+</div>
+    
+<div id="db_container" class="content-container" >
+    Local Data
+</div>
+
+<!--  ....  -->
+
+<div style="visibility: hidden;display: none;">
+    <a id='identity-download-link' href = "" >identity download</a>
+    <input class="no-view-file-field" type="file" id="drop-click-file_loader" />
+</div>
+
 </body>
 <script>
 
@@ -67,21 +116,27 @@ $$script::pc_location.js<<
 
 $$script::crypto-global.js<<
 
+$$script::crypto-hash.js<<
+
+$$script::crypto-wraps.js<<
+
 $$script::common.js<<
 
 $$script::https_checks.js<<
 
 $$script::post_fetch.js<<
 
+$$script::file_ops.js<<
+
 $$script::one_table_db.js<<
+
+$$script::app-dir/user_db.js<<
 
 $$script::for-humans/shared_constants.js<<
 
 $$script::for-humans/human_frame_client.js<<
 
 $$script::for-humans/frame_page_tab_com.js<<
-
-$$script::app-dir/user_db.js<<
 
 $$script::app-dir/window_app.js<<
 
