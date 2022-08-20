@@ -1,6 +1,5 @@
 // SITE PAGE COM
 //
-const FRAME_ACTION_LOAD_APP = "load-app"
 
 let g_frame_page = false
 let g_id_builder_page = false

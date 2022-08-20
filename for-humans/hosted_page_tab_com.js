@@ -62,7 +62,7 @@ let application_specific_handlers = (category,action,relationship,params) => {}
 
 let personalization = (post_params) => {}
 
-async function hosted_page_application_handlers(category,action,relationship,params) {
+hosted_page_application_handlers = async (category,action,relationship,params) => {
     switch ( category ) {
         case HOST_APP_PERSONALIZATION : {
             if ( typeof injest_personalization === "function" ) {

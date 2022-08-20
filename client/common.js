@@ -74,6 +74,8 @@ function normalized_launch_url(default_url) {
 	let uri_of_launch = ""
 	if ( default_url.indexOf('http://') === 0 ) {
 		uri_of_launch = default_url
+	} else if ( default_url.indexOf('https://') === 0 ) {
+		uri_of_launch = default_url
 	} else {
 		uri_of_launch = `https://${default_url}/`
 	}
