@@ -64,6 +64,7 @@ const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
 const FRAME_ACTION_REMOVE = "id-manager-remove-id"
 const FRAME_ACTION_UPLOAD = "id-manager-upload-id"
 const FRAME_ACTION_DOWNLOAD = "id-manager-download-id"
+const FRAME_ACTION_DOWNLOAD_PUBLIC = "id-manager-download-public-intro"
 const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
 const FRAME_ACTION_ATTACH = "manager-asset-attach"
 
