@@ -119,25 +119,34 @@ function pc_wrapper_keypair_promise() {  // return
 /*
 // aes_encryptor
 // Parameters:  
-//        		encodable -  a string
+//        		encodable -  a string or a uint8array
 //   			aes_key - aes_key as CryptoKey
 //				nonce - random (gen_nonce) passed as a uint8Array
 // Returns: The enciphered text ArrayBuffer
 */
 async function aes_encryptor(encodable,aes_key,nonce) {
 
-	let enc = new TextEncoder();
-	let clear_buf =  enc.encode(encodable);
-	let iv = nonce
+	let clear_buf = false
+	if ( typeof encodable === 'string' ) {
+		let enc = new TextEncoder();
+		clear_buf =  enc.encode(encodable);
+	} else if ( (encodable.constructor.name === 'Uint8Array') ||  (encodable.constructor.name === 'Buffer') ) {
+		clear_buf = encodable
+	}
 
-    let ciphertext = await g_crypto.encrypt({
-												name: "AES-CBC",
-												iv
-											},
-											aes_key,
-											clear_buf
-										);
-	return ciphertext
+	if ( clear_buf ) {
+		let iv = nonce
+		let ciphertext = await g_crypto.encrypt({
+													name: "AES-CBC",
+													iv
+												},
+												aes_key,
+												clear_buf
+											);
+		return ciphertext
+	}
+
+	return false
 }
 
 
@@ -165,6 +174,7 @@ async function aes_decipher_message(message,aes_key,nonce) {
 	return clear
 }
 //
+
 // 
 
 
@@ -221,6 +231,7 @@ async function galactic_user_starter_keys(selector) {
 		let sign_priv_exported = await g_crypto.exportKey("jwk",signer_priv_key);
 		sign_priv_key_str =  JSON.stringify(sign_priv_exported);
 	}
+
 
 	let axiom_pub_key_str = false
 	let axiom_priv_key_str = false
@@ -707,13 +718,17 @@ async function verifier(was_signed_data,signature,signer_pub_key) {
 //        -- nonce : as a string storing a buffer base64url
 // Returns: a base64url encoding of the enciphered buffer
 */
-async function encipher_message(message,aes_key,nonce) {
+async function encipher_message(message,aes_key,nonce,no_string) {
 	try {
 		if ( aes_key ) {
 			let iv_nonce = from_base64_to_uint8array(nonce)
 			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
 			let b8a = new Uint8Array(enciphered)
-			return to_base64_from_uint8array(b8a)
+			if ( no_string ) {
+				return b8a
+			} else {
+				return to_base64_from_uint8array(b8a)
+			}
 		}
 	} catch(e) {
 		console.log(e)
@@ -721,8 +736,6 @@ async function encipher_message(message,aes_key,nonce) {
 	return false
 }
 // 
-
-
 
 
 //$>>	derived_encipher_message
@@ -754,7 +767,7 @@ async function derived_encipher_message(message,remote_public_ky,local_private_k
 /*
 // decipher_message
 // Parameters:
-//        -- message :  as a string storing a buffer formatted as csv of the entries
+//        -- message :  base64url encoded string returned from encipher
 //        -- wrapped_key :  wrapped aes key 
 //                          passed as a string that can be JSON.parsed into a jwk format object
 //        -- priv_key : the private key for unwrapping
