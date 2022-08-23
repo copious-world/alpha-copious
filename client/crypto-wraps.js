@@ -525,11 +525,9 @@ async function derive_key(sender_public_key,piv_axiom_key) {
 	let local_private = await g_crypto.importKey(
 			"jwk",
 			axiom_jwk,
-			{   //these are the wrapping key's algorithm options
-				name: "RSA-OAEP",
-				modulusLength: 4096, //can be 1024, 2048, or 4096
-				publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-				hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+			{
+			'name': "ECDH",
+			'namedCurve': "P-384"
 			},
 			true,
 			["deriveKey"]
@@ -540,6 +538,49 @@ async function derive_key(sender_public_key,piv_axiom_key) {
 	let aes_key = await derive_aes_key(sender_pub_key_buffer,local_private)
 	return aes_key
 }
+
+
+
+
+//$>>	derive_key_jwk
+/*
+// derive_key_jwk
+// Parameters:
+//        -- sender_public_key :  as a JSON.parseable string representing jwk.
+//        -- piv_axiom_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk
+// Returns: the unwrapped key in a string that can be sent
+*/
+async function derive_key_jwk(sender_public_key,piv_axiom_key) {
+    //
+	let sender_pub_key = JSON.parse(sender_public_key)
+	let remote_public = await g_crypto.importKey(
+			"jwk",
+			sender_pub_key,
+			{
+            'name': "ECDH",
+            'namedCurve': "P-384"
+            },
+			true,
+			["deriveKey"]
+	);
+
+	let axiom_jwk = JSON.parse(piv_axiom_key)
+	let local_private = await g_crypto.importKey(
+			"jwk",
+			axiom_jwk,
+			{
+            'name': "ECDH",
+            'namedCurve': "P-384"
+            },
+			true,
+			["deriveKey"]
+	);
+	
+	let aes_key = await derive_aes_key(remote_public,local_private)
+	return aes_key
+}
+
+
 
 
 
@@ -743,7 +784,8 @@ async function encipher_message(message,aes_key,nonce,no_string) {
 // derived_encipher_message
 // Parameters:
 //        -- message :  a text string
-//        -- aes_key :  as CryptoKey
+//        -- remote_public_ky :  as CryptoKey
+//		  -- local_private_ky :  as CryptoKey
 //        -- nonce : as a string storing a buffer base64url
 // Returns: a base64url encoding of the enciphered buffer
 */
@@ -817,6 +859,22 @@ async function derived_decipher_message(message,remote_public,priv_key,nonce) {
 	return false
 }
 //
+
+async function derived_decipher_message_jwk(message,remote_public,priv_key,nonce) {
+	try {
+		let aes_key = await derive_key_jwk(remote_public,priv_key)
+		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let buffer = from_base64_to_uint8array(message)
+			let clear = await aes_decipher_message(buffer,aes_key,iv_nonce)
+			return clear
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+
 
 
 //$$EXPORTABLE::

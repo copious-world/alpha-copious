@@ -43,12 +43,50 @@ function show_intergalactic_explain() {
 	}
 }
 
+/*
+audios_1
+greet_and_meet_2
+*/
+
+async function logout_process() {
+    if ( g_current_pub_identity ) {
+        delete g_current_pub_identity.session
+        await update_galactic_identity(g_current_pub_identity)
+        visual_session_indicator(false)
+    }
+}
+
+function hide_login() {
+    let greeter = document.getElementById("greet_and_meet_2")
+    let solong = document.getElementById("audios_1")
+
+    if ( greeter && solong ) {
+        greeter.style.display = "none"
+        solong.style.display = "block"
+    }
+}
+
+function show_login() {
+    let greeter = document.getElementById("greet_and_meet_2")
+    let solong = document.getElementById("audios_1")
+
+    if ( greeter && solong ) {
+        greeter.style.display = "block"
+        solong.style.display = "none"
+    }
+}
+
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 if ( typeof visual_session_indicator === "function" ) {
 	visual_session_indicator = (boolval) => {
-				/// show hide indicator
+		/// show hide indicator
+		if ( boolval ) {
+			hide_login()
+		} else {
+			show_login()
+		}
 	}
 }
 

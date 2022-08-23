@@ -37,18 +37,17 @@ let g_captured_domain = false
 
 function if_logging_in_capture(source) {
     if ( source.indexOf("login")  > 0 ) {
-        g_captured_domain = source.replace("login","$$$$")
+        g_captured_domain = source.replace("login","@")
     }
 }
-
 //
 function human_frame_application_load_app_page(data) {
     let source = data.revise_source
     if ( source ) {
         let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
         if ( frame ) {
-            frame.src = source
             if_logging_in_capture(source)
+            frame.src = source
         }    
     }
 }
