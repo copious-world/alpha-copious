@@ -68,11 +68,13 @@ const FRAME_ACTION_DOWNLOAD_PUBLIC = "id-manager-download-public-intro"
 const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
 const FRAME_ACTION_ATTACH = "manager-asset-attach"
 
+const HOST_APP_PERSONALIZATION = "personalization"
+const HOST_APP_WANTS_SESSION = "session-to-app"
+
 
 // categories
 const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
 const FRAME_COMPONENT_MANAGE_ID = "m-igid"
-const HOST_APP_PERSONALIZATION = "personalization"
 const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
 const SITE_TO_FRAME_SESSIONS = "transfer-session"
 const FRAME_TO_SITE_MANAGE_SESSION = "site-manage-session"
@@ -95,3 +97,7 @@ const g_message_template =  {
                                 "action" : "",
                                 "relationship" : ""
                             }
+
+
+/// END OF CONSTANTS  (ALPHA)
+

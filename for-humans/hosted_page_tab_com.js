@@ -108,3 +108,7 @@ function relay_to_pages(message) {
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
 }
+
+
+
+// END OF HOSTED APP PAGE COM  (ALPHA)

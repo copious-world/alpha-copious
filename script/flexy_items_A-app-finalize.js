@@ -20,7 +20,7 @@ let chat_opener = async (evt) => {
 let blog_opener = async (evt) => {
 	let human_info = await intergalactic_session_going()
 	if ( human_info !== false ) {
-		await open_intergalactic_session_window("blog",human_info,human_info.session)
+		await open_intergalactic_session_window("private-blog",human_info,human_info.session)
 	} else {
 		open_public_window("blog")
 	}
@@ -28,11 +28,29 @@ let blog_opener = async (evt) => {
 let demos_opener = async (evt) => {
 	let human_info = await intergalactic_session_going()
 	if ( human_info !== false ) {
-		await open_intergalactic_session_window("demos",human_info,human_info.session)
+		await open_intergalactic_session_window("private-demos",human_info,human_info.session)
 	} else {
 		open_public_window("demos")
 	}
 }
+let streams_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info !== false ) {
+		await open_intergalactic_session_window("private-streams",human_info,human_info.session)
+	} else {
+		open_public_window("streams")
+	}
+}
+let composites_opener = async (evt) => {
+	let human_info = await intergalactic_session_going()
+	if ( human_info !== false ) {
+		await open_intergalactic_session_window("private-composites",human_info,human_info.session)
+	} else {
+		open_public_window("composites")
+	}
+}
+
+
 
 
 function show_intergalactic_explain() {

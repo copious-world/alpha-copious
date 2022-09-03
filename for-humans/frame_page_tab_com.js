@@ -53,7 +53,6 @@ function human_frame_application_load_app_page(data) {
 }
 
 
-
 /// ALIVE RESPONSES
 function site_reponding_alive() {
     let message = {
@@ -74,6 +73,7 @@ function worker_reponding_alive() {
     tell_site_page(message)
 }
 
+
 function app_reponding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
@@ -82,6 +82,7 @@ function app_reponding_alive() {
     }
     tell_hosted_app_page(message)
 }
+
 
 function builder_reponding_alive() {
     let message = {
@@ -103,12 +104,25 @@ function update_preferences_frame(session) {
         "action" : FRAME_HAS_PERSONALIZATION,
         "data" : {
             "session" : session,
+            "puplic_info" : g_current_pub_identity,     // make ccwid available to the private app...
             "personalization" : g_current_pub_identity ? g_current_pub_identity.preferences : false
         }
     }
     tell_hosted_app_page(msg)
-
 }
+
+// SESSION MESSAGES
+function update_session_frame(session) {
+    let msg = {
+        "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+        "action" : FRAME_HAS_SESSION,
+        "data" : {
+            "session" : session
+        }
+    }
+    tell_hosted_app_page(msg)
+}
+
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // MESSAGE HANDLERS
@@ -151,8 +165,8 @@ function install_site_page_response() {
                                         "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
                                     }
                                 }
-                                // tell_hosted_app_page(msg)
-                                tell_service_worker(msg)  // need to 
+                                tell_hosted_app_page(msg)
+                                //tell_service_worker(msg)  // need to 
                                 //
                                 update_preferences_frame(session)
                                 break;
