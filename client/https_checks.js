@@ -12,6 +12,19 @@ function not_https_switch() {
 }
 
 
+//$>>	check_https
+function check_https(maybe) {
+	if ( (location.protocol === 'https:') ) return false
+    if ( maybe ) {
+        let goahead = confirm("Things work better on this site under https. Do you want to switch to a more secure version if this site?")
+        if ( !goahead ) {
+            return false
+        }
+    }
+    return not_https_switch()
+}
+
+
 //$>>	getCookie
 // simple check on cookies, searching by ';' delimited string with the cookie name at the start of the trimmed line.
 function getCookie(cname) {  // modified from w3school
@@ -34,5 +47,6 @@ function getCookie(cname) {  // modified from w3school
 //$$EXPORTABLE::
 /*
 not_https_switch
+check_https
 getCookie
 */
