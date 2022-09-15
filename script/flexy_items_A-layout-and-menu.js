@@ -68,6 +68,7 @@ function show_thankyou_box(msg) {
 	}
 }
 
+
 // ---- ---- ---- ---- ---- ----
 function lowerFillerText() {
 	let content = `{{{decoratedLinks.content}}}`
