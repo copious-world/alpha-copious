@@ -57,6 +57,7 @@ const FRAME_WANTS_SESSION = "get-session"
 const FRAME_STOP_SESSION = "stop-session"
 const FRAME_HAS_PERSONALIZATION = "has-personalization"
 const SITE_WANTS_SIGNATURE = "send-sig-remote"
+const HOST_UP_REQ_UPLOAD = "send-request-upload"
 
 
 const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
@@ -83,6 +84,7 @@ const FRAME_WORKER_TO_SESSIONS = "transfer-session"
 const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
 const FRAME_SIGNED = "yep-signed"
+const FRAME_POSTED_PRIMARY = "yep-primary-response"
 
 //
 let g_user_current_session = false

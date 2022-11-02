@@ -58,7 +58,7 @@ async function fetchUrl(endpoint) {
 //  User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
 //  RETURNS: parsed JSON object or an empty object. ... Check for fields
 //
-async function postData(url = '', data = {}, creds = 'omit', do_stringify = true,ctype) {
+async function postData(url = '', data = {}, creds = 'omit', do_stringify = true, ctype) {
 	let content_type = 'application/json'
 	if ( ctype !== undefined ) {
 		content_type = ctype            // ctype is content type
