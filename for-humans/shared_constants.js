@@ -85,6 +85,11 @@ const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
 const FRAME_SIGNED = "yep-signed"
 const FRAME_POSTED_PRIMARY = "yep-primary-response"
+//
+const HOSTED_APP_FILE_OPERATION = "yep-file-creation-db"
+const FRAME_TO_HOSTED_APP_DATA = "yep-data-from-db"
+const FRAME_LIST_DATA = "frame-lists-data-part-ids"
+const FRAME_RETURNS_DATA = "frame-provides-data-part"
 
 //
 let g_user_current_session = false
