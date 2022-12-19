@@ -15,6 +15,7 @@ if ( typeof g_message_template === undefined ) {
 let g_site_page = false
 let g_hosted_app_page = false       // child iframe
 let g_id_builder_page = false
+let g_publisher_page = false
 let g_frame_page_service_worker = false
 let g_frame_broadcast_channel = false
 
@@ -26,6 +27,7 @@ const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
 // 
 let human_frame_application_id_installation = (id_data) => {}
 let human_frame_hosted_page_use_cases = (relationship,action,data) => {}
+let human_frame_publisher_page_use_cases = (relationship,action,data) => {}
 
 
 //
@@ -92,6 +94,16 @@ function builder_reponding_alive() {
     }
     tell_id_builder_page(message)
 }
+
+function publisher_reponding_alive() {
+    let message = {
+        "category": FRAME_COMPONENT_SAY_ALIVE,
+        "action" :FRAME_COMPONENT_RESPONDING,
+        "data" : false
+    }
+    tell_publisher_page(message)
+}
+
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -207,6 +219,44 @@ function install_application_page_response() {
                         switch ( category ) {
                             case FRAME_ACTION_FROM_APP : {
                                 human_frame_hosted_page_use_cases(relationship,action,data)
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+            }    
+        }
+    })
+}
+
+
+function install_application_publisher_page_response() {
+    window.addEventListener("message", (event) => {
+        let page_source = event.origin
+        if ( page_source !== '*' ) {
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+                if ( direction === HOSTED_PUBLISHER_TO_FRAME ) {
+                    g_publisher_page = event.source
+                    if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+                        if ( action === FRAME_COMPONENT_RESPOND ) {
+                            publisher_reponding_alive()
+                        }
+                    } else if ( relationship === PUBLISHER_RELATES_TO_FRAME ) {
+                        let data = mobj.data
+                        switch ( category ) {
+                            case FRAME_ACTION_FROM_PUBLISHER : {
+                                human_frame_publisher_page_use_cases(relationship,action,data)
                                 break;
                             }
                             default: {
@@ -455,6 +505,20 @@ function tell_id_builder_page(message) {
     msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_id_builder_page.postMessage(message_str,'*') //g_id_builder_cors_uri)
+    return true
+}
+
+
+function tell_publisher_page(message) {
+    if ( !g_publisher_page ) return(false)
+    let msg = Object.assign({},g_message_template)
+    msg.direction = FRAME_PAGE_TO_PUBLISHER
+    msg.relationship = FRAME_PAGE_RELATES_TO_PUBLISHER
+    msg.action = message.action
+    msg.category = message.category
+    msg.data = message.data
+    let message_str = JSON.stringify(msg)
+    g_publisher_page.postMessage(message_str,'*') //g_id_builder_cors_uri)
     return true
 }
 

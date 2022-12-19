@@ -23,6 +23,10 @@ const FRAME_PAGE_RELATES_TO_SERVICE_WORKER = "frame_page_shared_action"
 const FRAME_ACTION_TO_APP = "frame_page_request_action"
 const FRAME_REQUEST_SESSION = "frame_page_request_session"
 const FRAME_ACTION_FROM_APP = "hosted_app_requests_action"
+const FRAME_PAGE_TO_PUBLISHER = "frame_page_to_publisher"
+const FRAME_PAGE_RELATES_TO_PUBLISHER= "frame_page_publications"
+const FRAME_ACTION_FROM_PUBLISHER = "publisher_app_requests_action"
+
 
 // APP PAGE
 //
@@ -42,7 +46,9 @@ const BUILDER_ACTION_TO_FRAME = "builder_page_request_action"
 const WORKER_TO_FRAME = "worker_to_frame"
 const WORKER_RELATES_TO_FRAME = "worker_request_action"
 
-
+// PUBLISHER PAGE
+const HOSTED_PUBLISHER_TO_FRAME = "publisher_to_frame"
+const PUBLISHER_RELATES_TO_FRAME = "publisher_ask_frame_op"
 //
 // actions
 const FRAME_COMPONENT_RESPOND = "respond"
@@ -52,6 +58,7 @@ const FRAME_ACTION_INSTALL = "install-id"
 const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
+const FRAME_CHECK_SESSION = "check-session"
 const FRAME_NEEDS_SIGNATURE = "get-signature"
 const FRAME_WANTS_SESSION = "get-session"
 const FRAME_STOP_SESSION = "stop-session"
