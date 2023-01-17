@@ -177,7 +177,7 @@ async function aes_decipher_message(message,aes_key,nonce) {
 
 // 
 
-
+//$>>	asymmetric_starter_keys
 //$>>	galactic_user_starter_keys
 /*
 // galactic_user_starter_keys
@@ -886,6 +886,7 @@ axiom_keypair_promise
 pc_wrapper_keypair_promise
 aes_encryptor
 aes_decipher_message
+asymmetric_starter_keys
 galactic_user_starter_keys
 protect_hash
 verify_protected
