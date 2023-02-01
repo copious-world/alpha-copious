@@ -21,7 +21,7 @@ let cwraps = window
 */
 function gen_nonce(input_bits) {
 	if ( input_bits === undefined ) {
-		let random = window.crypto.getRandomValues(new Uint8Array(16))
+		let random = cwraps.crypto.getRandomValues(new Uint8Array(16))
 		return to_base64_from_uint8array(random)
 	} else {
 		let bytes = from_base64_to_uint8array(input_bits)
