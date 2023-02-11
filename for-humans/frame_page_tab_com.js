@@ -23,8 +23,9 @@ let g_this_page_instance_is_session_owner = false
 
 //
 const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
-
-// 
+const DEFAULT_APP_UPLOADER_FRAME_ID = 'humans-uploader-frame'
+//
+//
 let human_frame_application_id_installation = (id_data) => {}
 let human_frame_hosted_page_use_cases = (relationship,action,data) => {}
 let human_frame_publisher_page_use_cases = (relationship,action,data) => {}
@@ -35,13 +36,28 @@ let human_frame_publisher_page_use_cases = (relationship,action,data) => {}
 //  -- Frame application loader -- loads the pages and then steps back
 //  -- It is up to the loaded page to initialize communication...
 //
+
+function fussy_url(source) {
+    let c = source[source.length - 1]
+    if ( c !== '/' ) {
+        source += '/'
+    }
+    return source
+}
+
 let g_captured_domain = false
+let g_captured_app_domain = false
 
 function if_logging_in_capture(source) {
     if ( source.indexOf("login")  > 0 ) {
         g_captured_domain = source.replace("login","@")
     }
 }
+
+function capture_app(source) {
+    g_captured_app_domain = source
+}
+
 //
 function human_frame_application_load_app_page(data) {
     let source = data.revise_source
@@ -49,14 +65,29 @@ function human_frame_application_load_app_page(data) {
         let frame = document.getElementById(DEFAULT_APP_CONTAINER_FRAME_ID)
         if ( frame ) {
             if_logging_in_capture(source)
+            source = fussy_url(source)
+            frame.src = source
+        }    
+    }
+}
+
+function human_frame_application_load_uploader(data) {
+    let source = data.publications
+    if ( source ) {
+        let frame = document.getElementById(DEFAULT_APP_UPLOADER_FRAME_ID)
+        if ( frame ) {
+            source = fussy_url(source)
+            capture_app(source)
             frame.src = source
         }    
     }
 }
 
 
+
+
 /// ALIVE RESPONSES
-function site_reponding_alive() {
+function site_responding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" :FRAME_COMPONENT_RESPONDING,
@@ -66,7 +97,7 @@ function site_reponding_alive() {
 }
 
 
-function worker_reponding_alive() {
+function worker_responding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" : FRAME_COMPONENT_RESPONDING,
@@ -75,18 +106,20 @@ function worker_reponding_alive() {
     tell_site_page(message)
 }
 
-
-function app_reponding_alive() {
+function app_responding_alive_and_deque() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" :FRAME_COMPONENT_RESPONDING,
         "data" : false
     }
     tell_hosted_app_page(message)
+    while ( g_app_message_queue.length > 0 ) {
+        let msg = g_app_message_queue.shift()
+        tell_hosted_app_page(msg)
+    }
 }
 
-
-function builder_reponding_alive() {
+function builder_responding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" :FRAME_COMPONENT_RESPONDING,
@@ -95,14 +128,31 @@ function builder_reponding_alive() {
     tell_id_builder_page(message)
 }
 
-function publisher_reponding_alive() {
+function publisher_responding_alive_and_deque() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" :FRAME_COMPONENT_RESPONDING,
         "data" : false
     }
     tell_publisher_page(message)
+    while ( g_publisher_message_queue.length > 0 ) {
+        let msg = g_publisher_message_queue.shift()
+        tell_publisher_page(msg)
+    }
 }
+
+function publisher_performed_operation(op) {
+    let message = {
+        "category": FRAME_TO_APP_PUBLIC_COMPONENT,
+        "action" : FRAME_RAN_PUB_OP,
+        "data" : {
+            "op" : op   // if used
+        }
+    }
+    tell_publisher_page(message)
+}
+
+
 
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -155,13 +205,14 @@ function install_site_page_response() {
                     g_site_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
-                            site_reponding_alive()
+                            site_responding_alive()
                         }
                     } else if ( relationship === SITE_RELATES_TO_FRAME ) {
                         let data = mobj.data
                         switch ( category ) {
                             case FRAME_ACTION_LOAD_APP : {
                                 human_frame_application_load_app_page(data)
+                                human_frame_application_load_uploader(data)
                                 break;
                             }
                             case SITE_TO_FRAME_SESSIONS: {
@@ -177,8 +228,19 @@ function install_site_page_response() {
                                         "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
                                     }
                                 }
-                                tell_hosted_app_page(msg)
-                                //tell_service_worker(msg)  // need to 
+                                // tell_hosted_app_page(msg)
+                                tell_service_worker(msg)  // need to 
+                                msg = {
+                                    "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                    "action" : FRAME_START_SESSION,
+                                    "data" : {
+                                        "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                    }
+                                }
+                                let sent = tell_publisher_page(msg)
+                                if ( !sent ) {
+                                    g_publisher_message_queue.push(msg)
+                                }
                                 //
                                 update_preferences_frame(session)
                                 break;
@@ -212,7 +274,7 @@ function install_application_page_response() {
                     g_hosted_app_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
-                            app_reponding_alive()
+                            app_responding_alive_and_deque()
                         }
                     } else if ( relationship === APP_RELATES_TO_FRAME ) {
                         let data = mobj.data
@@ -250,7 +312,7 @@ function install_application_publisher_page_response() {
                     g_publisher_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
-                            publisher_reponding_alive()
+                            publisher_responding_alive_and_deque()
                         }
                     } else if ( relationship === PUBLISHER_RELATES_TO_FRAME ) {
                         let data = mobj.data
@@ -271,6 +333,7 @@ function install_application_publisher_page_response() {
     })
 }
 
+
 //
 function install_id_builder_page_response() {
     window.addEventListener("message", (event) => {
@@ -288,7 +351,7 @@ function install_id_builder_page_response() {
                     g_id_builder_page = event.source
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
-                            builder_reponding_alive()
+                            builder_responding_alive()
                         }
                     } else if ( relationship === BUILDER_ACTION_TO_FRAME ) {
                         let data = mobj.data
@@ -331,7 +394,7 @@ function install_service_worker_response() {
                 if ( direction === WORKER_TO_FRAME ) {
                     if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                         if ( action === FRAME_COMPONENT_RESPOND ) {
-                            worker_reponding_alive()
+                            worker_responding_alive()
                         }
                     } else if ( relationship === WORKER_RELATES_TO_FRAME ) {
                         let data = mobj.data
@@ -454,6 +517,7 @@ function tell_site_page(message) {
 }
 
 
+let g_app_message_queue = []
 function tell_hosted_app_page(message,relationship) {
     if ( !g_hosted_app_page ) return(false)
     let msg = Object.assign({},g_message_template)
@@ -509,6 +573,8 @@ function tell_id_builder_page(message) {
 }
 
 
+
+let g_publisher_message_queue = []
 function tell_publisher_page(message) {
     if ( !g_publisher_page ) return(false)
     let msg = Object.assign({},g_message_template)
@@ -528,7 +594,7 @@ function tell_publisher_page(message) {
 
 install_application_page_response()
 install_id_builder_page_response()
-
+install_application_publisher_page_response()
 
 //
 // END OF FRAME PAGE TAB COM

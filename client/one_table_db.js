@@ -108,12 +108,22 @@ class AppDBWrapper {
                 //
                 let db = event.target.result;
                 //
-                try {
-                    let sessionObjectStore = db.createObjectStore(this.DATA_STORE, { autoIncrement : true });
-                    sessionObjectStore.createIndex("name", "name", { unique: true });
-                    sessionObjectStore.createIndex("sess_date_time", "sess_date_time", { unique: true });
-                } catch (e) {
+                if ( this.DATA_STORE !== undefined ) {
+                    try {
+                        let sessionObjectStore = db.createObjectStore(this.DATA_STORE, { autoIncrement : true });
+                        sessionObjectStore.createIndex("name", "name", { unique: true });
+                        sessionObjectStore.createIndex("sess_date_time", "sess_date_time", { unique: true });
+                    } catch (e) {
+                    }
                 }
+                if ( this.COMPLETION_STORE !== undefined ) {
+                    try {
+                        let completeStore = db.createObjectStore(this.COMPLETION_STORE, { autoIncrement : false, keyPath: 'name' });
+                        completeStore.createIndex("name", "name", { unique: true });
+                    } catch (e) {
+                    }
+                }
+
             //
             };
         })  // end of promise
@@ -185,10 +195,91 @@ class AppDBWrapper {
         if ( (application_op !== undefined) && (typeof application_op === 'function') ) {
             application_op(sessionObj)
         }
-        let request = dataStore.add(sessionObj);
+        let request = dataStore.add(sessionObj);  // returning an async object to which handlers may be added
         return request
     }
   
+    add_empty_session(name,application_op) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        this.current_session_name = name
+        if ( application_op !== undefined ) {
+            this._add_session_to_db(dataStore,application_op)
+        } else {
+            this._add_session_to_db(dataStore)
+        }
+    }
+
+    //  update_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //                  field --- the field to change (top level)
+    //                  value --- set the field to this value
+    //  returns: true if the session is available for update
+    update_session(sess_name,field,value) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: get_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let sess_name = session_object.name
+        //
+        let p = new Promise((resolve,reject) => {
+          //
+          // get_elem_callback
+          let update_elem_callback = (value,dbIndex) => {          // element.name == sess_name exists
+            //
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            //
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+              let cursor = event.target.result;
+              if ( cursor ) {
+                //
+                let sessionObj = cursor.value
+                sessionObj[field] = value
+                const request = cursor.update(sessionObj);
+                request.onsuccess = async () => {
+                    resolve(true)
+                };
+
+                request.onerror = (event) => {
+                    resolve(false)
+                }
+              } else {
+                resolve(false)
+              }
+            }
+          }
+          //
+          // not_found_callback
+          let not_found_callback = () => {                       // element.name == sess_name  NOT FOUND
+            resolve(false)
+          }
+          //
+          this._apply_find_by_name(sess_name, dataStore, update_elem_callback, not_found_callback)
+        })
+        //
+        return p
+    }
+
 
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
@@ -240,7 +331,7 @@ class AppDBWrapper {
                         const request = cursor.update(sessionObj);
                         request.onsuccess = async () => {
                             try {
-                                self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                                self.application_data_update(blob_url,part_id,blob_data,part_id)  // application handling of data e.g visual rep
                             } catch (e) {
                                 console.log(e)
                             } finally {
@@ -290,6 +381,111 @@ class AppDBWrapper {
         //
         return p
     }
+
+
+    // update_data
+
+    update_data(blob_data,part_id,op_parameters) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        let update_list_elem_callback = (value,dbIndex) => {
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                var cursor = event.target.result;
+                if ( cursor ) {
+                    let sessionObj = cursor.value
+                    if ( sessionObj.data[part_id] != null ) {
+                        let blob_url = URL.createObjectURL(blob_data);
+                        sessionObj.data[part_id] = blob_data
+                        // handle a case which should not happen
+                        if ( sessionObj.hashes[part_id] === undefined ) {
+                            sessionObj.hashes[part_id] = { 'op_history' : [] }
+                        }
+                        // update hash ops
+                        let operation = this.app_pre_update_action(blob_data,part_id,op_parameters)
+                        if ( !operation ) {
+                            operation = {'op' : 'backup'}
+                        }
+                        sessionObj.hashes[part_id].op_history.push(operation)
+                        //
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            this.app_post_update_action(blob_data,part_id,blob_url)
+                        };
+                    }
+                    //
+                }
+            }
+        }
+
+        let not_found_callback = () => {
+            warn(`The session ${sess_name} is not in the database`)
+        }
+
+        //
+        this._apply_find_by_name(this.current_session_name, dataStore, update_list_elem_callback, not_found_callback)    
+    }
+
+
+    // update_data_ops
+
+    update_data_ops(part_id,pre_update,post_update) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+            let self = this
+
+            let add_elem_original_chunks_callback = (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                    dbIndex.openCursor(keyRangeValue).onsuccess = async (event) => {
+                    var cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        await pre_update(part_id,sessionObj)
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            await post_update(part_id,this.current_session_name,sessionObj)
+                            resolve(true)
+                        };
+                    }
+                    resolve(false)
+                }
+            }
+            //
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+            //
+            this._apply_find_by_name(this.current_session_name, dataStore, update_list_elem_callback, not_found_callback)    
+
+        })
+
+        return p
+    }
+
 
 
     //  remove_data: 
@@ -502,6 +698,155 @@ class AppDBWrapper {
     }
 
 
+
+    async install_session(session_object) {
+        if ( typeof session_object !== 'object')
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        //
+        let request = dataStore.put(session_object)
+        request.onsuccess = (ev) => {
+            let rsult = event.target.result
+            //
+            this.current_session_name = session_object.name
+        }
+        //
+    }
+
+
+    store_completion(storeObj) {
+        if ( typeof storeObj !== 'object')
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+
+        if ( this.COMPLETION_STORE !== undefined ) {
+            let p = new Promise((resolve,reject) => {
+                //
+                transaction.oncomplete = (ev) => {
+                    console.log("store_complete: transaction done")
+                }
+                transaction.onerror = (ev) => {
+                    console.log(ev)
+                }
+                let result = dataStore.put(storeObj)
+                result.onsuccess = (event) => {
+                    resolve(event.target.result)
+                }
+                result.error = (error) => {
+                    reject(error)
+                }
+            })
+            return p
+        }
+        return false
+    }
+
+
+    get_completion(c_key) {
+        //
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {            
+            let nameIndex = dataStore.index('name');
+            nameIndex.get(c_key).onsuccess = (evt) => {     // KEY
+                let value = evt.target.result;
+                if ( value ) {
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    nameIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            resolve(cursor.value)
+                        } else {
+                        r   esolve(false)
+                        }
+                    }
+                } else resolve(false)
+            }
+        })
+        //
+        return p
+    }
+
+
+    remove_completion(c_key) {
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+            //
+            let p_t = new Promise((resolve,reject) => {
+                transaction.oncomplete = (ev) => {
+                    resolve(true)
+                    console.log("remove_completion: transaction done")
+                }
+                transaction.onerror = (ev) => {
+                    console.log(ev)
+                    reject(false)
+                }}
+            )
+            //
+            let nameIndex = dataStore.index('name');
+            nameIndex.get(c_key).onsuccess = async (evt) => {     // KEY
+                let value = evt.target.result;
+                if ( value ) {
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    nameIndex.openCursor(keyRangeValue).onsuccess = async (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            let request = cursor.delete();
+                            request.onsuccess = async () => {
+                                await p_t
+                                resolve(true)
+                            };
+                        } else {
+                            await p_t
+                            resolve(false)
+                        }
+                    }
+                } else {
+                    await p_t
+                    resolve(false)
+                }
+            }
+        })
+        //
+        return p
+    }
+
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
     application_data_update(blob_url,part_id,blob_data) {
@@ -517,11 +862,19 @@ class AppDBWrapper {
     }
 
     application_update_session_name_selections(sess_name,name_list) {
+        // implemented by derived method (override)
+    }
 
+    app_pre_update_action(blob_data,part_id,op_parameters) {
+        // implemented by derived method (override)
+    }
+
+    app_post_update_action(blob_data,part_id,blob_url) {
+        // implemented by derived method (override)
     }
 
     application_total_entry(sess_obj) {
-        
+        // implemented by derived method (override)
     }
 
 }

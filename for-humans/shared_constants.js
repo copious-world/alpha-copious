@@ -49,6 +49,10 @@ const WORKER_RELATES_TO_FRAME = "worker_request_action"
 // PUBLISHER PAGE
 const HOSTED_PUBLISHER_TO_FRAME = "publisher_to_frame"
 const PUBLISHER_RELATES_TO_FRAME = "publisher_ask_frame_op"
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 //
 // actions
 const FRAME_COMPONENT_RESPOND = "respond"
@@ -76,13 +80,12 @@ const FRAME_ACTION_DOWNLOAD_PUBLIC = "id-manager-download-public-intro"
 const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
 const FRAME_ACTION_ATTACH = "manager-asset-attach"
 
-const HOST_APP_PERSONALIZATION = "personalization"
 const HOST_APP_WANTS_SESSION = "session-to-app"
-
 
 // categories
 const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
 const FRAME_COMPONENT_MANAGE_ID = "m-igid"
+const HOST_APP_PERSONALIZATION = "personalization"
 const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
 const SITE_TO_FRAME_SESSIONS = "transfer-session"
 const FRAME_TO_SITE_MANAGE_SESSION = "site-manage-session"
@@ -92,17 +95,24 @@ const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
 const FRAME_SIGNED = "yep-signed"
 const FRAME_POSTED_PRIMARY = "yep-primary-response"
-//
+const FRAME_RAN_PUB_OP = "yep-publication-operation"
+
 const HOSTED_APP_FILE_OPERATION = "yep-file-creation-db"
 const FRAME_TO_HOSTED_APP_DATA = "yep-data-from-db"
 const FRAME_LIST_DATA = "frame-lists-data-part-ids"
 const FRAME_RETURNS_DATA = "frame-provides-data-part"
+const FRAME_RETURNS_SESSION_CHECK = "frame-provides-session-check"
 
-//
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 let g_user_current_session = false
 let g_current_user_id = false
 let g_current_user_name = false
 let g_current_pub_identity = false
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+var g_current_session = false
 
 
 const g_message_template =  {
@@ -111,7 +121,6 @@ const g_message_template =  {
                                 "action" : "",
                                 "relationship" : ""
                             }
-
 
 /// END OF CONSTANTS  (ALPHA)
 

@@ -19,8 +19,6 @@ function pc_getLocation() {
   
   
 
-
-
 //$$EXPORTABLE::
 /*
 pc_getLocation
