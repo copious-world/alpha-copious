@@ -5,7 +5,7 @@
 // fetch with GET method
 async function fetchEndPoint(endpoint,port) {
 	port = !(port) ? '' : ( port.length ? `:${port}`   : '')
-	let myRequest = new Request(`${location.protocol}//${g_siteURL}${port}/${endpoint}`);
+	let myRequest = new Request(`${location.protocol}//${location.hostname}${port}/${endpoint}`);
 	try {
 		const body = await fetch(myRequest, {
 									method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -25,6 +25,30 @@ async function fetchEndPoint(endpoint,port) {
 	}
 }
 
+//$>>	fetchTextFile
+// //
+// fetch with GET method
+async function fetchTextFile(endpoint,port) {
+	port = !(port) ? '' : ( port.length ? `:${port}`   : '')
+	let myRequest = new Request(`${location.protocol}//${location.hostname}${port}/${endpoint}`);
+	try {
+		const body = await fetch(myRequest, {
+									method: 'GET', // *GET, POST, PUT, DELETE, etc.
+									mode: 'cors', // no-cors, *cors, same-origin
+									cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+									credentials: 'omit', // include, *same-origin, omit
+									redirect: 'follow', // manual, *follow, error
+									referrerPolicy: 'no-referrer', // no-referrer, *client
+								});
+		//
+		let html = await body.text();
+		return(html)
+		//
+	} catch (e) {
+		console.log(e.message)
+		return(false)
+	}
+}
 
 //$>>	fetchUrl
 // //

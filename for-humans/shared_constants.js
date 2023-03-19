@@ -69,6 +69,7 @@ const FRAME_STOP_SESSION = "stop-session"
 const FRAME_HAS_PERSONALIZATION = "has-personalization"
 const SITE_WANTS_SIGNATURE = "send-sig-remote"
 const HOST_UP_REQ_UPLOAD = "send-request-upload"
+const FRAME_REQ_DATA = "send-request-respond"
 
 
 const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
