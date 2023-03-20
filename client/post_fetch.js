@@ -169,6 +169,7 @@ async function post_submit(fields) {
 //$$EXPORTABLE::
 /*
 fetchEndPoint
+fetchTextFile
 fetchUrl
 postData
 post_submit

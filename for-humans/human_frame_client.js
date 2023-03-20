@@ -1,5 +1,5 @@
 
-// ---->>>   FOR HUMANS  >> HUMAN FRAME CLIENT .JS
+// FOR HUMANS  >> HUMAN FRAME CLIENT .JS
 
 //  human client frame
 

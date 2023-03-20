@@ -198,7 +198,7 @@ class AppDBWrapper {
         let request = dataStore.add(sessionObj);  // returning an async object to which handlers may be added
         return request
     }
-  
+
     add_empty_session(name,application_op) {
         //
         if ( !(this._can_process_db) ) return false
@@ -390,8 +390,8 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
-          return false;
+            console.log("db not initialized :: remove_audio_data")
+            return false;
         }
         //
         let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
@@ -445,8 +445,8 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
-          return false;
+            console.log("db not initialized :: remove_audio_data")
+            return false;
         }
         //
         let transaction = this.db.transaction(this.DATA_STORE, "readwrite");

@@ -1,3 +1,4 @@
+
 // FRAME PAGE COM
 //
 if ( typeof g_message_template === undefined ) {

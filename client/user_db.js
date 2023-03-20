@@ -156,14 +156,14 @@ class HumanUserDB extends AppDBWrapper {
     }
 
     //
-    async add_file(file_name,description,svg,to_layer,data) {
-        if ( data === undefined ) data = ""
+    async add_file(file_name,description,svg,to_layer,file_data) {
+        if ( file_data === undefined ) file_data = ""
         if ( svg === undefined ) svg = ""
         if ( to_layer == undefined ) to_layer = 0
         let file_record = {
             "name" : file_name, 
             "description" : description,
-            "data" : data, "ouput" : "", "svg" : svg, "layer" : to_layer }
+            "data" : file_data, "ouput" : "", "svg" : svg, "layer" : to_layer }
         //
         let data = JSON.stringify(file_record)
         await this.add_data(data,file_name)
@@ -188,6 +188,7 @@ class HumanUserDB extends AppDBWrapper {
             let sess_data = await this.get_session(sess_name)
             if ( sess_data ) {
                 let f_names = Object.keys(sess_data.data)
+                f_names = f_names.filter(ky => { return (ky !== 'user-meta') })
                 return f_names
             }    
         } catch (e) {
@@ -201,7 +202,14 @@ class HumanUserDB extends AppDBWrapper {
         try {
             let sess_data = await this.get_session(sess_name)
             if ( sess_data ) {
-                let f_objs = sess_data.data.map((f_data) => JSON.parse(f_data))
+                let f_names = Object.keys(sess_data.data)
+                f_names = f_names.filter(ky => { return (ky !== 'user-meta') })
+                let f_objs = []
+                for ( let ky of f_names ) {
+                    let f_data = sess_data.data[ky]
+                    let fobj = JSON.parse(f_data)
+                    f_objs.push(fobj)
+                }
                 return f_objs
             }
         } catch (e) {
