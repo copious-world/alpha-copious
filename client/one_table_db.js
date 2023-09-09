@@ -240,8 +240,6 @@ class AppDBWrapper {
         let dataStore = transaction.objectStore(this.DATA_STORE);
         if ( !(dataStore) ) return false
         //
-        let sess_name = session_object.name
-        //
         let p = new Promise((resolve,reject) => {
           //
           // get_elem_callback
@@ -783,7 +781,7 @@ class AppDBWrapper {
                         if ( cursor ) {
                             resolve(cursor.value)
                         } else {
-                        r   esolve(false)
+                            resolve(false)
                         }
                     }
                 } else resolve(false)
