@@ -68,6 +68,7 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+.DS_Store
 
 # dotenv environment variables file
 .env
@@ -104,3 +105,5 @@ dist
 # TernJS port file
 .tern-port
 .ics
+articles/._.DS_Store
+.vhd
