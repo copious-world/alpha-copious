@@ -1,0 +1,98 @@
+
+CONSISTENT HASHING FOR CLUSTER
+https://en.wikipedia.org/wiki/Consistent_hashing
+
+Rendezvous
+https://medium.com/i0exception/rendezvous-hashing-8c00e2fb58b0
+
+https://patents.google.com/patent/US10079879B2/en  (Juniper Networks)
+
+
+Hyper Vector Computing
+https://torchhd.readthedocs.io/en/stable/models.html
+
+
+Equal-Cost Multi-Path
+
+Locally sensitive hashing
+https://randorithms.com/2019/09/19/Visual-LSH.html
+
+
+Atomics hierarchy. == This good for discussion about the slowdown from atomics. 
+(Atomics can do better than condition variables. -- maybe shared more easily. But, will slow down algs that run fast on single cores.)
+https://travisdowns.github.io/blog/2020/07/06/concurrency-costs.html
+----
+
+
+ATOMIC DATA ACCESS IN MULTICORE
+----
+
+https://github.com/vtyulb/AtomicSharedPtr
+
+
+https://medium.com/@michelle.bao1/an-in-depth-analysis-of-hopscotch-hashings-locking-mechanisms-77b1a6f04262
+https://medium.com/@michelle.bao1/hopscotch-hashing-2045e7cc176b
+
+Robert Kelly - Now at Google Schweiz  - share hopscotch
+https://ch.linkedin.com/in/robert-kelly-61952155
+
+
+NVIDAI kokkos::UnorderedMap
+//
+https://developer.nvidia.com/blog/maximizing-performance-with-massively-parallel-hash-maps-on-gpus/
+
+//
+https://www.youtube.com/watch?v=Bwv5J7dHYjU
+
+
+
+
+QUIC
+https://www.emqx.com/en/blog/quic-protocol-the-features-use-cases-and-impact-for-iot-iov
+
+
+ATOMIC
+https://stackoverflow.com/questions/51229208/two-different-processes-with-2-stdatomic-variables-on-same-address
+
+
+amd6 and x86 assembly
+https://www.felixcloutier.com/x86/
+
+
+
+
+Explains the atomic lock on the memory BUS
+https://www.halolinux.us/kernel-reference/atomic-operations.html
+
+
+CMPXCHG
+https://www.felixcloutier.com/x86/cmpxchg
+
+CAS CASP CASA
+
+
+trevor brown
+https://www.cs.toronto.edu/~tabrown/
+
+
+
+HASH ANIMATION
+https://people.cs.pitt.edu/~kirk/cs1501/animations/Hashing.html
+
+
+
+
+
+
+// ZIMA BOARD --- personal cloud
+https://www.amazon.com/ZimaBoard-Computer-Personal-Network-Attached/dp/B0BKL7YPBQ/ref=pb_allspark_dp_sims_pao_desktop_session_based_d_sccl_2_3/134-7909307-8899328?pd_rd_w=XsjkL&content-id=amzn1.sym.bb57ff9c-59bb-4b04-a98f-485dda19cac2&pf_rd_p=bb57ff9c-59bb-4b04-a98f-485dda19cac2&pf_rd_r=DXVVAKXKQV3H2KXQ1VMZ&pd_rd_wg=nTQKf&pd_rd_r=a12b7269-bb7d-4041-83de-3237ec07125e&pd_rd_i=B0BKL7YPBQ&th=1
+
+
+
+
+
+domain attlocal.net
+search attlocal.net
+nameserver 192.168.1.254
+
+
