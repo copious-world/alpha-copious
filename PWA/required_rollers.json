@@ -1,0 +1,4 @@
+{
+    "https_checks": "https://[subsdomain_url]",
+    "subsdomain_url" : "pwa.{{sitebusiness_url}}"
+}
