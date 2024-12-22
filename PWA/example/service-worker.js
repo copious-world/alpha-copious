@@ -1,25 +1,27 @@
 
+// Human page container progressive web application
 
-// Song catcher Services Worker
-
-const CACHE_NAME = 'song-cache-v2'
+const CACHE_NAME = 'human-page-cache-v1'
 const FOLDER_NAME = 'post_requests'
+const CONTAINED_PAGE = 'human-page-update'
+const SW_DB = 'human-page-db'
 
 var g_form_data = null;
-var g_song_db = null;
+var g_contained_app_db = null;
 //
-// https://blog.formpl.us/how-to-handle-post-put-requests-in-offline-applications-using-service-workers-indexedb-and-da7d0798a9ab
 //
 
-
+// getObjectStore
 
 function getObjectStore (storeName, mode) {
-    if ( g_song_db ) {
-        return g_song_db.transaction(storeName, mode).objectStore(storeName)
+    if ( g_contained_app_db ) {
+        return g_contained_app_db.transaction(storeName, mode).objectStore(storeName)
     } else {
         return false
     }
 }
+
+//  savePostRequests
 
 function savePostRequests (url, payload) {
     //
@@ -45,7 +47,7 @@ function savePostRequests (url, payload) {
 
 function openDatabase () {
   // if `flask-form` does not already exist in our browser (under our site), it is created
-  var indexedDBOpenRequest = indexedDB.open('mysongs-db', 1)
+  var indexedDBOpenRequest = indexedDB.open(SW_DB, 1)
 
   indexedDBOpenRequest.onerror = function (error) {
     // error creatimg db
@@ -60,9 +62,9 @@ function openDatabase () {
 
   // This will execute each time the database is opened.
   indexedDBOpenRequest.onsuccess = function () {
-      g_song_db = this.result
-      if ( !g_song_db.objectStoreNames.contains(FOLDER_NAME) ) {
-          let objectstore = g_song_db.createObjectStore(FOLDER_NAME, { keyPath: 'id' })
+      g_contained_app_db = this.result
+      if ( !g_contained_app_db.objectStoreNames.contains(FOLDER_NAME) ) {
+          let objectstore = g_contained_app_db.createObjectStore(FOLDER_NAME, { keyPath: 'id' })
       }
   }
 }
@@ -361,26 +363,47 @@ self.addEventListener('fetch', (event) => {
 
 
 
-
-self.addEventListener('message', (event) => {
-                          console.log('form data', event.data)
-                          if ( event.data.hasOwnProperty('form_data') ) {
-                              g_form_data = event.data   // receives form data from script.js upon submission
-                          } else if ( event.data.hasOwnProperty('sendSongs') ) {
-                              event.waitUntil(sendPostToServer())
-                          }
-})
+self.onmessage = (event) => {
+    console.log('form data', event.data)
+    //
+    if ( event.data.hasOwnProperty('form_data') ) {
+        g_form_data = event.data   // receives form data from script.js upon submission
+    } else if ( event.data.hasOwnProperty(CONTAINED_PAGE) ) {
+        event.waitUntil(sendPostToServer())
+    }
+}
 
 
 
 self.addEventListener('sync', (event) => {
-                          console.log('now online')
-                          if ( event.tag === 'sendSongs' ) { // event.tag name checked here must be the same as the one used while registering sync
+                          if ( event.tag === CONTAINED_PAGE ) { // event.tag name checked here must be the same as the one used while registering sync
                               event.waitUntil(sendPostToServer())
                           }
                       })
 
-
+/*
+self.addEventListener('sync', event => {
+  if (event.tag == 'send-chats') {
+    event.waitUntil(
+      getMessagesFromOutbox().then(messages => {
+        // Post the messages to the server
+        return fetch('/send', {
+          method: 'POST',
+          body: JSON.stringify(messages),
+          headers: { 'Content-Type': 'application/json' }
+        }).then(() => {
+          // Success! Remove them from the outbox
+          return removeMessagesFromOutbox(messages);
+        });
+      }).then(() => {
+        // Tell pages of your success so they can update UI
+        return clients.matchAll({ includeUncontrolled: true });
+      }).then(clients => {
+        clients.forEach(client => client.postMessage('outbox-processed'))
+      })
+    );
+  }
+});*/
 
 self.addEventListener('push', (event) => {
     let options = {

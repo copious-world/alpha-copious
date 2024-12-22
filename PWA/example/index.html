@@ -917,6 +917,7 @@ html {
 		main_contaier.innerHTML = "Sorry... this browser does not support progressive web applications"
 	} else {
 
+		const HUMAN_PAGE_UPDATE = 'human-page-update'
 
 		async function service_worker_message_handler(msg_event) {
 			let data = event.data
@@ -1020,23 +1021,22 @@ html {
 			//
 		}
 
-
 		async function  ready_service_worker(params) {
 
 			try {
 				let registration = await navigator.serviceWorker.ready
 				if ( registration.sync ) {
-					await registration.sync.register('human-page-update')
+					let tags = await registration.sync.getTags()
+					const contained_page = HUMAN_PAGE_UPDATE
+					if ( !(tags.includes(contained_page)) ) {
+						await registration.sync.register(contained_page)
+					}
 				} else {
 					postDataFromThePage();
 				}
 			} catch (e) {
 				postDataFromThePage();
 			}
-
-// 
-// onsync = (event) => {};
-
 
 		}
 
