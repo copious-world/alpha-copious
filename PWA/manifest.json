@@ -1,7 +1,7 @@
 {
     "name": "{{pwa-name}}",
     "short_name": "{{pwa-name-short}}",
-    "description": "A skinable music player app to play your favorite mp3 files",
+    "description": "{{description}}",
     "lang": "en-US",
     "start_url": "./",
     "scope": "./",
@@ -16,29 +16,21 @@
     },
     "icons": [
         {
-            "src": "icons/512.png",
-            "type": "image/png",
-            "sizes": "512x512"
+            "src": "icon/lowres.webp",
+            "sizes": "48x48",
+            "type": "image/webp"
         },
         {
-            "src": "./favicon-48.png",
+            "src": "icon/lowres",
             "sizes": "48x48"
         },
         {
-            "src": "./favicon-96.png",
-            "sizes": "96x96"
+            "src": "icon/hd_hi.ico",
+            "sizes": "72x72 96x96 128x128 256x256"
         },
         {
-            "src": "./favicon-128.png",
-            "sizes": "128x128"
-        },
-        {
-            "src": "./favicon-256.png",
-            "sizes": "256x256"
-        },
-        {
-            "src": "./favicon-512.png",
-            "sizes": "512x512"
+            "src": "icon/hd_hi.svg",
+            "sizes": "257x257"
         }
     ],
     "screenshots": [
