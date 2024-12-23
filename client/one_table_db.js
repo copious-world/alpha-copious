@@ -455,7 +455,7 @@ class AppDBWrapper {
         let p = new Promise((resolve,reject) => {
             let self = this
 
-            let add_elem_original_chunks_callback = (value,dbIndex) => {
+            let update_list_elem_callback = (value,dbIndex) => {
                 let keyRangeValue = IDBKeyRange.only(value.name);
                     dbIndex.openCursor(keyRangeValue).onsuccess = async (event) => {
                     var cursor = event.target.result;
@@ -713,7 +713,7 @@ class AppDBWrapper {
         //
         let request = dataStore.put(session_object)
         request.onsuccess = (ev) => {
-            let rsult = event.target.result
+            let rsult = ev.target.result
             //
             this.current_session_name = session_object.name
         }

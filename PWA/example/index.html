@@ -959,12 +959,12 @@ html {
 
 		// Events from the serive worker
 		navigator.serviceWorker.oncontrollerchange = () => {
-								console.log('This page is now controlled by:', navigator.serviceWorker.controller);
-								var msg = {
-									'human-page-update': true
-								}
-								navigator.serviceWorker.controller.postMessage(msg)
-							};
+			console.log('This page is now controlled by:', navigator.serviceWorker.controller);
+			var msg = {
+				'human-page-update': true
+			}
+			navigator.serviceWorker.controller.postMessage(msg)
+		};
 
 
 		// ---- ---- ---- ---- ---- ---- ----
@@ -1021,7 +1021,7 @@ html {
 			//
 		}
 
-		async function  ready_service_worker(params) {
+		async function ready_service_worker() {
 
 			try {
 				let registration = await navigator.serviceWorker.ready
@@ -1035,7 +1035,7 @@ html {
 					postDataFromThePage();
 				}
 			} catch (e) {
-				postDataFromThePage();
+				postDataFromThePage(e);
 			}
 
 		}
@@ -1043,6 +1043,7 @@ html {
 
 		window.onload = async (evn) => {
 			await init_service_worker()
+			await ready_service_worker()
 		}
 
 	}
