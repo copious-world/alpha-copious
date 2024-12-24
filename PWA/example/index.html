@@ -580,7 +580,7 @@ html {
 
 
 	/*  Landscape */
-	@media screenand and (orientation: landscape)
+	@media screen and (orientation: landscape)
 		and (device-width: 360px) 
 		and (device-height: 640px) 
 		and (-webkit-device-pixel-ratio: 2) {
@@ -885,13 +885,13 @@ html {
                     &nbsp;
 				</td>
 				<td>
-					&nbsp;
+					Lifecycle&nbsp; <span id="lifecycle-report">&nbsp;</span>
 				</td>
 			</tr>
 		</table>
 	</nav>
 	<main id="app-sourcing">
-	<iframe src="" id="app-human-frame">
+	<iframe src="https://have_a_nice.of-this.world/" id="app-human-frame">
 
 	</iframe>
 	</main>
@@ -989,16 +989,16 @@ html {
 						// the service worker has been fetched from the server during registration
 						// now get stuff that goes into cache... this tell the client about it
 						serviceWorker = registration.installing;
-						document.getElementById("app-human-frame").textContent = "installing";
+						document.getElementById("lifecycle-report").textContent = "installing";
 					} else if ( registration.waiting ) {
 						// waiting for clients to quit using the old version (installed and activating)
 						// clear out the old caches any final setup processes
 						document.querySelector("#kind").textContent = "waiting";
-						document.getElementById("app-human-frame").textContent = "waiting";
+						document.getElementById("lifecycle-report").textContent = "waiting";
 					} else if ( registration.active ) {
 						// finally active -- new clients can interact with the service worker (messages and events)
 						serviceWorker = registration.active;
-						document.getElementById("app-human-frame").textContent = "active";
+						document.getElementById("lifecycle-report").textContent = "active";
 					}
 					//
 					logState(serviceWorker.state);
