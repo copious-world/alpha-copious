@@ -891,7 +891,7 @@ html {
 		</table>
 	</nav>
 	<main id="app-sourcing">
-	<iframe src="https://have_a_nice.of-this.world/" id="app-human-frame">
+	<iframe src="./new_user.html" id="app-human-frame">
 
 	</iframe>
 	</main>
@@ -1136,5 +1136,61 @@ html {
 			}
 		}
 	}
+
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// MESSAGE HANDLERS
+
+
+
+const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
+const HOST_APP_PERSONALIZATION = "personalization"
+const FRAME_HAS_PERSONALIZATION = "has-personalization"
+
+//
+// window.g_message_template = g_message_template = {
+// 	"category" : HOST_APP_PERSONALIZATION,
+// 	"direction" : HOSTED_APP_TO_FRAME,
+// 	"action" : FRAME_HAS_PERSONALIZATION,
+// 	"relationship" : "phone-install"
+// }
+function update_frame_source(url_str) {
+	let id="app-human-frame"
+	let human_frame = document.getElementById(id)
+	if ( human_frame !== null ) {
+		human_frame.src = url_str
+	}
+}
+//
+function install_new_user_response() {
+    window.addEventListener("message", (event) => {
+        let page_source = event.origin
+        if ( page_source !== '*' ) {
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+                if ( direction === HOSTED_APP_TO_FRAME ) {
+                    let _starter_page = event.source
+                    if ( category === HOST_APP_PERSONALIZATION ) {
+                        if ( action === FRAME_HAS_PERSONALIZATION ) {
+                            update_frame_source(mobj.data)
+                        }
+                    }
+                }
+            } catch (e) {
+            }    
+        }
+    })
+}
+
+
+install_new_user_response()
 
 </script>
