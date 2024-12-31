@@ -18,7 +18,7 @@
 	<!-- metas for PWA -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
-	<meta name="apple-mobile-web-app-title" content="copious-world-container">
+	<meta name="apple-mobile-web-app-title" content="copious-safe-recorder">
 	<meta name="msapplication-TileImage" content="link to the image in static folder">
 	<meta name="msapplication-TileColor" content="#000">
 
@@ -1259,4 +1259,72 @@ function setup_iframe_readiness_response() {
 install_new_user_response()
 setup_iframe_readiness_response()
 
+
+
+
+/*
+if (navigator.storage && navigator.storage.estimate) {
+  const quota = await navigator.storage.estimate();
+  // quota.usage -> Number of bytes used.
+  // quota.quota -> Maximum number of bytes available.
+  const percentageUsed = (quota.usage / quota.quota) * 100;
+  console.log(`You've used ${percentageUsed}% of the available storage.`);
+  const remaining = quota.quota - quota.usage;
+  console.log(`You can write up to ${remaining} more bytes.`);
+}
+
+
+// QuotaExceededError
+const transaction = idb.transaction(['entries'], 'readwrite');
+transaction.onabort = function(event) {
+  const error = event.target.error; // DOMException
+  if (error.name == 'QuotaExceededError') {
+    // Fallback code goes here
+  }
+};
+
+
+
+// cache -- QuotaExceededError
+try {
+  const cache = await caches.open('my-cache');
+  await cache.add(new Request('/sample1.jpg'));
+} catch (err) {
+  if (error.name === 'QuotaExceededError') {
+    // Fallback code goes here
+  }
+}
+
+
+
+
+
+
+
+// Check if site's storage has been marked as persistent
+if (navigator.storage && navigator.storage.persist) {
+  const isPersisted = await navigator.storage.persisted();
+  console.log(`Persisted storage granted: ${isPersisted}`);
+}
+
+// Request persistent storage for site -- A PERMISSION GRANTED BY THE USER
+if (navigator.storage && navigator.storage.persist) {
+  const isPersisted = await navigator.storage.persist();
+  console.log(`Persisted storage granted: ${isPersisted}`);
+}
+
+
+// If the persistent storage permission is granted, the browser will not evict data stored in:
+
+//     Cache API
+//     Cookies
+//     DOM Storage (Local Storage)
+//     File System API (browser-provided and sandboxed file system)
+//     IndexedDB
+//     Service workers
+//     App Cache (deprecated, should not be used)
+//     WebSQL (deprecated, should not be used)
+
+
+*/
 </script>
