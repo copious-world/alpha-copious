@@ -695,7 +695,7 @@ html {
 			<br><br>
 			Please click on this link that follows to begin this process.
 			<br><br>
-			<button onclick="go_get_identity()">MY BUTTON</button>
+			<button onclick="go_get_identity()" style="width: fit-content;">Create Intergalactic Identity</button>
 	</div>
 	
 	</main>
@@ -788,12 +788,13 @@ html {
 	//
 	function go_get_identity() {
 		tell_frame_page({
-			"data" : "https://have_a_nice.of-this.world/"
+			"data" : "https://www.of-this.world/igid-creator/"    // "https://have_a_nice.of-this.world/"
 		})
 	}
 
 
 	const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
+	const NEW_USER_TO_FRAME = "new_user_to_frame"
 	const HOST_APP_PERSONALIZATION = "personalization"
 	const FRAME_HAS_PERSONALIZATION = "has-personalization"
 
@@ -803,7 +804,7 @@ html {
 	//
 	g_message_template = {
 		"category" : HOST_APP_PERSONALIZATION,
-		"direction" : HOSTED_APP_TO_FRAME,
+		"direction" : NEW_USER_TO_FRAME,
 		"action" : FRAME_HAS_PERSONALIZATION,
 		"relationship" : "phone-install"
 	}

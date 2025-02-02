@@ -305,8 +305,13 @@ async function postData(url = '', data = {}, creds = 'omit', do_stringify = true
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-async function wv_update_user(user_object) {
-    // may send this to the client page....
+async function wv_update_user(user_object,current_session_name) {
+    // may send this to the client page....  
+    self.postMessage({
+        "type" : "keys-up",
+        "signer" : user_object.chunk_signer,
+        "session" : current_session_name
+    })
 }
 
 //
@@ -703,41 +708,25 @@ function set_current_app_ws_id(ws_id) {
 function post_wss(message) {
     if ( g_app_web_socket ) {
         let chunk_message = JSON.stringify(message)
-        g_app_web_socket.send(chunk_message)    
+        g_app_web_socket.send(chunk_message)
     }
 }
 
 function post_chunk(chunk_data) {
     if ( g_app_web_socket ) {
-        let chunk_message = JSON.stringify(chunk_data)
-        g_app_web_socket.send(chunk_message)    
+        let description = JSON.stringify(chunk_data.message)
+        g_app_web_socket.send(chunk_message)
+        self.postMessage({
+            "type" : "op-complete",
+            "transition" : chunk_data.transition,
+            "message" : chunk_data.message,
+            "description" : description,
+            "session" : g_current_session_name
+        })
+    
     }
 }
 
-
-// Data for persistence storage...
-function create_asset_meta(info_obj) {
-    let field_vars = {}
-    field_vars['asset-id'] = false
-    field_vars['rec-file-mtype'] = "audio/x-wav"
-    field_vars['rec-title'] = info_obj.name
-    field_vars['rec-subject'] = "New asset - " + Date.now()
-    field_vars['rec-keys'] = ""
-    field_vars['rec-abstract'] = ""
-    field_vars['rec-full-text'] = ""
-    //
-    field_vars['paid-checkbox'] = false
-    field_vars['WIP-checkbox'] = true
-    field_vars['rec-contract'] = false
-    //
-    field_vars['rec-file-name'] = info_obj.name
-    field_vars['rec-file-proper'] = info_obj
-    field_vars['rec-poster-name'] = ""
-    field_vars['rec-poster-proper'] = false
-    //
-    field_vars['rec-was-published'] = false
-    field_vars['rec-was-uploaded'] = false
-}
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -754,7 +743,7 @@ self.onmessage = async (e) => {
                     let sign_keys = await galactic_user_starter_keys('signer')
                     g_user_info.chunk_signer = sign_keys
                     g_chunk_signer = sign_keys
-                    await wv_update_user(g_user_info)
+                    await wv_update_user(g_user_info,g_current_session_name)
                 } else {
                     g_chunk_signer =  g_user_info.chunk_signer
                 }
@@ -781,6 +770,7 @@ self.onmessage = async (e) => {
             } else {
                 g_current_session_nonce = session_object.nonce
             }
+            await wv_update_user(g_user_info,g_current_session_name)
             
             let remote_session_op = {
                 'transition' : 'recording-session',
@@ -817,7 +807,7 @@ self.onmessage = async (e) => {
             let secret = xor_byte_arrays(g_nonce_buffer,time_array)
             // has the secret into the chunk
             // -- hash_of_chunk -- SHA-256 of xor with secret  = (time ^ data) ^ random = (time ^ random) ^ data
-            let chunk_hash = await hash_of_chunk(new_chunk,secret)  // chunk has is a string in the hex alphabet
+            let chunk_hash = await hash_of_chunk(new_chunk,secret)  // chunk hash is a string in the hex alphabet
             // STORE HASH LOCALLY -- not yet in DB -- the chunk is in the DB
             g_current_chunks.push(chunk_hash)
             let nonce_hx_str = hex_fromTypedArray(g_nonce_buffer)  // a string
@@ -836,7 +826,7 @@ self.onmessage = async (e) => {
                     'server_id' : g_identified_server
                 }       // there is no blob id yet...
             }
-            post_chunk(remote_cache_op)  // send updates to the server (short message)
+            post_chunk(remote_cache_op)  // web socket send updates to the server (short message)
             break;
         }
         case 'benchmark' : {        // storage benchmark - hash identifying a whole session
@@ -848,23 +838,24 @@ self.onmessage = async (e) => {
                     // message.blob_id -- a uuid, made for the blob
                     // next get the session data for this blob from the DB
                     let hashes = await retrieve_hash_from_db(message.blob_id,g_current_session_name)
+                    //
                     // message.blob -- the audio blob, made from the chunks gathered - real time.
                     let c_hash = await combined_hash_signed_and_store(hashes,message.blob_id,message.blob,null)
                         // STORE HASH REMOTELY  // STORE HASH REMOTELY
                     let remote_cache_op = {
-                        'transition' : 'chunk-final',
+                        'transition' : 'chunk-final',   // no blob in message
                         'message' : {
                             'chunk_final' : c_hash,
                             'ucwid' : g_user_info.ucwid,
                             'session' : g_current_session_name,
-                            'nonce' : g_current_session_nonce,
                             'verify_key' : g_chunk_signer.signer_pk_str,
                             'client_time' : Date.now(),
                             'server_id' : g_identified_server,    // identifies the user recording session
+                            'nonce' : g_current_session_nonce,
                             'section' : message.blob_id             // UUID from web page
                         }
                     }
-                    post_chunk(remote_cache_op)
+                    post_chunk(remote_cache_op) // web socket send updates to the server (short message)
                     // discard data mapping to chunks gathhered while recording
                     g_current_chunks = []
                     g_current_nonces = []
@@ -875,6 +866,7 @@ self.onmessage = async (e) => {
                     // message.blob_id -- a uuid, made for the blob - stays the same after edits, etc.
                     // next get the session data for this blob from the DB
                     let hashes = await retrieve_hash_from_db(message.blob_id,g_current_session_name)
+                    //
                     // message.blob -- the audio blob, made from the chunks gathered - real time - and then edited
                     // make a new hash for the edit
                     let edit_ops = JSON.stringify(hashes.operations)
@@ -888,31 +880,17 @@ self.onmessage = async (e) => {
                             'verify_key' : g_chunk_signer.signer_pk_str,
                             'client_time' : Date.now(),
                             'server_id' : g_identified_server,
-                            'section' : message.blob_id,
                             'nonce' : g_current_session_nonce,
+                            'section' : message.blob_id,
                             'ops' : edit_ops
                         }
                     }
-                    post_chunk(remote_cache_op)
+                    post_chunk(remote_cache_op) // web socket send updates to the server (short message)
                     break;
                 }
                 default: {      // error condition
                     break;
                 }
-            }
-            break;
-        }
-        case 'storage' : {          // send a complete session
-            let sess_name = message.sess_id
-            try {
-                // get the session made by the recorde (effectively use the DB as a means of communications)
-                let sess_data = await fetch_compressed_session_from_db(sess_name) // complete sessions (complete session db)
-                // The JSON (object) wrapper of the blob data should have fields required by persisitence storage
-                let meta = create_asset_meta(sess_data)
-                // Now, with meta data stored the data on the WIP persistence path === 'ownership'
-                create_entry(meta)
-            } catch (e) {
-                // ----
             }
             break;
         }
@@ -1185,185 +1163,14 @@ if ( typeof g_message_template === undefined ) {
 
 let g_frame_page = window.parent
 
-let hosted_page_application_handlers = (category,action,relationship,params) => {}
-
-
-
-function responding_alive() {
-    let message = {
-        "category": FRAME_COMPONENT_SAY_ALIVE,
-        "action" : FRAME_COMPONENT_RESPOND,
-        "data" : false
-    }
-    tell_frame_page(message)
-}
-
-
-function install_frame_page_response() {
-    g_gratis_negotiator.onmessage( (event) => {
-        // let opener = event.source --- the site page is assumed to be the top level of the interactions
-        try {
-            let mobj = JSON.parse(event.data)
-            let category = mobj.category
-            let relationship = mobj.relationship
-            let action = mobj.action
-            let direction = mobj.direction
-            //
-            if ( direction === FRAME_PAGE_TO_PUBLISHER ) {
-                if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
-                    if ( action === FRAME_COMPONENT_RESPONDING ) {
-                        console.log("functioning")
-                    }
-                } else {
-                    let params = mobj.data
-                    hosted_page_application_handlers(category,action,relationship,params)
-                }
-            }
-        } catch (e) {
-        }    
-    })
-}
-
 
 let injest_personalization = false
 let injest_session = false
-let application_specific_handlers = (category,action,relationship,params) => {}
 
 let personalization = (post_params) => {}
 
 
-hosted_page_application_handlers = async (category,action,relationship,params) => {
-    switch ( category ) {
-        case HOST_APP_PERSONALIZATION : {
-            if ( typeof injest_personalization === "function" ) {
-                await injest_personalization(action,params)
-            }
-            break;
-        }
-        case FRAME_TO_HOSTED_APP_SESSIONS : {          /// a hosted page that does not start a session.
-            if ( typeof injest_session === "function" ) {
-                await injest_session(action,params)
-            }
-            break;
-        }
-        default: {                  /// any other actions ... could be a login page that fetches a session
-            await application_specific_handlers(category,action,relationship,params)
-            break;
-        }
-    }
-}
-
-
-function tell_frame_page(message) {
-    if ( !g_gratis_negotiator ) return(false)
-    let msg = Object.assign({},g_message_template)
-    msg.direction = HOSTED_PUBLISHER_TO_FRAME
-    msg.relationship = PUBLISHER_RELATES_TO_FRAME
-    msg.action = message.action
-    msg.category = message.category
-    msg.data = message.data
-    let message_str = JSON.stringify(msg)
-    g_gratis_negotiator.postMessage(message_str,'*')
-    return true
-}
-
-
 // END OF HOSTED APP PAGE COM  (ALPHA)
-
-
-
-
-
-
-
-
-application_specific_handlers = async (category,action,relationship,params) => {
-		try {
-			if ( category === FRAME_TO_APP_PUBLIC_COMPONENT ) {
-				switch ( action ) {
-					case FRAME_POSTED_PRIMARY: {
-						let response = params.response
-						if ( response ) {
-							g_responder_tables["post-response"].resolver(response)
-						} else {
-							g_responder_tables["post-response"].rejector()
-						}
-						break
-					}
-					case FRAME_LIST_DATA: {
-						if ( params && params.file_names ) {
-							g_responder_tables["data-requests"].resolver(params.file_names)
-						} else {
-							g_responder_tables["data-requests"].rejector()
-						}
-						break
-					}
-					case FRAME_RAN_PUB_OP: {
-						if ( params.op ) {
-							g_responder_tables["data-requests"].resolver(params.op)
-						} else {
-							g_responder_tables["data-requests"].rejector()
-						}
-						break
-					}
-					case FRAME_RETURNS_DATA: {
-						if ( params ) {
-							g_responder_tables["data-requests"].resolver(params)
-						} else {
-							g_responder_tables["data-requests"].rejector()
-						}
-						break
-					}
-					case FRAME_RETURNS_SESSION_CHECK: {
-						if ( params.active ) {
-							g_responder_tables["session-check"].resolver(true)
-						} else {
-							g_responder_tables["session-check"].resolver(false)
-						}
-						break;
-					}
-				}
-			}
-		} catch (e) {
-			console.log(e)
-		}
-	}
-
-
-
-// MODULE: ????
-
-
-const AUDIO_STREAMING_SERVICE = "https://www.popsongnow.com/audio/"
-const VIDEO_STREAMING_SERVICE = "https://www.popsongnow.com/video/"
-const IMAGE_STORAGE_SERVICE = "https://www.popsongnow.com/images/"
-
-// 
-//
-// All of these make a link that will server the stored object given its placement into a p2p service cloud.
-// The link may be filtered through a service worker that translates it into the p2p pathway such as ipfs.
-//
-function make_audio_upload_link(obj) {
-	let file_name = obj.file_name
-	let stream_link = AUDIO_STREAMING_SERVICE + file_name
-	prep_upload_for(obj,upload_audio)
-	return(stream_link)
-}
-
-function make_video_upload_link(obj) {
-	let file_name = obj.file_name
-	let stream_link = VIDEO_STREAMING_SERVICE + file_name
-	prep_upload_for(obj,upload_video)
-	return(stream_link)
-}
-
-function make_image_upload_link(obj) {
-	let file_name = obj.file_name
-	let stream_link = IMAGE_STORAGE_SERVICE + file_name
-	prep_upload_for(obj,upload_image)
-	return(stream_link)	
-}
-
 
 
 
@@ -1372,431 +1179,6 @@ function make_image_upload_link(obj) {
 
 const DEFINED_CHUNK_SIZE = 5000000
 const DEFINED_MAX_SIZE = 9000000
-
-
-
-
-// prep_upload_data
-// 	-- if needed prepare the blob...  in any case separate the blob from the com object to send it later.
-// 	-- return the com object and blob as a pair
-//
-async function prep_upload_data(obj,blob_already,protocol) {
-	//
-	let blob_data = ""
-	//
-	if ( !(blob_already) )  {
-		try {
-			let res = await fetch(obj.blob)
-			blob_data = await res.blob()
-		} catch(e) {
-			return
-		}
-	} else {
-		blob_data = blob_already
-	}
-	//
-	if ( obj.blob !== undefined )  {
-		delete obj.blob
-	}
-	obj.protocol = protocol ? protocol : 'p2p-default'
-	obj.preamble_size = blob_data.size
-
-	return [obj,blob_data]
-}
-
-
-
-//$>>	finalize_small_media_storage
-async function finalize_small_media_storage(url,primary_response) {
-	if ( primary_response.transition && primary_response.transition.token ) {
-		let transaction_token = primary_response.transition.token
-		let protocol = primary_response.elements.protocol
-		let media_id = primary_response.elements.media_id
-		let body = {
-			"token" : transaction_token,
-			"match" : "handshake",
-		}
-		body.protocol = protocol
-		body.media_id = media_id   // maybe a checksum
-		let secondary_resp =  await postData(url,body)
-		return [protocol,media_id]
-	}
-	return [false,false]
-}
-
-
-//$>>	finalize_media_storage
-//                                                  <<depends>> postData
-//	There are likely faster ways of sending the data. But, this way requires some permission and safe guarding by the server sid.
-//	sending multi part form data . The blob list is actually file objects 
-async function finalize_media_storage(url,primary_response,formdata,blob,obj) {
-	//
-	let secondary_resp = primary_response
-	//
-	if ( primary_response.transition && primary_response.transition.token ) {	// A token has to be associated with the transaction
-		//
-		if ( formdata === false ) {
-			formdata = new FormData()
-			for ( let ky in obj ) {
-				formdata.append(ky, obj[ky])
-			}
-		}
-		let transaction_token = secondary_resp.transition.token		// call the transition token the transaction_token
-		let protocol = obj.protocol ? obj.protocol : 'p2p-default'				// These fields have no real value until the end, but are always checked in case they may be used for security.
-		let media_id = ""
-		//
-		formdata.set("protocol",protocol)				// Most likely ipfs ... 
-		formdata.set("media_id",media_id)				// not set until the storage system can identify 
-		formdata.set("token",transaction_token)
-		formdata.set("match","upload-next")				// tell the server that you are sending one chunk after another
-		formdata.set("next",true)  // NEXT
-		formdata.set("_t_match_field",obj.file_name)
-		//
-		let size_end = blob.size						// total length of the data in flight
-		let start = 0;
-		let span = DEFINED_CHUNK_SIZE					// application generation sets this (tuning upstream)
-		let num_sends = Math.floor(size_end/span) + 1	// size/chunk_size
-		//
-		for ( let i = 0; i < num_sends; i++ ) {			// the number of times this is called is determined by the client
-			//
-			let start = i*span
-			let end = Math.min((i+1)*span,size_end)
-			let blob_part = blob.slice(start,end)  				// next part of the blob
-			formdata.set('media_file', new Blob([blob_part]),obj.file_name)
-			secondary_resp = await postData(url,formdata, 'omit',false,'multipart/form-data')  // send it as a separate file
-			//
-			if ( (secondary_resp.OK !== "true") && (secondary_resp.OK !== "true") ) {
-				break;			// This last send failed. Bailout  (If failed, the server will shutdown the communication)
-			}
-		}
-		//
-		if ( (secondary_resp.OK === "true") || (secondary_resp.OK === "true") ) {						// The last send was good.
-			let body = {
-				"token" : transaction_token,
-				"match" : "complete",
-				"_t_match_field" : obj.file_name,
-				"file" : { "name" : obj.file_name },
-				"next"	: false		// NO NEXT
-			}
-			secondary_resp =  await postData(url,body)			// Tell the server that this transaction is done...
-			if ( secondary_resp && secondary_resp.state ) {
-				let elements = secondary_resp.state.elements			// The good stuff is returned in a state field 
-				if ( elements ) {
-					protocol = elements.protocol  // final hash and provider returned in state (same as for the shor but in the state field)
-					media_id = elements.media_id
-				}
-			}
-		}
-		//
-		return [protocol,media_id]
-	}
-	return [false,false]
-}
-
-
-
-//$>>	finalize_media_array_storage
-//                                                  <<depends>> postData
-//	There are likely faster ways of sending the data. But, this way requires some permission and safe guarding by the server sid.
-//	sending multi part form data . The blob list is actually file objects 
-async function finalize_media_array_storage(url,primary_response,formdata,blob_list,obj) {
-	//
-	let secondary_resp = primary_response
-	//
-	// TOKEN ->
-	if ( primary_response.transition && primary_response.transition.token ) {	// A token has to be associated with the transaction
-		//
-		// include extra (not default) fields and elements
-		if ( formdata === false ) {		// sending as a file form
-			formdata = new FormData()
-			for ( let ky in obj ) {
-				formdata.append(ky, obj[ky])
-			}
-		}
-		let transaction_token = secondary_resp.transition.token		// call the transition token the transaction_token
-		let protocol = obj.protocol ? obj.protocol : 'p2p-default'				// These fields have no real value until the end, but are always checked in case they may be used for security.
-		let media_id = ""
-		//
-		formdata.set("protocol",protocol)				// Most likely ipfs ... 
-		formdata.set("media_id",media_id)				// not set until the storage system can identify 
-		formdata.set("token",transaction_token)
-		formdata.set("match","upload-next")				// tell the server that you are sending one chunk after another
-		formdata.set("next",true)  // NEXT
-		formdata.set("_t_match_field",obj.file_name)
-		//
-
-		let max_num_sends = 0
-		let blob_pars = blob_list.map( blob => {
-			let size_end = blob.size						// total length of the data in flight
-			let start = 0;
-			let span = DEFINED_CHUNK_SIZE					// application generation sets this (tuning upstream)
-			let num_sends = Math.floor(size_end/span) + 1	// size/chunk_size
-			max_num_sends = (num_sends > max_num_sends) ?  num_sends : max_num_sends
-			return {
-				blob, size_end, start, span, num_sends
-			}
-		})
-		// 
-		//
-		for ( let i = 0; i < max_num_sends; i++ ) {			// the number of times this is called is determined by the client
-			//
-			for ( let blob_dscr of blob_pars ) {
-				if ( blob_dscr.num_sends === 0 ) continue
-				let blob = blob_dscr.blob
-				let span = blob_dscr.span
-				let start = span*i
-				let size_end = blob_dscr.size_end
-				let end = Math.min((i+1)*span,size_end)
-
-				let blob_part = blob.slice(start,end)  				// next part of the blob
-				formdata.set('media_file', new Blob([blob_part]), blob_dscr.file_name)
-				blob_dscr.num_sends--
-			}
-			//
-			// POST chunk wrapped in a Form descriptor
-			secondary_resp = await postData(url,formdata, 'omit',false,'multipart/form-data')  // send it as a separate file
-			//
-			if ( (secondary_resp.OK !== "true") && (secondary_resp.OK !== true) ) {
-				break;			// This last send failed. Bailout  (If failed, the server will shutdown the communication)
-			}
-		}
-		//
-		if ( (secondary_resp.OK === "true") || (secondary_resp.OK === true) ) {						// The last send was good.
-			// SEND LAST CHUNK
-			let body = {
-				"token" : transaction_token,
-				"match" : "complete",
-				"_t_match_field" : obj.file_name,
-				"file" : { "name" : obj.file_name },
-				"next"	: false		// NO NEXT
-			}
-			// postData
-			secondary_resp =  await postData(url,body)			// Tell the server that this transaction is done...
-			let elements = secondary_resp.state		// The good stuff is returned in a state field 
-			protocol = elements.protocol  // final hash and provider returned in state (same as for the shor but in the state field)
-			media_id = elements.media_id
-		}
-		//
-		return [protocol,media_id]   // this will be for tracking, etc.
-	}
-	return [false,false]
-}
-
-
-
-//$>>	finalize_media_array_storage_deep_json
-//                                                  <<depends>> postData
-// sending json with a layerd structure (includes meta field)
-// this is distinguished from the other methods that expect a file object to be used as multipart form data...
-// not sedning multi-part form data
-//	There are likely faster ways of sending the data. But, this way requires some permission and safe guarding by the server sid.
-async function finalize_media_array_storage_deep_json(url,token,primary_response,formdata,blob_list,postable) {
-	//
-	let secondary_resp = primary_response
-	//
-	// TOKEN ->
-	if ( primary_response.transition && primary_response.transition.token ) {	// A token has to be associated with the transaction
-		//
-		// include extra (not default) fields and elements
-		if ( formdata === false ) {		// sending as a file form
-			formdata = {}
-			for ( let ky in postable ) {
-				if ( ky === 'meta' ) continue
-				formdata[ky] = postable[ky]
-			}
-		}
-		let transaction_token = token		// call the transition token the transaction_token
-		let protocol = postable.protocol ? postable.protocol : 'p2p-default'				// These fields have no real value until the end, but are always checked in case they may be used for security.
-		let media_id = ""
-		formdata.json_chunks = true
-		//
-		formdata.protocol = protocol					// Most likely ipfs ... 
-		formdata.media_id = media_id					// not set until the storage system can identify 
-		formdata.token = transaction_token
-		formdata.match = "upload-next"					// tell the server that you are sending one chunk after another
-		formdata.next = true
-		formdata._t_match_field = postable.file_name
-		//
-		let max_num_sends = 0
-		let blob_pars = blob_list.map( blob_descr => {
-			let blob = blob_descr.blob_url
-			let name = blob_descr.name
-			let size_end = blob.length						// total length of the data in flight
-			let start = 0;
-			let span = DEFINED_CHUNK_SIZE					// application generation sets this (tuning upstream)
-			let num_sends = Math.floor(size_end/span) + 1	// size/chunk_size
-			max_num_sends = (num_sends > max_num_sends) ? num_sends : max_num_sends
-			return {
-				blob, name, size_end, start, span, num_sends
-			}
-		})
-		// 
-		let media_meta = postable.meta
-		//
-		for ( let i = 0; i < max_num_sends; i++ ) {			// the number of times this is called is determined by the client
-			//
-			formdata.media_parts = {}
-			for ( let blob_dscr of blob_pars ) {
-				if ( blob_dscr.num_sends === 0 ) continue
-				let blob = blob_dscr.blob
-				let span = blob_dscr.span
-				let start = span*i
-				let size_end = blob_dscr.size_end
-				let end = Math.min((i+1)*span,size_end)
-				//
-				let blob_part = blob.slice(start,end)  				// next part of the blob
-				formdata.media_parts[blob_dscr.name] = blob_part
-				blob_dscr.num_sends--
-			}
-			//
-			// POST chunk wrapped in a Form descriptor
-			secondary_resp = await postData(url,formdata,'omit')	//	the blob_url will be sent as part of the JSON object
-			//
-			if ( (secondary_resp.OK !== "true") && (secondary_resp.OK !== true) ) {
-				break;			// This last send failed. Bailout  (If failed, the server will shutdown the communication)
-			}
-		}
-		//
-		if ( (secondary_resp.OK === "true") || (secondary_resp.OK === true) ) {						// The last send was good.
-			// SEND LAST CHUNK
-			let body = {
-				"token" : transaction_token,
-				"match" : "complete",
-				"file_list" : blob_list,
-				"_t_match_field" : postable.file_name,
-				"file" : { "name" : postable.file_name },
-				"next"	: false		// NO NEXT
-			}
-			// postData
-			secondary_resp =  await postData(url,body)			// Tell the server that this transaction is done...
-			let elements = secondary_resp.state		// The good stuff is returned in a state field 
-			protocol = elements.protocol  // final hash and provider returned in state (same as for the shor but in the state field)
-			media_id = elements.media_id
-		}
-		//
-		return [protocol,media_id]   // this will be for tracking, etc.
-	}
-	return [false,false]
-}
-
-
-
-
-//$>>	upload_small
-//                                                  <<depends>> postData,finalize_small_media_storage
-async function upload_small(url,obj,blob_already) {			// 	obj.media_type  // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
-	//
-	let [com_obj,blob_data] = await prep_upload_data(obj,blob_already,'p2p-default')
-	//
-	let formdata = new FormData()
-	for ( let ky in com_obj ) {
-		formdata.append(ky, com_obj[ky])
-	}
-	formdata.append('media_file', new Blob([blob_data]), obj.file_name)
-	//
-	// in the small versions, the file is sent immediately. No preamble
-	//
-	let primary_response =  await postData(url,formdata,'omit',false,'multipart/form-data')
-	if ( primary_response.OK === "true" ) {
-		let media_store_characteristics = await finalize_small_media_storage(primary_response)
-		return media_store_characteristics
-	} else {
-		return [false, false]
-	}
-}
-
-//$>>	upload_big
-//                                                  <<depends>> postData,finalize_media_storage
-async function upload_big(url,obj,blob_already) {
-	//
-	let [com_obj,blob_data] = await prep_upload_data(obj,blob_already,'p2p-default')
-	//
-	let formdata = new FormData()
-	for ( let ky in com_obj ) {
-		formdata.append(ky, com_obj[ky])
-	}
-	//
-	// in the large versions, a preamble is sent with the size of the data. No data is sent in the first message
-	//
-	let primary_response = await postData(url,formdata,'omit',false,'multipart/form-data')
-	//
-	if ( primary_response.OK === "true" ) {		// If the system can handle the request, start a cycle of sends
-		let media_store_characteristics = await finalize_media_storage(primary_response,formdata,blob_data,obj)
-		return media_store_characteristics
-	} else {
-		return [false, false]
-	}
-}
-
-
-
-
-
-	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
-
-	let g_responder_tables = {
-		"post-response" : {
-			"resolver" : false,
-			"rejector" : false
-		},
-		"data-requests" : {
-			"resolver" : false,
-			"rejector" : false
-		},
-		"session-check" : {
-			"resolver" : false,
-			"rejector" : false
-		}
-	}
-
-	function promise_handling(source_name) {
-		if ( g_responder_tables[source_name] !== undefined ) {  // do we implement this entry?
-			let p = new Promise((resolve,reject) => {
-				g_responder_tables[source_name].resolver = (resp_obj) => {
-					g_responder_tables[source_name] = {
-						"resolver" : false,
-						"rejector" : false            
-					}
-					resolve(resp_obj)
-				}
-				g_responder_tables[source_name].rejector = () => {
-					g_responder_tables[source_name] = {
-						"resolver" : false,
-						"rejector" : false            
-					}
-					reject(false)
-				}
-			})
-			return p    
-		}
-		return false
-	}
-
-
-
-	let g_app_path = "publisher"
-	let g_uploader_path = "uploaders"
-
-	// g_app_path important to nginx configuration
-
-	function get_transition_endpoint(endpoint) {
-		let url = `${location.protocol}//${location.host}/${g_app_path}/transition/${endpoint}`
-		return url
-	}
-
-	function get_secondary_transition_endpoint(endpoint) {
-		let url = `${location.protocol}//${location.host}/${g_app_path}/secondary/transition`
-		return url
-	}
-
-	function get_secondary_transition_uploader_endpoint(endpoint) {
-		let url = `${location.protocol}//${location.host}/${g_uploader_path}/secondary/transition`
-		return url
-	}
-
-
 
 
 
@@ -1973,590 +1355,5 @@ async function galactic_user_starter_keys(selector) {
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
-
-	// prep_send_new_entry
-	async function prep_send_new_entry(data_hash,send_obj,link_meta) {
-		// send the fields this knows about. Expect the human frame to handle a hash and security
-		let postable = Object.assign(send_obj,{
-			"topic" : "command-upload",
-			"path" : "upload-media"			// dashboard is sending files... while others may send just JSON on the 'lite' path
-		})
-		//
-		//
-		let message = {
-			"category": FRAME_ACTION_FROM_PUBLISHER,
-			"action" : HOST_UP_REQ_UPLOAD,
-			"data" : {
-				"link" : get_transition_endpoint(link_meta.link),
-				"hash" : data_hash,
-				"postable" : postable
-			}
-		}
-		tell_frame_page(message)  // ask for the primary transition to be handled by the human frame...
-		//
-		let primary_response = await promise_handling("post-response")
-		return primary_response
-	}
-
-
-
-	async function send_new_entry(object_data_meta,link_meta,asset_type) {
-		/*
-		object_data_meta === { "meta" : good_data }  // search for>> "meta" : good_data
-		*/
-		if ( object_data_meta.meta.media && object_data_meta.meta.media.source ) {
-			let blob_data = object_data_meta.meta.media.source.blob_url
-			let blob_data_size = object_data_meta.meta.media.source.size
-			if ( object_data_meta.meta.media.poster ) {
-				blob_data_size += object_data_meta.meta.media.poster.size
-			}
-			//
-			let com_obj = {
-				protocol : 'p2p-default',
-				preamble_size : blob_data_size  // send total size
-			}
-			com_obj = Object.assign(object_data_meta,com_obj)
-			//
-			// +  obj.protocol,  + obj.preamble_size    // { "meta" : good_data, "protocol" : - ,  "preamble_size" : - }
-			let data_hash = await do_hash(blob_data)  // the file data of the main type of media (e.g. movie, sound, which might also upload an image)
-			//   post data in here  (prep --- don't send the actual file... )
-
-			let backup_media = {
-				"source" : com_obj.meta.media.source ? com_obj.meta.media.source : undefined,
-				"poster" : com_obj.meta.media.poster ? com_obj.meta.media.poster : undefined
-			}
-
-			// make copies of the media components
-			com_obj.meta.media.source = Object.assign({},com_obj.meta.media.source)
-			delete com_obj.meta.media.source.blob_url  // (prep --- don't send the actual file... )
-			//
-			if ( object_data_meta.meta.media.poster ) {
-				com_obj.meta.media.poster = Object.assign({},com_obj.meta.media.poster)
-				delete com_obj.meta.media.poster.blob_url   // (prep --- don't send the actual file... )
-			}
-
-			// TELL THE FRAME THAT YOU ARE ABOUT TO UPLOAD DATA (and need a ticket)
-			let primary_response = await prep_send_new_entry(data_hash,com_obj,link_meta)
-			//
-			if ( primary_response.OK == "true" ) {
-				let upload_keys = primary_response.elements  // should be produced by publication handling
-				let postable = Object.assign(com_obj,{
-					"token" : primary_response.token,		// primary action token (key to secondary)
-					"asset_type" : asset_type,
-					"sign" : upload_keys.sign,
-					"hash" : data_hash
-				})
-				// --- backup_media -- the blobs should be loaded (later -- maybe sliceable)
-				let blob_list = []
-				if ( backup_media.source ) blob_list.push(backup_media.source)
-				if ( backup_media.poster ) blob_list.push(backup_media.poster)
-				//
-				let link = get_secondary_transition_uploader_endpoint(link_meta.secondary_link)
-				//
-				let token = primary_response.elements.token
-				//  , primary_response -> original respone, false -> will make FromData, blob_data -> one file, 
-				let media_store_characteristics = await finalize_media_array_storage_deep_json(link,token,primary_response,false,blob_list,postable)
-				
-				return media_store_characteristics
-			}
-		}
-
-		return [false,false]
-		//
-	}
-
-
-
-	async function send_publication_command(command,object_data_meta,link_meta) {
-		let data_hash = do_hash(object_data_meta)
-		//
-		let postable = Object.assign(object_data_meta,{
-			"topic" : `command-${command}`,
-			"path" : "upload-media",
-			"file_name" : data_hash
-		})
-		//
-		let message = {
-			"category": FRAME_ACTION_FROM_PUBLISHER,
-			"action" : HOST_UP_REQ_UPLOAD,
-			"data" : {
-				"link" : get_transition_endpoint(link_meta.link),
-				"hash" : data_hash,
-				"postable" : postable
-			}
-		}
-		tell_frame_page(message)  // ask for the primary transition to be handled by the human frame...
-		//
-		let primary_response = await promise_handling("post-response")
-		if ( primary_response.OK == "true" ) {
-			return true
-		} 
-		return false
-		//
-	}
-
-
-
-	async function app_run_file_op(file_obj,operation) {
-		let message = {
-			"category": FRAME_ACTION_FROM_PUBLISHER,
-			"action" : HOSTED_APP_FILE_OPERATION,
-			"data" : {
-				"op" : operation,
-				"file" : file_obj
-			}
-		}
-		//
-		tell_frame_page(message)  // ask for the primary transition to be handled by the human frame...
-		//
-		try {
-			let file_info = await promise_handling("data-requests")
-			return file_info
-		} catch (e) {
-			console.log(e)
-		}
-		return false
-	}
-
-let g_ui_data = new DataFromUi()
-let g_proxy = new Proxy()
-
-///
-
-// field_data :: in the following, field_data is a map of fields ids to DOM element objects. 
-// values will be read in from those fields
-// calculation on values will be handled by gather_fields
-// FILES: two fields will refer to the DOM element for file uploaders. 
-//		-- rec-file-name	--- likely a media file e.g. mp3, mov, etc.
-//		-- rec-poster-name   --- likely an image file that will be displayed
-
-//
-// ---- create_entry ---- ---- ---- ---- ---- ---- ----
-async function create_entry(field_data) {
-    if ( field_data ) {
-        let good_data = await g_ui_data.gather_fields(field_data)  // puts the upload file into the structure
-        if ( good_data ) {
-            let t_num = await g_proxy.new_entry(good_data)
-            return t_num /// for placement into display				
-        }
-        return false
-    }
-}
-
-
-
-
-//
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-let g_punctuation = ".,;:\'\"~\~\`@#$%^&*()+=|\\][}{?/><"
-
-function ispunct(c,add_dash) {
-    let is = (g_punctuation.indexOf(c) >= 0 )
-    if ( !(is) && add_dash ) {
-        is = (c == '-' || c == '_')
-    }
-    return is
-}
-
-function trim_punct(key,add_dash) {
-    while ( (key.length > 0) && ispunct(key[0],add_dash) ) {
-        key = key.substr(1)
-    }
-    while ( (key.length > 0) && ispunct(key[key.length - 1],add_dash) ) {
-        key = key.substr(0,(key.length - 1))
-    }
-    return(key)
-}
-
-
-
-class DataFromUi {
-
-    constructor() {
-        this._user_id = false
-        this._current_asset_history = false
-        this._current_asset_prev_text = ""
-        this._current_asset_text_ucwid_info = false
-    }
-
-    get_file(name,file_record) {
-        //
-        if ( name.length ) {
-            if ( file_record.blob ) {
-                let basename = name.substring(0,name.lastIndexOf('.'))
-                let ext = name.replace(basename + '.','')
-                let loaded = {
-                    "blob_url" : file_record.blob,
-                    "name" : basename,
-                    "ext" : ext,
-                    "mtype" : file_record.type,
-                    "size" : file_record.size,
-                    "file" : {
-                        "lastModified" : file_record.lastModified
-                    }
-                }
-                return loaded
-            }
-        }
-        //
-        return false
-    }
-
-    set_user_id(uid) {
-        this._user_id = uid
-    }
-
-    //  ----  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-    async gather_fields(field_vars) {
-        //
-        if ( this._user_id === false ) {
-            return false
-        }
-        //
-        let upload_record = {}
-        try {
-            let asset_pair = field_vars['rec-file-mtype']
-            let title = field_vars['rec-title']
-            let subject = field_vars['rec-subject']
-            let keys = field_vars['rec-keys']
-            let abstract = field_vars['rec-abstract']
-            let full_text = field_vars['rec-full-text']
-            //
-            let paid = field_vars['paid-checkbox']
-            let WIP = field_vars['WIP-checkbox']
-            let contract = field_vars['rec-contract']
-            //
-            let name = field_vars['rec-file-name']
-            let file_proper = field_vars['rec-file-proper']
-            let poster = field_vars['rec-poster-name']
-            let poster_file_proper = field_vars['rec-poster-proper']
-            //
-            let been_published = field_vars['rec-was-published']
-            let uploaded = field_vars['rec-was-uploaded']
-            //
-            if ( title.length === 0 ) return false
-            if ( subject.length === 0 ) return false
-            if ( asset_pair.length === 0 ) return false
-            let [asset_type,media_type] = asset_pair.split('/')
-            /*
-                stream/audio
-                stream/video
-                stream/image
-                blog/text
-                music_buzz/text
-            */
-            let media_data = await this.get_file(name,file_proper)
-            let poster_data = await this.get_file(poster,poster_file_proper)        // file names for stream type media
-
-            if ( (media_type !== 'text') && (media_data === false) && (poster === false) ) {
-                return false
-            }
-            if ( ( media_type === 'text' ) && ( full_text.length === 0 ) ) {
-                return false
-            } else if ( media_type !== 'text' ) {
-                full_text = name
-            }
-            //
-            let modDate = media_data ? media_data.file.lastModified : ( poster_data ? poster_data.file.lastModified : Date.now())
-            //
-            keys = keys.split(' ').filter( key => {
-                let ok = (key !== undefined)
-                if ( ok ) ok = (key.length > 2)
-                return ok
-            })
-            keys = keys.map(key => {
-                key = trim_punct(key)
-                key = key.trim()
-                return(key)
-            })
-            keys = keys.filter( key => {
-                let ok = (key !== undefined)
-                if ( ok ) ok = (key.length > 2)
-                return ok
-            })
-            keys = keys.map(key => {
-                key = encodeURIComponent(key)
-                return(key)
-            })
-            //
-            let tracking = field_vars["asset-id"]  // if it has been created
-            this._author_tracking = ""
-
-            //
-            let exclusion_fields = [
-                "_history","_prev_text",
-                "_transition_path", "encode",
-                "media.poster.ucwid_info", "media.source.ucwid_info",
-                "media.poster.protocol", "media.source.protocol",
-                "media.poster.ipfs", "media.source.ipfs"
-            ]
-            let repository_fields = [ "media.source", "media.poster" ]  // field that contain id's useful to pin object at the server
-            //
-            upload_record = {
-                "_tracking" : tracking,             // tracking of the asset
-                "_id" :  this._user_id,             // should be a UCWID
-                "_author_tracking" :  this._author_tracking,
-                "_paid" : paid,
-                "_contract" : contract,
-                "_work_in_progress" : WIP,
-                "_transition_path" : "asset_path",
-                "asset_path" : `${tracking}+${asset_type}+${this._user_id}`,
-                "title" : encodeURIComponent(title),
-                "subject" : encodeURIComponent(subject),
-                "keys" : keys,
-                "asset_type" : asset_type,        // blog, stream, link-package, contact, ownership, etc...
-                "media_type" : media_type,        // text, audio, video, image
-                "abstract" : encodeURIComponent(abstract),
-                "published" :  been_published,
-                "uploaded" : uploaded,
-                "media" : {
-                    "poster" : poster_data,
-                    "source" : media_data
-                },
-                "encode" : true,
-                "txt_full" : encodeURIComponent(full_text),
-                "dates" : {
-                    "created" : Date.now(),
-                    "updated" : modDate
-                },
-                "_history" : this._current_asset_history ? this._current_asset_history : [],
-                "_prev_text" : this._current_asset_prev_text,
-                "text_ucwid_info" : this._current_asset_text_ucwid_info,
-                "repository_fields" : repository_fields,
-                "exclusion_fields" : exclusion_fields
-            }
-            this._current_asset_history = false   // reset it when it is retrieved
-            //    
-        } catch (e) {
-            return false
-        }
-
-        return(upload_record)
-    }
-
-    //  ----  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-    async gather_identifying_fields(field_vars) {
-        //
-        if ( this._user_id === false ) {
-            return false
-        }
-        //
-        let upload_record = {}
-        try {
-            let tracker = field_vars['asset-id']
-            let asset_pair = field_vars['rec-file-mtype']
-            if ( asset_pair.length === 0 ) return false
-            //
-            let [asset_type,media_type] = asset_pair.split('/')
-            /*
-                stream/audio
-                stream/video
-                stream/image
-                blog/text
-                music_buzz/text
-            */
-            //
-            //
-            let tracking = ""       // if it has been created
-            if ( tracker ) {
-                let t = tracker.value
-                if ( t.length ) tracking = t
-                else return false
-            }
-
-            let paid = field_vars['paid-checkbox']
-            let WIP = field_vars['WIP-checkbox']
-            let contract = field_vars['rec-contract']
-
-            //
-            let exclusion_fields = [  // fields excluded from searching services.
-                "_history","_prev_text",
-                "_transition_path", "encode",
-                "media.poster.ucwid_info", "media.source.ucwid_info",
-                "media.poster.protocol", "media.source.protocol",
-                "media.poster.ipfs", "media.source.ipfs"
-            ]
-
-            //
-            upload_record = {
-                "_tracking" : tracking,
-                "_id" :  this._user_id,
-                "_paid" : paid,
-                "_contract" : contract,
-                "_work_in_progress" : WIP,
-                "_transition_path" : "asset_path",
-                "asset_path" : `${tracking}+${asset_type}+${this._user_id}`,
-                "asset_type" : asset_type,        // blog, stream, link-package, contact, ownership, etc...
-                "media_type" : media_type,
-                "exclusion_fields" : exclusion_fields
-            }
-            //
-        } catch (e) {
-            return false
-        }
-
-        return(upload_record)
-    }
-
-    async gather_asset_fields(field_vars) {
-        //
-        let upload_record = {}
-        try {
-            let asset_id = field_vars['asset-id']
-            upload_record._id = asset_id
-        } catch (e) {
-            return false
-        }
-        return upload_record
-    }
-
-}
-
-
-
-
-class Proxy {
-
-
-    constructor() {
-
-        //
-        this.new_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-        this.get_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-        this.update_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-
-        this.delete_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-        this.publish_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-        this.unpublish_entry_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-        this.get_user_ready_link = {
-            "link" : "",
-            "secondary_link" : ""
-        }
-
-    }
-
-    set_links(link_conf) {
-        this.new_entry_link = {
-            "link" : some_def(link_conf.new_entry.link),
-            "secondary_link" : some_def(link_conf.new_entry.secondary_link)
-        }
-        this.get_entry_link = {
-            "link" : some_def(link_conf.get_entry.link),
-            "secondary_link" : some_def(link_conf.get_entry.secondary_link),
-        }
-        this.update_entry_link = {
-            "link" : some_def(link_conf.update_entry.link),
-            "secondary_link" : some_def(link_conf.update_entry.secondary_link),
-        }
-
-        this.delete_entry_link = {
-            "link" : some_def(link_conf.delete_entry.link),
-            "secondary_link" : some_def(link_conf.delete_entry.secondary_link),
-        }
-        this.publish_entry_link = {
-            "link" : some_def(link_conf.publish_entry.link),
-            "secondary_link" : some_def(link_conf.publish_entry.secondary_link),
-        }
-        this.unpublish_entry_link = {
-            "link" : some_def(link_conf.unpublish_entry.link),
-            "secondary_link" : some_def(link_conf.unpublish_entry.secondary_link),
-        }
-        this.get_user_ready_link = {
-            "link" : some_def(link_conf.get_user.link),
-            "secondary_link" : some_def(link_conf.get_user.secondary_link),
-        }
-    }
-
-    async new_entry(good_data) {
-        // to transitions 
-        let uploadable = {
-            "meta" : good_data		// good data already has urls for BLOBs representing the media to upload
-            // file entries, etc/	
-        }
-        let [result,pid] = await send_new_entry(uploadable,this.new_entry_link,good_data.asset_type)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-
-    async get_entry(good_data) {
-        let uploadable = {
-            "meta" : good_data
-            // file entries, etc/	
-        }
-        let result = await send_publication_command("get",uploadable,this.get_entry_link)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-    async update_entry(good_data) {
-        good_data.update = true   // something better?
-        let uploadable = {
-            "meta" : good_data
-            // file entries, etc/	
-        }
-        let [result,pid] = await send_new_entry(uploadable,this.update_entry_link,good_data.asset_type)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-    async delete_entry(good_data) {
-        let uploadable = {
-            "meta" : good_data
-            // file entries, etc/	
-        }
-        let result = await send_publication_command("get",uploadable,this.delete_entry_link)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-    async publish_entry(good_data) {
-        let uploadable = {
-            "meta" : good_data
-            // file entries, etc/	
-        }
-        let result = await send_publication_command("publish",uploadable,this.publish_entry_link)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-    async unpublish_entry(good_data) {
-        let uploadable = {
-            "meta" : good_data
-            // file entries, etc/	
-        }
-        let result = await send_publication_command("unpublish",uploadable,this.unpublish_entry_link)
-        if ( result.status === "OK" ) {
-            return result.tracker
-        }
-    }
-
-}
-
 
 

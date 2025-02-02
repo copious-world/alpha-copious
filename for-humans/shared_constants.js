@@ -50,6 +50,7 @@ const WORKER_RELATES_TO_FRAME = "worker_request_action"
 const HOSTED_PUBLISHER_TO_FRAME = "publisher_to_frame"
 const PUBLISHER_RELATES_TO_FRAME = "publisher_ask_frame_op"
 
+const NEW_USER_TO_FRAME = "new_user_to_frame"
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -99,6 +100,14 @@ const FRAME_POSTED_PRIMARY = "yep-primary-response"
 const FRAME_RAN_PUB_OP = "yep-publication-operation"
 
 const HOSTED_APP_FILE_OPERATION = "yep-file-creation-db"
+const HOSTED_APP_WORKER_OPERATION = "yep-worker-op"
+const HOSTED_APP_LOAD_WORKER = "yep-worker-select"
+const HOSTED_APP_INIT_WORKER = "yep-worker-ready"
+
+const HOSTED_APP_DATA_FLIGHT = "yep-worker-dat-fly"
+const HOSTED_APP_DATABASE_STORE  = "yep-data-to-db"
+const HOSTED_APP_PROPERTIES = "yep-data-properties"
+const HOSTED_APP_DATA_VERIFY = "yep-data-verify"
 const FRAME_TO_HOSTED_APP_DATA = "yep-data-from-db"
 const FRAME_LIST_DATA = "frame-lists-data-part-ids"
 const FRAME_RETURNS_DATA = "frame-provides-data-part"

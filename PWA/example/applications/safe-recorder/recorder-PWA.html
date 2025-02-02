@@ -44,7 +44,7 @@
   }
 
   .wv_button {
-    width: 50%;
+    width: fit-content;
   }
 
   .wv_button_wordy {
@@ -57,10 +57,7 @@
     overflow-y: scroll;
   }
 
-  .component-container {
-    border: rgb(126, 79, 9) solid 2px;
-    padding: 4px;
-  }
+
   .audio-checks {
     float: left
   }
@@ -172,59 +169,103 @@
     background-color: rgba(236, 236, 201, 0.445);
   }
 
+
+
+  .component-container {
+    border: rgb(126, 79, 9) solid 2px;
+    padding: 4px;
+    display: block;
+    top: 0px;
+    height: calc(100vh - 50px);
+  }
+
+  .boxes {
+    position : absolute;
+    top:0px;
+    bottom:0px;
+    width: 100vw;
+    border: 1px solid rgb(41, 29, 120);
+  }
+
+  #select-mode {
+    padding-top: 8px;
+    padding-left: 10%;
+    background-color: rgb(249, 247, 236);
+    height:28px;
+    border: 1px solid rgb(72, 3, 3);
+    width: calc(100vw - 10% - 2px);
+  }
+
 </style>
 </head>
 <body>
-
-<div class="component-container">
-  <span style="font-weight: bolder;">Manage Recording Sessions</span>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
-  <div class="like-button" style="display: inline;" >
-    <label  for="wv-geo-location">Session Geolocation:</label>
-    <span id="wv-geo-location">NaN,NaN</span>
-  </div>
-  
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-  <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
-  <!--   -->
-  <div class="like-button" style="display: inline;" >
-  <label  for="sess-names" style="text-align: left;">Edit Existing Session:</label>
-  <select name="sess-names" id="sess-names" onchange="edit_user_session(event)">
-    <option value="none">no selection</option>
-  </select>
-  </div>
-  <!--   -->
-  <div>
-  <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
-  <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
-  </div>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-  <!--   -->
-  <span style="font-weight: bolder;">Record Audio</span>:&nbsp;&nbsp;&nbsp;&nbsp;
-  <span id="show-session-name" style="font-weight: bolder;"></span>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
-  <button id="record" disabled>Record</button>
-  <button id="stop" disabled>Stop</button>
-  <button id="play" disabled>Play</button>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-
-  <span style="font-weight: bolder;">Save Audio</span>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
-  <button id="save" disabled>Save</button>
-  <button id="delete" disabled>Delete</button>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-  <div style="width: 98%;">
-    <div style="font-weight: bolder;">Session Components:</div>
-    <div style="display: inline;padding:2px;background-color: oldlace">
-      <button class="wv_button" onclick="wv_edit_checked()" >edit&nbsp;checked</button>
-      <button class="wv_button" onclick="wv_delete_checked()" >delete&nbsp;checked</button>
+<div style="width:100%">
+  <div class="boxes">
+    <div id="select-mode" >
+      <button id="btn-pick_recorder" onclick="show_recorder(event)">recorder</button>&nbsp;
+      <button id="btn-pick_manager" onclick="show_manager(event)">manage records</button>
     </div>
+
+    <div id="big-recorder" class="component-container">
+      <span style="font-weight: bolder;">Record Audio</span>:&nbsp;&nbsp;&nbsp;&nbsp;
+      <span id="show-session-name" style="font-weight: bolder;"></span>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
+      <button id="record" disabled>Record</button>
+      <button id="stop" disabled>Stop</button>
+      <button id="play" disabled>Play</button>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
+
+      BIG RECORDER
+    </div>
+
+    <div  id="record-manager"  class="component-container" style="display: none;">
+      <span style="font-weight: bolder;">Manage Recording Sessions</span>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
+      <div class="like-button" style="display: inline;" >
+        <label  for="wv-geo-location">Session Geolocation:</label>
+        <span id="wv-geo-location">NaN,NaN</span>
+      </div>
+      
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
+      <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
+      <!--   -->
+      <div class="like-button" style="display: inline;" >
+      <label  for="sess-names" style="text-align: left;">Edit Existing Session:</label>
+      <select name="sess-names" id="sess-names" onchange="edit_user_session(event)">
+        <option value="none">no selection</option>
+      </select>
+      </div>
+      <!--   -->
+      <div>
+      <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
+      <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
+      </div>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
+      <!--   -->
+    
+      <span style="font-weight: bolder;">Save Audio</span>
+      <div style="max-height: 1px; background-color: rgb(12, 4, 4);width: 100%;margin-bottom: 2px;">&nbsp;</div>
+      <button id="save" disabled>Save</button>
+      <button id="delete" disabled>Delete</button>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
+      <div style="width: 98%;">
+        <div style="font-weight: bolder;">Session Components:</div>
+        <div style="display: inline;padding:2px;background-color: oldlace">
+          <button class="wv_button" onclick="wv_edit_checked()" >edit&nbsp;checked</button>
+          <button class="wv_button" onclick="wv_delete_checked()" >delete&nbsp;checked</button>
+        </div>
+      </div>
+      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;;margin-top: 2px;">&nbsp;</div>
+      <div id="saved-audio-messages">
+      </div>
+    </div>
+    
   </div>
-  <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;;margin-top: 2px;">&nbsp;</div>
-  <div id="saved-audio-messages">
-  </div>
+
 </div>
+
+
 <div id="wave-graph-tmplt" class='wave-graph-container'>
   <div class="drag-bar-control"
         onmousedown="wv_capture_cursor(event)"
@@ -276,6 +317,169 @@
 
 <script>
 
+
+//
+// SHARED CONSTANTS
+
+// SITE PAGE
+//
+const SITE_PAGE_TO_FRAME = "site_page_to_frame"
+const SITE_PAGE_TO_BUILDER = "site_page_to_builder"
+const SITE_PAGE_TO_ALL = "RELAY"
+const SITE_RELATES_TO_BUILDER = "site_page_request_id"
+const SITE_RELATES_TO_FRAME = "site_page_request_action"
+const SITE_RELATES_TO_ALL = "site_frame_yields_news"
+
+// FRAME PAGE
+const FRAME_PAGE_TO_HOSTED_APP = "frame_page_to_hosted_app"
+const FRAME_PAGE_TO_SITE = "frame_page_to_site"
+const FRAME_PAGE_TO_BUILDER = "frame_page_to_builder"
+const FRAME_PAGE_TO_SERVICE_WORKER = "frame_page_to_sw"
+const FRAME_PAGE_TO_WORKER = "frame_page_to_w"
+const FRAME_PAGE_RELATES_TO_SITE = "frame_page_injector"
+const FRAME_PAGE_RELATES_TO_BUILDER = "frame_page_reponses"
+const FRAME_PAGE_RELATES_TO_SERVICE_WORKER = "frame_page_shared_action"
+const FRAME_ACTION_TO_APP = "frame_page_request_action"
+const FRAME_REQUEST_SESSION = "frame_page_request_session"
+const FRAME_ACTION_FROM_APP = "hosted_app_requests_action"
+const FRAME_PAGE_TO_PUBLISHER = "frame_page_to_publisher"
+const FRAME_PAGE_RELATES_TO_PUBLISHER= "frame_page_publications"
+const FRAME_ACTION_FROM_PUBLISHER = "publisher_app_requests_action"
+
+// APP PAGE
+//
+const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
+const HOSTED_APP_TO_ALL = "RELAY"
+const APP_RELATES_TO_FRAME = "app_in_human_context"
+const APP_RELATES_TO_ALL = "app_in_frame_yields_news"
+
+// BUILDER PAGE
+//
+const BUILDER_PAGE_TO_FRAME = "builder_page_to_frame"
+const BUILDER_PAGE_TO_SITE = "builder_page_to_site"
+const BUILDER_RELATES_TO_SITE = "builder_page_injector"
+const BUILDER_ACTION_TO_FRAME = "builder_page_request_action"
+
+// HUMAN FRAME WORKER
+const WORKER_TO_FRAME = "worker_to_frame"
+const WORKER_RELATES_TO_FRAME = "worker_request_action"
+
+// PUBLISHER PAGE
+const HOSTED_PUBLISHER_TO_FRAME = "publisher_to_frame"
+const PUBLISHER_RELATES_TO_FRAME = "publisher_ask_frame_op"
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+//
+// actions
+const FRAME_COMPONENT_RESPOND = "respond"
+const FRAME_COMPONENT_RESPONDING = "responding"
+const FRAME_ACTION_LOAD_APP = "load-app"
+const FRAME_ACTION_INSTALL = "install-id"
+const FRAME_ACTION_INJECT = "inject"
+const FRAME_START_SESSION = "start-session"
+const FRAME_HAS_SESSION = "has-session"
+const FRAME_CHECK_SESSION = "check-session"
+const FRAME_NEEDS_SIGNATURE = "get-signature"
+const FRAME_WANTS_SESSION = "get-session"
+const FRAME_STOP_SESSION = "stop-session"
+const FRAME_HAS_PERSONALIZATION = "has-personalization"
+const SITE_WANTS_SIGNATURE = "send-sig-remote"
+const HOST_UP_REQ_UPLOAD = "send-request-upload"
+const FRAME_REQ_DATA = "send-request-respond"
+
+
+const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
+const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
+const FRAME_ACTION_REMOVE = "id-manager-remove-id"
+const FRAME_ACTION_UPLOAD = "id-manager-upload-id"
+const FRAME_ACTION_DOWNLOAD = "id-manager-download-id"
+const FRAME_ACTION_DOWNLOAD_PUBLIC = "id-manager-download-public-intro"
+const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
+const FRAME_ACTION_ATTACH = "manager-asset-attach"
+
+const HOST_APP_WANTS_SESSION = "session-to-app"
+
+// categories
+const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
+const FRAME_COMPONENT_MANAGE_ID = "m-igid"
+const HOST_APP_PERSONALIZATION = "personalization"
+const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
+const SITE_TO_FRAME_SESSIONS = "transfer-session"
+const FRAME_TO_SITE_MANAGE_SESSION = "site-manage-session"
+const WORKER_TO_FRAME_SESSIONS = "w-transfer-session"
+const FRAME_WORKER_TO_SESSIONS = "transfer-session"
+const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
+const FRAME_TO_APP_SIGNATURE = "signed-data"
+const FRAME_SIGNED = "yep-signed"
+const FRAME_POSTED_PRIMARY = "yep-primary-response"
+const FRAME_RAN_PUB_OP = "yep-publication-operation"
+
+const HOSTED_APP_FILE_OPERATION = "yep-file-creation-db"
+const HOSTED_APP_WORKER_OPERATION = "yep-worker-op"
+const HOSTED_APP_LOAD_WORKER = "yep-worker-select"
+const HOSTED_APP_INIT_WORKER = "yep-worker-ready"
+const HOSTED_APP_DATA_FLIGHT = "yep-worker-dat-fly"
+const HOSTED_APP_DATABASE_STORE  = "yep-data-to-db"
+const HOSTED_APP_PROPERTIES = "yep-data-properties"
+const HOSTED_APP_DATA_VERIFY = "yep-data-verify"
+const FRAME_TO_HOSTED_APP_DATA = "yep-data-from-db"
+const FRAME_LIST_DATA = "frame-lists-data-part-ids"
+const FRAME_RETURNS_DATA = "frame-provides-data-part"
+const FRAME_RETURNS_SESSION_CHECK = "frame-provides-session-check"
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+let g_user_current_session = false
+let g_current_user_id = false
+let g_current_user_name = false
+let g_current_pub_identity = false
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+var g_current_session = false
+
+
+const g_message_template =  {
+                                "category" : "",
+                                "direction" : "",
+                                "action" : "",
+                                "relationship" : ""
+                            }
+
+/// END OF CONSTANTS  (ALPHA)
+
+
+
+
+// Data for persistence storage...
+// This is the same meta as in the file uploader
+function create_asset_meta(info_obj) {
+    let field_vars = {}
+    field_vars['asset-id'] = false
+    field_vars['rec-file-mtype'] = "audio/x-wav"
+    field_vars['rec-title'] = info_obj.name
+    field_vars['rec-subject'] = "New asset - " + Date.now()
+    field_vars['rec-keys'] = ""
+    field_vars['rec-abstract'] = ""
+    field_vars['rec-full-text'] = ""
+    //
+    field_vars['paid-checkbox'] = false
+    field_vars['WIP-checkbox'] = true
+    field_vars['rec-contract'] = false
+    //
+    field_vars['rec-file-name'] = info_obj.name
+    field_vars['rec-file-proper'] = info_obj
+    field_vars['rec-poster-name'] = ""
+    field_vars['rec-poster-proper'] = false
+    //
+    field_vars['rec-was-published'] = false
+    field_vars['rec-was-uploaded'] = false
+    return field_vars
+}
+
+
+
 const AUDIO_SESSION_STORE = 'audio_sessions'
 const AUDIO_USERID_STORE = 'audio_users'
 const AUDIO_SESSION_COMPLETE = 'audio_complete'
@@ -292,7 +496,14 @@ const MILSEC_CHUNK_INTERVAL = 500  // every half second
 // Send entire session data to the server for later placement on another device belonging to the current user.
 const REQ_AUDIO_SESSION_TRANSFER = '/song-search/guarded/dynamic/audio-session-transfer'
 //const REQ_WORKER_CODE = `https://${self.location.host}/song-search/static/ownership`  idea is to require a session to acquire
-const REQ_WORKER_CODE = `./ownership`
+const REQ_WORKER_CODE = `./ownership.js`
+
+
+
+
+
+
+
 
 //
 let recorder = false
@@ -348,261 +559,897 @@ function beep() {
 const g_audioContext = new AudioContext();
 
 
-var BASE64_MARKER = ';base64,';
-//
-function convertDataURIToBinary(dataURI) {
-  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-  var base64 = dataURI.substring(base64Index);
-  var raw = window.atob(base64);
-  var rawLength = raw.length;
-  var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-  for(i = 0; i < rawLength; i++) {
-    array[i] = raw.charCodeAt(i);
-  }
-  return array;
-}
-
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// OWNERSHIP WORKER!!!
-let g_ownership_worker = new Worker(REQ_WORKER_CODE)
-
-g_ownership_worker.onmessage = (msg) => {
-  //
-  if ( msg.data.type === 'status' ) {
-    worker_status_view(msg.data.message)
-  }
-  //
-  if ( msg.data.type === 'op_complete' ) {
-    worker_op_response(msg.data.message);
-  }
-}
 
 
 
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// TOOLS -- UTILITIES
-//>--
-function get_client_device_name() {
-    let oscpu = navigator.oscpu
-    let ua = navigator.userAgent
-    let user_given_machine_name = g_current_session_machine_name
+
+// ---->>>
+// MODULE: ONE TABLE(windowized)
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+//>>  AppDBWrapper
+
+
+// In the following line, you should include the prefixes of implementations you want to test.
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+// DON'T use "var indexedDB = ..." if you're not in a function.
+// Moreover, you may need references to some window.IDB* objects:
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
+window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+
+
+/*
+
+// autoIncrement set to true  (for this special case DB use )
+
+DB_VERSION
+DATA_STORE
+describe_data
+
+*/
+
+
+function warn(str) {
     //
-    let b = `${oscpu}-${ua}-${user_given_machine_name}`
-    b = encodeURIComponent(b.trim())
-    return(b)
-}
-//--<
-
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
 }
 
 
-function ext_from_download_format(download_format) {
-  if ( download_format === 'audio/wave' ) {
-    return("wav")
-  }
-  if ( download_format === 'audio/ogg' ) {
-    return("ogg")
-  }
-  if ( download_format === 'audio/mpeg' ) {
-    return("mp3")
-  }
-}
+// a session is a project...
+// a session object (sessionObject) is stored in the DB and may contain parts of data
+// part_id identifies a part of the data (e.g. a layer or a component)
+
+class AppDBWrapper {
+
+    constructor(name,conf) {
+        this._can_process_db = true
+        if ( !(window.indexedDB) ) {
+            this._can_process_db = false
+            console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+        }
+        //
+        let self = this
+        // DATA_STORE
+        // DB_VERSION
+        // describe_data
+        if ( conf ) {
+            for ( let ky in conf ) {
+                self[ky] = conf[ky]
+            }    
+        }
+        //
+        this.db = false
+        this.current_session_name = 'none'
+        this._session_name_list = []
+        this.name = name
+        //
+    }
 
 
-function blobToBase64(blob) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => {
-      resolve(reader.result);
-    };
-  });
-}
+    set session_name(name) {
+        this.current_session_name = name
+    }
+
+    get session_name() {
+        return this.current_session_name
+    }
+
+    get name_list() {
+        return this._session_name_list
+    }
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    init_database() {
+        //
+        if ( !(this._can_process_db) ) return false
+        let self = this
+        let db_name = this.name
+        //
+        let p = new Promise((resolve,reject) => {
+
+            let request = window.indexedDB.open(db_name, this.DB_VERSION);
+            //
+            // <-- onerror
+            request.onerror = (event) => {
+                alert(`This web app will not store ${this.describe_data} without the use of computer storage.`)
+            };
+            
+            // <-- onsuccess
+            request.onsuccess = (event) => {
+                //
+                let db = event.target.result;
+                db.onerror = (event) => {
+                    console.log("Database error: " + event.target.error);
+                    reject(event.target.error)
+                };
+                //
+                self.db = db;
+                resolve(db)
+            }
+
+            // <-- onupgradeneeded
+            request.onupgradeneeded = (event) => {
+                //
+                let db = event.target.result;
+                //
+                if ( this.DATA_STORE !== undefined ) {
+                    try {
+                        let sessionObjectStore = db.createObjectStore(this.DATA_STORE, { autoIncrement : true });
+                        sessionObjectStore.createIndex("name", "name", { unique: true });
+                        sessionObjectStore.createIndex("sess_date_time", "sess_date_time", { unique: true });
+                    } catch (e) {
+                    }
+                }
+                if ( this.COMPLETION_STORE !== undefined ) {
+                    try {
+                        let completeStore = db.createObjectStore(this.COMPLETION_STORE, { autoIncrement : false, keyPath: 'name' });
+                        completeStore.createIndex("name", "name", { unique: true });
+                    } catch (e) {
+                    }
+                }
+
+            //
+            };
+        })  // end of promise
+        //
+        return p
+    }
 
 
-// ----
-function make_audio_blob(channel_data_list) {
-  let d1 = channel_data_list[0]
-  let d2 = channel_data_list[1]
-  let wb = new WaveBlob()
-  wb.record(d1)
-  wb.record(d2)
-  //
-  let blob = wb.toBlob('audio/wave')
-  //
-  return(blob)
-}
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
+    //      load_name_list
+    // -- 
+    load_name_list() {
+        if ( !(this.db) ) return
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readonly");
+        let dataStore = transaction ? transaction.objectStore(this.DATA_STORE) : false
+        //
+        if ( !(dataStore) ) return false
+        let p = new Promise((resolve,reject) => {
+            this._session_name_list = []
+            let myIndex = dataStore.index('name');
+            myIndex.openCursor().onsuccess = (event) => {
+                let cursor = event.target.result;
+                if ( cursor ) {
+                    this._session_name_list.push(cursor.value.name)
+                    this.application_total_entry(cursor.value)
+                    cursor.continue();
+                } else {
+                    this.application_update_session_name_selections(this.current_session_name,this._session_name_list)
+                    resolve(true)
+                }
+            }
+        })
+        //
+        return p
+    }
 
-
-async function concat_all_to_array(list_of_sections) {
-  let start = list_of_sections.unshift()
-  while ( list_of_sections.length ) {
-    let next_sect = list_of_sections.unshift()
-    start = start.concat(next_sect)
-  }
-  return(start)
-}
-
-
-
-// https://stackoverflow.com/questions/33702838/how-to-append-bytes-multi-bytes-and-buffer-to-arraybuffer-in-javascript
-function concatTypedArrays(a, b) { // a, b TypedArray of same type
-  var c = new (a.constructor)(a.length + b.length);
-  c.set(a, 0);
-  c.set(b, a.length);
-  return c;
-}
-
-
-
-function lst_remove(list,index) {
-    list.splice(index,1)
-  }
-
-  function lst_insert_before(list,el,index) {
-    list.splice(index,0,el)
-  }
-
-
-
-
-// ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-var g_current_session_machine_name = "tester"
-
-
-
-/**
- * AppAudioRecorder
- *
- *  Manage the use of the media recorder 
- */
-
-class AppAudioRecorder {
-  //  //  //
-  constructor(stream,chunck_interval) {
+    // _apply_find_by_name
+    //  -- a generic that calls success_callback when an element matches the index, or not_found_callback otherwise.
     //
-    this.audioChunks = [];
-    let mediaRecorder = new MediaRecorder(stream);
+    _apply_find_by_name(sess_name, store, success_callback, not_found_callback) {
+        let nameIndex = store.index('name');
+        nameIndex.get(sess_name).onsuccess = (evt) => {
+            let value = evt.target.result;
+            if ( value ) {
+                if ( success_callback ) success_callback(value,nameIndex);
+            } else {
+                if ( not_found_callback ) not_found_callback();
+            }
+        };
+    }
 
-    // send a frame to ownership
+    // _add_session_to_db
+    //  -- adds the session object to the db, sets up the basic fields... 
+    //
+    _add_session_to_db(dataStore,application_op,part_id) {
+        //
+        let sessionObj = {
+            'name' : this.current_session_name,
+            'sess_date_time' : '' + Date.now(),
+            'data' : { },
+            'hashes' : { },
+            'edit_order' : []
+        }
+        //
+        if ( part_id ) sessionObj.edit_order.push(part_id)
+        //
+        if ( (application_op !== undefined) && (typeof application_op === 'function') ) {
+            application_op(sessionObj)
+        }
+        let request = dataStore.add(sessionObj);  // returning an async object to which handlers may be added
+        return request
+    }
+
+    add_empty_session(name,application_op) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        this.current_session_name = name
+        if ( application_op !== undefined ) {
+            this._add_session_to_db(dataStore,application_op)
+        } else {
+            this._add_session_to_db(dataStore)
+        }
+    }
+
+    //  update_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //                  field --- the field to change (top level)
+    //                  value --- set the field to this value
+    //  returns: true if the session is available for update
+    update_session(sess_name,field,value) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: get_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+          //
+          // get_elem_callback
+          let update_elem_callback = (value,dbIndex) => {          // element.name == sess_name exists
+            //
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            //
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+              let cursor = event.target.result;
+              if ( cursor ) {
+                //
+                let sessionObj = cursor.value
+                sessionObj[field] = value
+                const request = cursor.update(sessionObj);
+                request.onsuccess = async () => {
+                    resolve(true)
+                };
+
+                request.onerror = (event) => {
+                    resolve(false)
+                }
+              } else {
+                resolve(false)
+              }
+            }
+          }
+          //
+          // not_found_callback
+          let not_found_callback = () => {                       // element.name == sess_name  NOT FOUND
+            resolve(false)
+          }
+          //
+          this._apply_find_by_name(sess_name, dataStore, update_elem_callback, not_found_callback)
+        })
+        //
+        return p
+    }
+
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    // add_data -- 
+    //  Parameters: blob_data -- data stored as part of the session
+    //              session id could be a layer....
+    add_data(blob_data,part_id) {
+        if ( !(this._can_process_db) ) return false
+        if ( !(this.db) ) {
+          console.log(`db not initialized :: AppDBWrapper.add_data`)
+          return;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        let p = new Promise((resolve,reject) => {
+            let self = this
+            // update_list_callback
+            let update_list_callback = (value,dbIndex) => {     // if found update
+                if ( !dbIndex || (typeof value === "undefined") ) {
+                    resolve(false)
+                    return;
+                }
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        // existing session 
+                        let sessionObj = cursor.value
+                        //
+                        let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                        // map_id = part_id
+                        // store revised data
+                        sessionObj.data[part_id] = blob_data
+                        // make sure the structure has been set up if not already
+                        if ( sessionObj.hashes[part_id] === undefined ) {
+                            sessionObj.hashes[part_id] = {}
+                        }
+                        if ( sessionObj.hashes[part_id].op_history === undefined ) {
+                            sessionObj.hashes[part_id].op_history = []
+                        }
+                        // record the order in which sessions (layers) have been edited
+                        sessionObj.edit_order.push(part_id)
+                        //
+                        // update IndexedDB
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            try {
+                                self.application_data_update(blob_url,part_id,blob_data,part_id)  // application handling of data e.g visual rep
+                            } catch (e) {
+                                console.log(e)
+                            } finally {
+                                resolve(true)
+                            }
+                        };
+
+                        request.onerror = (event) => {
+                            resolve(false)
+                        }
+                        //
+                    } else {
+                        resolve(false)
+                    }
+                }
+            }
+            // add_new_callback
+            let add_new_callback = () => {          // if not found add a new one
+                //
+                let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                //
+                let application_op = (sessionObj) => {
+                    //
+                    sessionObj.data[part_id] = blob_data
+                    if ( sessionObj.hashes[part_id] === undefined ) {
+                        sessionObj.hashes[part_id] = {}
+                    }
+                    sessionObj.hashes[part_id].op_history = []
+                    //
+                } 
+                //
+                let request = self._add_session_to_db(dataStore,application_op,part_id)
+                if ( request ) {
+                    request.onsuccess = (event) => {
+                        self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                        resolve(true)
+                    };
+                    request.onerror = (event) => {
+                        resolve(false)
+                    }
+                }
+                //
+            }
+            //
+            this._apply_find_by_name(this.current_session_name, dataStore, update_list_callback, add_new_callback)    
+        })
+        //
+        return p
+    }
+
+
+    // update_data
+
+    update_data(blob_data,part_id,op_parameters) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+            console.log("db not initialized :: remove_audio_data")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        let update_list_elem_callback = (value,dbIndex) => {
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                var cursor = event.target.result;
+                if ( cursor ) {
+                    let sessionObj = cursor.value
+                    if ( sessionObj.data[part_id] != null ) {
+                        let blob_url = URL.createObjectURL(blob_data);
+                        sessionObj.data[part_id] = blob_data
+                        // handle a case which should not happen
+                        if ( sessionObj.hashes[part_id] === undefined ) {
+                            sessionObj.hashes[part_id] = { 'op_history' : [] }
+                        }
+                        // update hash ops
+                        let operation = this.app_pre_update_action(blob_data,part_id,op_parameters)
+                        if ( !operation ) {
+                            operation = {'op' : 'backup'}
+                        }
+                        sessionObj.hashes[part_id].op_history.push(operation)
+                        //
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            this.app_post_update_action(blob_data,part_id,blob_url)
+                        };
+                    }
+                    //
+                }
+            }
+        }
+
+        let not_found_callback = () => {
+            warn(`The session ${sess_name} is not in the database`)
+        }
+
+        //
+        this._apply_find_by_name(this.current_session_name, dataStore, update_list_elem_callback, not_found_callback)    
+    }
+
+
+    // update_data_ops
+
+    update_data_ops(part_id,pre_update,post_update) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+            console.log("db not initialized :: remove_audio_data")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+            let self = this
+
+            let add_elem_original_chunks_callback = (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                    dbIndex.openCursor(keyRangeValue).onsuccess = async (event) => {
+                    var cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        await pre_update(part_id,sessionObj)
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            await post_update(part_id,this.current_session_name,sessionObj)
+                            resolve(true)
+                        };
+                    }
+                    resolve(false)
+                }
+            }
+            //
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+            //
+            this._apply_find_by_name(this.current_session_name, dataStore, update_list_elem_callback, not_found_callback)    
+
+        })
+
+        return p
+    }
+
+
+
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    remove_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let remove_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        delete sessionObj.data[part_id]
+                        //
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            //  item has been removed
+                            console.log(`deleted ${part_id}`)
+                            await this.app_secure_total_session(sess_name)
+                            resolve(true)
+                        };
+                        //
+                        request.onerror = (e) => {
+                            resolve(false)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+
+            this._apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    get_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let get_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        let value =  sessionObj.data[part_id]
+                        if ( value === undefined ) {
+                            resolve(false)
+                        } else {
+                            resolve(value)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+        
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+        
+            this._apply_find_by_name(sess_name, dataStore, get_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
  
-    this.mediaRecorder = mediaRecorder
-    this.audio_instance = null
-    this.section_id = 0
-    //
-    this.chunk_interval = chunck_interval
-    //
-    mediaRecorder.addEventListener('dataavailable', event => {    // DATA AVAILABLE
-      this.data_handler(event)
-    });
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
-    mediaRecorder.addEventListener('stop',  event => {
-      this.stop_handler(event)
-    });
-  }
-  
-
-  //  data_handler
-  //
-  data_handler(data) {      /// called at the interval (see setup in constructore)
-    let chunk = event.data
-    this.audioChunks.push(chunk);
-    wv_prep_secure_relay(chunk,this.section_id)       // pass to thread (thread will do calculations)
-  }
-
-
-  //  start
-  //
-  start() {                // wrap the recorder start method and make sure configuration parameters are stored
-    this.section_id = 'ER' + uuidv4() // use ER to signify End(Edit) Recording and be different than other randoms
-    //
-    this.audioChunks = []
-    if ( typeof this.chunk_interval === 'number' ) {
-      this.mediaRecorder.start(this.chunk_interval);
-    } else {
-      this.mediaRecorder.start();
+    //  get_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //  Returns the object controlling all the data within the session.
+    get_session(sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: get_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+          //
+          // get_elem_callback
+          let get_elem_callback = (value,dbIndex) => {          // element.name == sess_name exists
+            //
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            //
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+              let cursor = event.target.result;
+              if ( cursor ) {
+                let sessionObj = cursor.value
+                resolve(sessionObj)
+              } else {
+                reject(null)
+              }
+            }
+          }
+          //
+          // not_found_callback
+          let not_found_callback = () => {                       // element.name == sess_name  NOT FOUND
+            reject(null)
+          }
+          //
+          this._apply_find_by_name(sess_name, dataStore, get_elem_callback, not_found_callback)
+        })
+        //
+        return p
     }
-  }
 
-  //  stop_handler
-  //
-  stop_handler(event) {
-    this.audio_results()
-  }
+     
+    //  delete_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //
+    delete_session(sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
 
-  // stop
-  //
-  stop() {
-    this.mediaRecorder.stop();
-  }
-
-  // audio_results
-  // Called when recording stops.. This makes the first record of a collection of audio chunks
-  // A section ID is produced. The section ID will be used later when the user decideds to save 
-  // the section... However, the section hash will be sent on to the server. (note: section v.s. session)
-  async audio_results() {
-    let audioBlob = new Blob(this.audioChunks);
-    let audioUrl = URL.createObjectURL(audioBlob);
-    this.audioBlob = audioBlob
-    this.audio_instance = new Audio(audioUrl);
-    await wv_backup_audio_chunks_for_verification(this.section_id,this.audioChunks)
-    wv_secure('end-recording',audioBlob,this.section_id)
-  }
-
-  // add_current_data
-  // Called when the user decides to save the audio as part of the named session
-  // At this point, there is a section_id. It is used to make sure the indexedDB storage 
-  // maps to the blob
-  add_current_data() {
-    if ( this.audioBlob ) {
-      add_audio_data(this.audioBlob,this.section_id)
+        if ( sess_name !== 'none ') {
+            if ( this.db === null ) {
+                console.log("db not initialized :: delete_session")
+                return false;
+            }
+            //
+            let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+            if ( !(transaction) ) return false
+            let dataStore = transaction.objectStore(this.DATA_STORE);
+            if ( !(dataStore) ) return false
+        
+            let p = new Promise((resolve,reject) => {
+                // delete_from_list_callback
+                let delete_from_list_callback = (value,dbIndex) => {
+                    //
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    //
+                    dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            let request = cursor.delete();
+                            request.onsuccess = () => {
+                                this.current_session_name = 'none'   /// here last
+                                this.load_name_list()
+                                this.application_revise_current_session(this.current_session_name)
+                                resolve(true)
+                            };
+                        }
+                        resolve(false)
+                    }
+                }
+                //
+                let not_found_callback = () => {
+                    warn(`The session ${sess_name} is not in the database`)
+                    resolve(false)
+                }
+                //
+                this._apply_find_by_name(sess_name, dataStore, delete_from_list_callback, not_found_callback)    
+            })
+            //
+            return p
+        }
+        return false
     }
-  }
 
-  delete_last_recorderd_audio() {
-    this.audio_instance = null
-    this.audioBlob = null
-  }
 
-  play() {
-    if ( this.audio_instance ) {
-      this.audio_instance.play()
+
+    async install_session(session_object) {
+        if ( typeof session_object !== 'object')
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        //
+        let request = dataStore.put(session_object)
+        request.onsuccess = (ev) => {
+            let rsult = event.target.result
+            //
+            this.current_session_name = session_object.name
+        }
+        //
     }
-  }
+
+
+    store_completion(storeObj) {
+        if ( typeof storeObj !== 'object')
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+
+        if ( this.COMPLETION_STORE !== undefined ) {
+            let p = new Promise((resolve,reject) => {
+                //
+                transaction.oncomplete = (ev) => {
+                    console.log("store_complete: transaction done")
+                }
+                transaction.onerror = (ev) => {
+                    console.log(ev)
+                }
+                let result = dataStore.put(storeObj)
+                result.onsuccess = (event) => {
+                    resolve(event.target.result)
+                }
+                result.error = (error) => {
+                    reject(error)
+                }
+            })
+            return p
+        }
+        return false
+    }
+
+
+    get_completion(c_key) {
+        //
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {            
+            let nameIndex = dataStore.index('name');
+            nameIndex.get(c_key).onsuccess = (evt) => {     // KEY
+                let value = evt.target.result;
+                if ( value ) {
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    nameIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            resolve(cursor.value)
+                        } else {
+                            resolve(false)
+                        }
+                    }
+                } else resolve(false)
+            }
+        })
+        //
+        return p
+    }
+
+
+    remove_completion(c_key) {
+        if ( !(this._can_process_db) ) return false
+        if ( this.db === null ) {
+            console.log("db not initialized :: delete_session")
+            return false;
+        }
+        //
+        let transaction = this.db.transaction(this.COMPLETION_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.COMPLETION_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+            //
+            let p_t = new Promise((resolve,reject) => {
+                transaction.oncomplete = (ev) => {
+                    resolve(true)
+                    console.log("remove_completion: transaction done")
+                }
+                transaction.onerror = (ev) => {
+                    console.log(ev)
+                    reject(false)
+                }}
+            )
+            //
+            let nameIndex = dataStore.index('name');
+            nameIndex.get(c_key).onsuccess = async (evt) => {     // KEY
+                let value = evt.target.result;
+                if ( value ) {
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    nameIndex.openCursor(keyRangeValue).onsuccess = async (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            let request = cursor.delete();
+                            request.onsuccess = async () => {
+                                await p_t
+                                resolve(true)
+                            };
+                        } else {
+                            await p_t
+                            resolve(false)
+                        }
+                    }
+                } else {
+                    await p_t
+                    resolve(false)
+                }
+            }
+        })
+        //
+        return p
+    }
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    application_data_update(blob_url,part_id,blob_data) {
+        // implemented by derived method (override)
+    }
+
+    async app_secure_total_session(sess_name) {
+         // implemented by derived method (override)
+    }
+
+    application_revise_current_session(sess_name) {
+        // implemented by derived method (override)
+    }
+
+    application_update_session_name_selections(sess_name,name_list) {
+        // implemented by derived method (override)
+    }
+
+    app_pre_update_action(blob_data,part_id,op_parameters) {
+        // implemented by derived method (override)
+    }
+
+    app_post_update_action(blob_data,part_id,blob_url) {
+        // implemented by derived method (override)
+    }
+
+    application_total_entry(sess_obj) {
+        // implemented by derived method (override)
+    }
 
 }
-// END OF CLASS AUDIO RECORDER
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-//  INTERACT WITH PAGE USER AND USER DATA
-
-// USER
-async function get_page_user() {
-  if ( typeof intergalactic_session_going === "function" ) {
-    let pub_user = await intergalactic_session_going()
-    return pub_user
-  }
-  return false
-}
-
-// wv_find_user 
-//      on the user's device, store inforation that he needs to communicate with the servers
-//
-async function wv_find_user() {
-  return await get_page_user()
-}
 
 
+
+
+//$EXPORTABLE::
+/*
+AppDBWrapper
+*/
 
 // DATABASE ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -857,23 +1704,567 @@ async function wv_init_database() {
 
 
 
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
-function apply_find_audio_session(sess_name, store, success_callback, not_found_callback) {
-  //
-  var nameIndex = store.index('name');
-  nameIndex.get(sess_name).onsuccess = (evt) => {
-    var value = evt.target.result;
-    if ( value ) {
-      if ( success_callback ) success_callback(value,nameIndex);
-    } else {
-      if ( not_found_callback ) not_found_callback();
+// HOSTED APP PAGE COM
+//
+if ( typeof g_message_template === undefined ) {
+    window.g_message_template = g_message_template = {
+        "category" : "",
+        "direction" : "",
+        "action" : "",
+        "relationship" : ""
     }
-  };
-  //
 }
 
+// constants in shared constants
+
+let g_frame_page = window.parent
+
+let hosted_page_application_handlers = (category,action,relationship,params) => {}
+
+
+
+function reponding_alive() {
+    let message = {
+        "category": FRAME_COMPONENT_SAY_ALIVE,
+        "action" : FRAME_COMPONENT_RESPONDING,
+        "data" : false
+    }
+    tell_frame_page(message)
+}
+
+
+function install_frame_page_response() {
+    window.addEventListener("message", (event) => {
+        let page_source = event.origin
+        if ( page_source !== '*' ) {
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+                if ( direction === FRAME_PAGE_TO_HOSTED_APP ) {
+                    if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+                        if ( action === FRAME_COMPONENT_RESPOND ) {
+                            reponding_alive()
+                        }
+                    } else {
+                        let params = mobj.data
+                        hosted_page_application_handlers(category,action,relationship,params)
+                    }
+                }
+            } catch (e) {
+            }    
+        }
+    })
+}
+
+
+let g_promise_keeper_user_info = false
+let g_promise_resolver_user_info = () => { return false }
+let g_promise_reject_user_info = () => { return "NO USER INFO" }
+
+async function human_frame_user_info() {
+  g_promise_keeper_user_info = new Prommise((resolve,reject) => {
+    g_promise_resolver_user_info = (user_info) => { resolve(user_info) }
+  })
+  return g_promise_keeper_user_info
+}
+
+let injest_personalization = false
+let injest_session = false
+let application_specific_handlers = (category,action,relationship,params) => {}
+
+let personalization = (post_params) => {}
+
+hosted_page_application_handlers = async (category,action,relationship,params) => {
+    switch ( category ) {
+        case HOST_APP_PERSONALIZATION : {
+            if ( typeof injest_personalization === "function" ) {
+                await injest_personalization(action,params)
+            }
+            break;
+        }
+        case FRAME_TO_APP_PUBLIC_COMPONENT: {
+          if ( action === FRAME_HAS_PERSONALIZATION ) {
+            let user_info = params
+            if ( typeof g_promise_resolver_user_info === "function" ) {
+              g_promise_resolver_user_info(user_info)
+            }
+          }
+          break;
+        }
+        case FRAME_TO_HOSTED_APP_SESSIONS : {          /// a hosted page that does not start a session.
+            if ( typeof injest_session === "function" ) {
+                await injest_session(action,params)
+            }
+            break;
+        }
+        default: {                  /// any other actions ... could be a login page that fetches a session
+            await application_specific_handlers(category,action,relationship,params)
+            break;
+        }
+    }
+}
+
+
+function tell_frame_page(message) {
+    if ( !g_frame_page ) return(false)
+    let msg = Object.assign({},g_message_template)
+    msg.direction = HOSTED_APP_TO_FRAME
+    msg.relationship = APP_RELATES_TO_FRAME
+    msg.action = message.action
+    msg.category = message.category
+    msg.data = message.data
+    let message_str = JSON.stringify(msg)
+    g_frame_page.postMessage(message_str,'*')
+    return true
+}
+
+function relay_to_pages(message) {
+    if ( !g_frame_page ) return(false)
+    let msg = Object.assign({},g_message_template)
+    msg.direction = HOSTED_APP_TO_ALL
+    msg.relationship = APP_RELATES_TO_ALL
+    msg.action = message.action
+    msg.category = message.category
+    msg.data = message.data
+    let message_str = JSON.stringify(msg)
+    g_frame_page.postMessage(message_str,'*')
+}
+
+
+
+// END OF HOSTED APP PAGE COM  (ALPHA)
+
+
+
+
+// ---- ---- ---- ---- ---- ----
+
+// WORKER MESSAGES
+
+// operations:  init, chunk, benchmark, storage, session, geolocation
+
+async function wv_human_frame_app_initialization() {
+  try {
+    let frame_message = {
+      "category" : HOSTED_APP_WORKER_OPERATION,
+      "action" : HOSTED_APP_INIT_WORKER,
+      "data" : message
+    }
+    tell_frame_page(frame_message)
+    let user_info = await human_frame_user_info()
+    if ( user_info ) {
+        let message = {
+        "type" : "init",
+        'user' : user_info,
+        "session" : g_current_session_name
+      }
+      g_ownership_worker.postMessage(message) //, no keys sent on initialization... worker sends "keys-up"
+    }
+  } catch (e) {
+    console.log(e)
+    return false
+  }
+  return true
+}
+
+
+async function wv_default_session_readiness() {
+  await wv_load_name_list()
+  let n = g_session_name_list.length
+  g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
+  //
+  await wv_human_frame_app_initialization(user_info)
+}
+
+
+
+// wv_prep_secure_relay 
+//    available for securing the complete wave form comprised of chunks...
+//
+function wv_prep_secure_relay(data_chunk,section_id) {
+  // relay to worker
+  let message = {
+    'type' : 'chunk',
+    'chunk' : data_chunk,               /// send ONE chunk ... 
+    'section' : section_id,
+    'sess_name' : g_current_session_name
+  }
+  g_ownership_worker.postMessage(message) // ,[data_chunk]
+}
+
+
+// wv_secure 
+//    available for securing the complete wave form comprised of chunks...
+//
+function wv_secure(op,audioBlob,id_param) {  // called for these states of processing: edit-update, end-recording
+  // relay to worker
+  let message = {
+    'type' : 'benchmark',
+    'blob' : audioBlob,
+    'op' : op,
+    'blob_id' : id_param
+  }
+  g_ownership_worker.postMessage(message) // ,[data_chunk]
+}
+
+
+// wv_secure_total_session
+//    called for edit operations and switching between sessions...
+//    This secures a named sessions which may include a number of parts each comprising a number of chunks.... 
+//
+async function wv_secure_total_session(sess_name) {
+  try {
+    let sessionObj = await get_audio_data(sess_name)
+    let complete_name = sess_name + "-complete"
+    await make_complete_session_record(complete_name,sessionObj,g_preferred_download_format)
+    let message = {
+      'type' : 'storage',
+      'sess_id' : complete_name,
+      'ext' : ext_from_download_format(g_preferred_download_format)
+    }
+    //
+    let frame_message = {
+      "category" : HOSTED_APP_WORKER_OPERATION,
+      "action" : HOSTED_APP_DATABASE_STORE,
+      "data" : message
+    }
+    tell_frame_page(frame_message)
+    //
+  } catch (e) {
+  }
+}
+
+
+//  wv_change_session_name
+//    a high level session editing operation... tell worker what session is being edited
+//
+function wv_change_session_name() {  // tell worker what session is being edited
+  let message = {
+    'type' : 'session',
+    'sess_name' : g_current_session_name
+  }
+  let frame_message = {
+    "category" : HOSTED_APP_WORKER_OPERATION,
+    "action" : HOSTED_APP_PROPERTIES,
+    "data" : message
+  }
+  tell_frame_page(frame_message)
+}
+
+//
+//  wv_update_geo_location 
+//  this is applied to recording a part.  Each part may have a location at which it is recorded.
+//  This information is passed on to the work. The interface will request permission from the user.
+//
+function wv_update_geo_location(location) {
+  let message = {
+    'type' : 'geolocation',
+    'geo_location' : location
+  }
+  let frame_message = {
+    "category" : HOSTED_APP_WORKER_OPERATION,
+    "action" : HOSTED_APP_PROPERTIES,
+    "data" : message
+  }
+  tell_frame_page(frame_message)
+}
+
+
+//
+//  wv_update_geo_location 
+//  this is applied to recording a part.  Each part may have a location at which it is recorded.
+//  This information is passed on to the work. The interface will request permission from the user.
+//
+function wv_verify_ownership(location,sess_name) {
+  let complete_name = sess_name + "-complete"
+  let message = {
+    'type' : 'verify',
+    'sess_id' : complete_name
+  }
+  let frame_message = {
+    "category" : HOSTED_APP_WORKER_OPERATION,
+    "action" : HOSTED_APP_DATA_VERIFY,
+    "data" : message
+  }
+  tell_frame_page(frame_message)
+}
+
+
+
+// <- end of ... WORKER MESSAGES
+
+
+
+
+var BASE64_MARKER = ';base64,';
+//
+function convertDataURIToBinary(dataURI) {
+  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+  var base64 = dataURI.substring(base64Index);
+  var raw = window.atob(base64);
+  var rawLength = raw.length;
+  var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+  for(i = 0; i < rawLength; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// OWNERSHIP WORKER!!!
+let g_ownership_worker = new Worker(REQ_WORKER_CODE)
+
+g_ownership_worker.onmessage = async (msg) => {
+  //
+  switch ( msg.data.type ) {
+    case 'status' : {
+      worker_status_view(msg.data.message)
+      break;
+    }
+    case 'info-ws' : {
+      msg.category = HOSTED_APP_WORKER_OPERATION
+      msg.action = HOSTED_APP_DATABASE_STORE
+      tell_frame_page(msg)
+      break;
+    }
+    case 'op-complete' : {
+      if ( msg.transition === 'chunk-final' || msg.transition ===  'edit-update' ) {
+        msg.category = FRAME_ACTION_FROM_PUBLISHER
+        msg.action = HOSTED_APP_FILE_OPERATION
+        let sessionObj = await get_audio_data(msg.session)
+        msg.data = {
+          "op" : "store",
+          "audio_data" : create_asset_meta(sessionObj)
+        }
+        tell_frame_page(msg)      /// 
+      }
+      break;
+    }
+    case 'keys-up' : {
+      msg.category = HOSTED_APP_WORKER_OPERATION
+      msg.action = HOSTED_APP_DATABASE_STORE
+      tell_frame_page(msg)
+    }
+    default: {
+      // ----
+    }
+  }
+}
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// TOOLS -- UTILITIES
+//>--
+function get_client_device_name() {
+    let oscpu = navigator.oscpu
+    let ua = navigator.userAgent
+    let user_given_machine_name = g_current_session_machine_name
+    //
+    let b = `${oscpu}-${ua}-${user_given_machine_name}`
+    b = encodeURIComponent(b.trim())
+    return(b)
+}
+//--<
+
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+
+function ext_from_download_format(download_format) {
+  if ( download_format === 'audio/wave' ) {
+    return("wav")
+  }
+  if ( download_format === 'audio/ogg' ) {
+    return("ogg")
+  }
+  if ( download_format === 'audio/mpeg' ) {
+    return("mp3")
+  }
+}
+
+
+function blobToBase64(blob) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+  });
+}
+
+
+// ----
+function make_audio_blob(channel_data_list) {
+  let d1 = channel_data_list[0]
+  let d2 = channel_data_list[1]
+  let wb = new WaveBlob()
+  wb.record(d1)
+  wb.record(d2)
+  //
+  let blob = wb.toBlob('audio/wave')
+  //
+  return(blob)
+}
+
+
+
+async function concat_all_to_array(list_of_sections) {
+  let start = list_of_sections.unshift()
+  while ( list_of_sections.length ) {
+    let next_sect = list_of_sections.unshift()
+    start = start.concat(next_sect)
+  }
+  return(start)
+}
+
+
+
+// https://stackoverflow.com/questions/33702838/how-to-append-bytes-multi-bytes-and-buffer-to-arraybuffer-in-javascript
+function concatTypedArrays(a, b) { // a, b TypedArray of same type
+  var c = new (a.constructor)(a.length + b.length);
+  c.set(a, 0);
+  c.set(b, a.length);
+  return c;
+}
+
+
+
+function lst_remove(list,index) {
+    list.splice(index,1)
+  }
+
+  function lst_insert_before(list,el,index) {
+    list.splice(index,0,el)
+  }
+
+
+
+
+// ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+var g_current_session_machine_name = "tester"
+
+
+
+/**
+ * AppAudioRecorder
+ *
+ *  Manage the use of the media recorder 
+ */
+
+class AppAudioRecorder {
+  //  //  //
+  constructor(stream,chunck_interval) {
+    //
+    this.audioChunks = [];
+    let mediaRecorder = new MediaRecorder(stream);
+
+    // send a frame to ownership
+ 
+    this.mediaRecorder = mediaRecorder
+    this.audio_instance = null
+    this.section_id = 0
+    //
+    this.chunk_interval = chunck_interval
+    //
+    mediaRecorder.addEventListener('dataavailable', event => {    // DATA AVAILABLE
+      this.data_handler(event)
+    });
+
+    mediaRecorder.addEventListener('stop',  event => {
+      this.stop_handler(event)
+    });
+  }
+  
+
+  //  data_handler
+  //
+  data_handler(data) {      /// called at the interval (see setup in constructore)
+    let chunk = event.data
+    this.audioChunks.push(chunk);
+    wv_prep_secure_relay(chunk,this.section_id)       // pass to thread (thread will do calculations)
+  }
+
+
+  //  start
+  //
+  start() {                // wrap the recorder start method and make sure configuration parameters are stored
+    this.section_id = 'ER' + uuidv4() // use ER to signify End(Edit) Recording and be different than other randoms
+    //
+    this.audioChunks = []
+    if ( typeof this.chunk_interval === 'number' ) {
+      this.mediaRecorder.start(this.chunk_interval);
+    } else {
+      this.mediaRecorder.start();
+    }
+  }
+
+  //  stop_handler
+  //
+  stop_handler(event) {
+    this.audio_results()
+  }
+
+  // stop
+  //
+  stop() {
+    this.mediaRecorder.stop();
+  }
+
+  // audio_results
+  // Called when recording stops.. This makes the first record of a collection of audio chunks
+  // A section ID is produced. The section ID will be used later when the user decideds to save 
+  // the section... However, the section hash will be sent on to the server. (note: section v.s. session)
+  async audio_results() {
+    let audioBlob = new Blob(this.audioChunks);
+    let audioUrl = URL.createObjectURL(audioBlob);
+    this.audioBlob = audioBlob
+    this.audio_instance = new Audio(audioUrl);
+    await wv_backup_audio_chunks_for_verification(this.section_id,this.audioChunks)
+    wv_secure('end-recording',audioBlob,this.section_id)
+  }
+
+  // add_current_data
+  // Called when the user decides to save the audio as part of the named session
+  // At this point, there is a section_id. It is used to make sure the indexedDB storage 
+  // maps to the blob
+  add_current_data() {
+    if ( this.audioBlob ) {
+      add_audio_data(this.audioBlob,this.section_id)
+    }
+  }
+
+  delete_last_recorderd_audio() {
+    this.audio_instance = null
+    this.audioBlob = null
+  }
+
+  play() {
+    if ( this.audio_instance ) {
+      this.audio_instance.play()
+    }
+  }
+
+}
+// END OF CLASS AUDIO RECORDER
 
 
   ////////////////
@@ -1036,36 +2427,6 @@ async function make_complete_session_record(sess_name_cmplt,sessionObj,contentTy
   }
   //
 }
-
- // ---- ---- ---- ---- ---- ---- ---- ----
- // ---- ---- ---- ---- ---- ---- ---- ----
-
-
-if ( typeof(postData) === "function" ) {
-  wv_postData = postData
-} else {
-  throw new Error("postData not defined for the containing page")
-}
-
-async function ask_file_from_disk(name_info) {
-  return new Promise((resolve,reject) => {
-    g_dropped_file_modal.showModal();
-    const modal = g_user_modal
-    modal.addEventListener('close', async () => {
-      let modal_value = modal.returnValue
-      if ( modal_value === 'ready' ) {
-        let drop_target = document.getElementById('dropped-file-target')
-        if ( drop_target ) {
-          let data = drop_target.innerText
-          resolve(data)      
-        } else {
-          reject(false)
-        }
-      }
-    })
-  })
-}
-
 
 
 // AUDIO MODAL
@@ -1231,6 +2592,8 @@ async function wv_load_name_list() {
 
 
 function update_session_name_selections(sess_name,name_list) {
+  if ( sess_name === undefined ) return;
+  //
   let session_options = name_list.map(name => {
     let el_html = `<option value='${name}'>${name}</option>`
     return(el_html)
@@ -1254,7 +2617,7 @@ function warn(str) {
 
 async function add_in_new_session(name) {
   let sess_name_el = document.getElementById('show-session-name')
-  if ( sess_name_el ) {
+  if ( sess_name_el && name ) {
     g_current_session_name = name
     g_session_name_list.push(name)
     sess_name_el.innerHTML = name
@@ -2367,127 +3730,6 @@ function wv_delete_checked() {
 }
 
 // ---- ---- ---- ---- ---- ----
-// ---- ---- ---- ---- ---- ----
-
-// WORKER MESSAGES
-
-
-// operations:  init, chunk, benchmark, storage, session, geolocation
-
-function wv_user_info_to_worker(user_info) {
-  try {
-    let message = {
-      'type' : 'init',
-      'user' : user_info,
-      'iv' : hex_toByteArray(user_info.iv)
-    }
-    if ( user_info.machine_name === undefined ) {
-      user_info.machine_name = g_current_session_machine_name
-    }
-    delete user_info.iv
-    g_ownership_worker.postMessage(message) //,[message.priv,message.iv]
-  } catch (e) {
-    console.log(e)
-    return false
-  }
-  return true
-}
-
-
-
-// wv_prep_secure_relay 
-//    available for securing the complete wave form comprised of chunks...
-//
-function wv_prep_secure_relay(data_chunk,section_id) {
-  // relay to worker
-  let message = {
-    'type' : 'chunk',
-    'chunk' : data_chunk,               /// sned ONE chunk ... 
-    'section' : section_id,
-    'sess_name' : g_current_session_name
-  }
-  g_ownership_worker.postMessage(message) // ,[data_chunk]
-}
-
-// wv_secure 
-//    available for securing the complete wave form comprised of chunks...
-//
-function wv_secure(op,audioBlob,id_param) {  // called for these states of processing: edit-update, end-recording
-  // relay to worker
-  let message = {
-    'type' : 'benchmark',
-    'blob' : audioBlob,
-    'op' : op,
-    'blob_id' : id_param
-  }
-  g_ownership_worker.postMessage(message)
-}
-
-
-// wv_secure_total_session
-//    called for edit operations and switching between sessions...
-//    This secures a named sessions which may include a number of parts each comprising a number of chunks.... 
-//
-async function wv_secure_total_session(sess_name) {
-  try {
-    let sessionObj = await get_audio_data(sess_name)
-    let complete_name = sess_name + "-complete"
-    await make_complete_session_record(complete_name,sessionObj,g_preferred_download_format)
-    let message = {
-      'type' : 'storage',
-      'sess_id' : complete_name,
-      'ext' : ext_from_download_format(g_preferred_download_format)
-    }
-    // get the session data and store it
-    g_ownership_worker.postMessage(message)  // just send the key for DB retrieval
-    //
-  } catch (e) {
-  }
-}
-
-
-//  wv_change_session_name
-//    a high level session editing operation... tell worker what session is being edited
-//
-function wv_change_session_name() {  // tell worker what session is being edited
-  let message = {
-    'type' : 'session',
-    'sess_name' : g_current_session_name
-  }
-  g_ownership_worker.postMessage(message)
-}
-
-//
-//  wv_update_geo_location 
-//  this is applied to recording a part.  Each part may have a location at which it is recorded.
-//  This information is passed on to the work. The interface will request permission from the user.
-//
-function wv_update_geo_location(location) {
-  let message = {
-    'type' : 'geolocation',
-    'geo_location' : location
-  }
-  g_ownership_worker.postMessage(message)
-}
-
-
-//
-//  wv_update_geo_location 
-//  this is applied to recording a part.  Each part may have a location at which it is recorded.
-//  This information is passed on to the work. The interface will request permission from the user.
-//
-function wv_verify_ownership(location) {
-  let complete_name = sess_name + "-complete"
-  let message = {
-    'type' : 'verify',
-    'sess_id' : complete_name
-  }
-  g_ownership_worker.postMessage(message)
-}
-
-
-
-// <- end of ... WORKER MESSAGES
 
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -2558,12 +3800,11 @@ async function download_prompt() {
 }
 
 
+/// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 function handle_session_upload(ev) {
   //
 }
-
-
 
 function worker_status_view(status) {
   //
@@ -2591,84 +3832,12 @@ function wv_getLocation() {
   }
 }
 
-//>--
-function hex_fromArrayOfBytes(arrayOfBytes) {
-    const hexstr = arrayOfBytes.map(b => b.toString(16).padStart(2, '0')).join('');
-    return(hexstr)
-}
-//--<
-
-//>--
-function hex_fromTypedArray(byteArray){
-    let arrayOfBytes = Array.from(byteArray)
-    return(hex_fromArrayOfBytes(arrayOfBytes))
-}
-//--<
 
 
-//>--
-function hex_fromByteArray(byteArray){
-    return hex_fromTypedArray(ArrayOfBytes_toByteArray(byteArray))
-}
-//--<
-
-
-//>--
-function hex_toArrayOfBytes(hexString) {
-    let result = [];
-    for ( let i = 0; i < hexString.length; i += 2 ) {
-      result.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    return result;
-}
-//--<
-
-//>--
-function ArrayOfBytes_toByteArray(arrayOfBytes) {
-    let byteArray = new Uint8Array(arrayOfBytes)
-    return(byteArray)
-}
-//--<
-
-//>--
-function hex_toByteArray(hexstr) {
-    let aob = hex_toArrayOfBytes(hexstr)
-    return ArrayOfBytes_toByteArray(aob)
-}
-//--<
-
-//>--
-function bufferToArrayBufferCycle(buffer) {
-  var ab = new ArrayBuffer(buffer.length);
-  var view = new Uint8Array(ab);
-  for (var i = 0; i < buffer.length; ++i) {
-      view[i] = buffer[i];
-  }
-  return ab;
-}
-//--<
 
 // ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ----
 
-
-
-async function wv_set_session_user() {
-  if ( g_window_can_process && g_audio_db ) {
-    //
-    let user_info = null
-    try {
-      user_info = await wv_find_user()
-      if ( !(wv_user_info_to_worker(user_info)) ) {
-        alert("Worker threads do not have user information - not initialized")
-      }
-    } catch (e) {                           // NO USER FOUND
-    }
-    //
-  } else {
-    alert("Crypotgraphy processing is not available within this browser at this time.")
-  }
-}
 
 function stop_geo_update() {
   if ( g_geo_update ) clearInterval(g_geo_update)
@@ -2680,39 +3849,114 @@ function restart_geo_update() {
 }
 
 // ---- ---- ---- ---- ---- ----
-async function initialize_db_and_crypto() {
+async function initialize_data_operations() {
   g_audio_db = await wv_init_database()
-  wv_load_name_list()
-  await wv_set_session_user()
 }
+
+
 
 async function application_initialization() {
+  //
   wv_getLocation()
-  wv_initialize_global_buttons()
   wv_init_recorder()
+  wv_initialize_global_buttons()
   //
-  await initialize_db_and_crypto()
-  //g_geo_update = setInterval(wv_getLocation,GEO_UPDATE_INTERVAL)  
+  await initialize_data_operations()
+  await wv_default_session_readiness()
 }
 
-// ---- ---- ---- ---- ---- ----
-// ---- ---- ---- ---- ---- ----
-if ( g_window_can_process ) {
-  //
-  async function first_initializer() {
-    await application_initialization()
+
+// ---- ----
+
+function show_recorder(event) {
+  let rec_el_nm = "big-recorder"
+  let mng_el_nm = "record-manager"
+  let rec_el = document.getElementById(rec_el_nm)
+  let mng_el = document.getElementById(mng_el_nm)
+  if ( rec_el && mng_el ) {
+    rec_el.style.display= "block"
+    mng_el.style.display = "none"
+    //
+    let stylish_guy = document.getElementById("btn-pick_recorder")
+    stylish_guy.style.border = "2px solid navy"
+    stylish_guy.style.borderRadius = "4px"
+    //
+    let plain_guy = document.getElementById("btn-pick_manager")
+    plain_guy.style.border = "1px solid black"
+    plain_guy.style.borderRadius = "4px"
   }
-  //
-  first_initializer()
 }
 
-if ( typeof g_current_pin !== "undefined" ) {
-  g_current_pin.openAction = () => {
-    let f = async () => { await initialize_db_and_crypto() }
-    f()
+function show_manager(event) {
+  let rec_el_nm = "big-recorder"
+  let mng_el_nm = "record-manager"
+  let rec_el = document.getElementById(rec_el_nm)
+  let mng_el = document.getElementById(mng_el_nm)
+  if ( rec_el && mng_el ) {
+    rec_el.style.display= "none"
+    mng_el.style.display = "block"
+    //
+    let stylish_guy = document.getElementById("btn-pick_manager")
+    stylish_guy.style.border = "2px solid navy"
+    stylish_guy.style.borderRadius = "4px"
+    //
+    let plain_guy = document.getElementById("btn-pick_recorder")
+    plain_guy.style.border = "1px solid black"
+    plain_guy.style.borderRadius = "4px"
   }
 }
 
+
+// async wrapper 
+async function first_initializer() {
+  await application_initialization()
+}
+//
+first_initializer()
+show_recorder(event)
 /*
 */
+
+
+
+
+
+
+/*
+
+// this.mediaRecorder.start(this.chunk_interval);    /// allows data available to run
+
+
+const chunks = [];
+
+mediaRecorder.onstop = (e) => {
+  console.log("data available after MediaRecorder.stop() called.");
+
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+  const audioURL = window.URL.createObjectURL(blob);
+  audio.src = audioURL;
+  console.log("recorder stopped");
+};
+
+mediaRecorder.ondataavailable = (e) => {
+  chunks.push(e.data);
+};
+
+
+
+
+let arbuf = blob.arrayBuffer()    // everywhere
+
+//Blob.arrayBuffer()
+
+
+// Blob.bytes() ... only Mozilla
+
+*/
 </script>
+
+
+
+
