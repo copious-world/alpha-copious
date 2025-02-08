@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 <!-- MANIFEST... -->
-	<link rel="manifest" href="manifest.json" />
+	<link rel="manifest" href="./manifest.json" />
 <!-- ... -->
 
 	<meta name="author" content="Richard Leddy" />
@@ -13,7 +13,7 @@
 	<meta id="theme-color" name="theme-color" content="#452770">
 
 	<link rel="canonical" href="http://www.copious.world">
-	<link rel="icon" type="image/svg+xml" href="/copiousLogo.svg" />
+	<link rel="icon" type="image/svg+xml" href="./copiousLogo.svg" />
 
 	<!-- metas for PWA -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -915,6 +915,10 @@ html {
 	function postDataFromThePage() {}  // TBD
 
 
+
+	const APPLICATON_URL = `https://cloud.copious.world/pwa/market-place/`
+
+
 	if ( !('serviceWorker' in navigator) ) {
 		let main_contaier = document.getElementById("app-sourcing")
 		main_contaier.innerHTML = "Sorry... this browser does not support progressive web applications"
@@ -1053,7 +1057,6 @@ html {
 
 
 
-
 	//
 	window.addEventListener('online', () => {
 							if ( navigator.serviceWorker.controller ) {
@@ -1067,7 +1070,6 @@ html {
 	window.addEventListener('offline', () => {
 							//alert('You have lost internet access!');
 						});
-
 
 
 	// END OF SERVICE WORKER
@@ -2188,6 +2190,7 @@ class HumanUserDB extends AppDBWrapper {
 }
 
 
+
 //$>>	db_startup
 
 const DB_VERSION = 1
@@ -2229,7 +2232,7 @@ async function get_known_users() {
     if ( g_human_user_storage ) {
         return await g_human_user_storage.get_known_users()
     }
-    return false
+    return [false,false]
 }
 
 
@@ -2354,6 +2357,7 @@ get_known_users
 		}
 	}
 
+
 // END POST WRAPPERS
 
 
@@ -2417,12 +2421,12 @@ function get_identity_for_human_frame_startup() {
 }
 
 
-async function  store_public_identity(public_component) {
+async function store_public_identity(public_component) {
 	// dB operation
 }
 
 
-async function  load_public_identity() {
+async function load_public_identity() {
 	// dB operation
 	let [users,identities] = await get_known_users()
 	if ( users && users.length ) {
@@ -2432,6 +2436,7 @@ async function  load_public_identity() {
 }
 
 
+
 async function frame_page_alive() {
 	// post message promise
 }
@@ -2439,6 +2444,13 @@ async function frame_page_alive() {
 
 
 // ---->>>
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// MESSAGE HANDLERS
+
+
+// ---->>>
+
 
 // SHARED CONSTANTS
 
@@ -2543,6 +2555,8 @@ const FRAME_RAN_PUB_OP = "yep-publication-operation"
 const HOSTED_APP_FILE_OPERATION = "yep-file-creation-db"
 const HOSTED_APP_WORKER_OPERATION = "yep-worker-op"
 const HOSTED_APP_LOAD_WORKER = "yep-worker-select"
+const HOSTED_APP_INIT_WORKER = "yep-worker-ready"
+
 const HOSTED_APP_DATA_FLIGHT = "yep-worker-dat-fly"
 const HOSTED_APP_DATABASE_STORE  = "yep-data-to-db"
 const HOSTED_APP_PROPERTIES = "yep-data-properties"
@@ -2553,16 +2567,21 @@ const FRAME_RETURNS_DATA = "frame-provides-data-part"
 const FRAME_RETURNS_SESSION_CHECK = "frame-provides-session-check"
 
 //
-// window.g_message_template = g_message_template = {
-// 	"category" : HOST_APP_PERSONALIZATION,
-// 	"direction" : HOSTED_APP_TO_FRAME,
-// 	"action" : FRAME_HAS_PERSONALIZATION,
-// 	"relationship" : "phone-install"
-// }
+// window.g_message_template =
+
+g_message_template = {
+	"category" : "",
+	"direction" : SITE_PAGE_TO_FRAME,
+	"action" : "any",
+	"relationship" : SITE_RELATES_TO_FRAME
+}
+
+let g_human_frame_url = ""
 function update_frame_source(url_str) {
 	let id="app-human-frame"
 	let human_frame = document.getElementById(id)
 	if ( human_frame !== null ) {
+		g_human_frame_url = url_str
 		human_frame.src = url_str
 	}
 }
@@ -2577,12 +2596,25 @@ function tell_frame_page(message) {
     msg.category = message.category
     msg.data = message.data
     let message_str = JSON.stringify(msg)
-    g_frame_page.postMessage(message_str,g_frame_cors_uri)
+    g_frame_page.contentWindow.postMessage(message_str,g_frame_cors_uri)
     return true
 }
 
 
-//
+function tell_human_page_new_source(app_url) {
+	let message = {
+		"category" : FRAME_ACTION_LOAD_APP,
+		"action" : "any",
+		"data" : {
+			"revise_source" : app_url,
+			"publications" : false
+		}
+	}
+	tell_frame_page(message)
+}
+
+
+//  container (special verion) CWC
 function install_new_user_response() {
     window.addEventListener("message", async (event) => {
         let page_source = event.origin
@@ -2615,66 +2647,74 @@ function install_new_user_response() {
                     if ( category === FRAME_COMPONENT_MANAGE_ID ) {
                         if ( action === FRAME_ACTION_INJECT ) {
 							let public_component = mobj.data;
-							await store_public_identity(public_component)  // public to local DB
+							if ( typeof public_component === 'object') {
+								await store_public_identity(public_component)  // public to local DB
+							}
                         } else if ( action === FRAME_ACTION_INSTALL ) {
 							let identity = mobj.data;
-							keep_identity_for_human_frame_startup(identity)
-							if ( typeof identity.public_component === 'object' ) {
-								//
-								if ( identity.public_component.human_frame_url ) {
-									update_frame_source(identity.public_component.human_frame_url)
-									try {
-										let ok = await alive_response("human_frame")
-										if ( ok ) {
-											let identity = get_identity_for_human_frame_startup()
-											let message = {
-												"category" : FRAME_COMPONENT_MANAGE_ID,
-												"action" : FRAME_ACTION_INSTALL,
-												"data" : identity
+							if ( typeof identity === 'object' ) {
+								keep_identity_for_human_frame_startup(identity)
+								if ( typeof identity.public_component === 'object' ) {
+									//
+									if ( identity.public_component.human_frame_url ) {
+										update_frame_source(identity.public_component.human_frame_url)
+										try {
+											let ok = await alive_response("human_frame")
+											if ( ok ) {
+												let identity = get_identity_for_human_frame_startup()
+												let message = {
+													"category" : FRAME_COMPONENT_MANAGE_ID,
+													"action" : FRAME_ACTION_INSTALL,
+													"data" : identity
+												}
+												tell_frame_page(message)
 											}
-											tell_frame_page(message)
+										} catch (e) {
 										}
-									} catch (e) {
 									}
+									//
 								}
-								//
 							}
                         }
                     }
 				} else if ( direction === FRAME_PAGE_TO_SITE ) {
-                if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
-                    if ( action === FRAME_COMPONENT_RESPONDING ) {
-                        if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
-                            g_responder_tables.human_frame.resolver(relationship,action)
-                        }
-                    }
-                } else {
-                    let data = mobj.data
-                    human_frame_page_application_handlers(category,action,data,relationship)
-                }
-            }
+					if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+						if ( action === FRAME_COMPONENT_RESPONDING ) {
+							if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
+								g_responder_tables.human_frame.resolver(relationship,action)
+							}
+						}
+					} else {
+						let data = mobj.data
+						human_frame_page_application_handlers(category,action,data,relationship)
+					}
+				}
             } catch (e) {
             }    
         }
     })
 }
 
-/*
+function setup_iframe_readiness_response() {
+	let id="app-human-frame"
+	let human_frame = document.getElementById(id)
+	if ( human_frame !== null ) {
+		//
+		g_frame_page = human_frame
 
-    id_packet.public_component = Object.assign(user_data)
+		human_frame.addEventListener('load', (evnt) => {
+			if ( g_human_frame_url == evnt.target.src ) {
+				let app_url = APPLICATON_URL
+				tell_human_page_new_source(APPLICATON_URL)
+			}
+		});
+		//
+	}
 
-    let hashable_data = JSON.stringify(id_packet)
-    let hash_of_data = await do_hash(hashable_data)
-    // add to the user data ....
-    id_packet.ccwid = hash_of_data
-    id_packet.public_component.ccwid = hash_of_data
-    //
-    return id_packet
+}
 
-	identity.public_component.human_frame_url = human_frame_url
-    identity.public_component.name_as_uri = name_as_uri
 
-*/
+
 
 
 // ---- run_finalizers
@@ -2683,7 +2723,6 @@ async function run_finalizers() {
 		await fn()
 	}
 }
-
 
 async function startup() {
 	await run_finalizers()
@@ -2700,9 +2739,77 @@ async function startup() {
 }
 
 
-
-
 startup()
+
+
+
+
+/*
+if (navigator.storage && navigator.storage.estimate) {
+  const quota = await navigator.storage.estimate();
+  // quota.usage -> Number of bytes used.
+  // quota.quota -> Maximum number of bytes available.
+  const percentageUsed = (quota.usage / quota.quota) * 100;
+  console.log(`You've used ${percentageUsed}% of the available storage.`);
+  const remaining = quota.quota - quota.usage;
+  console.log(`You can write up to ${remaining} more bytes.`);
+}
+
+
+// QuotaExceededError
+const transaction = idb.transaction(['entries'], 'readwrite');
+transaction.onabort = function(event) {
+  const error = event.target.error; // DOMException
+  if (error.name == 'QuotaExceededError') {
+    // Fallback code goes here
+  }
+};
+
+
+
+// cache -- QuotaExceededError
+try {
+  const cache = await caches.open('my-cache');
+  await cache.add(new Request('/sample1.jpg'));
+} catch (err) {
+  if (error.name === 'QuotaExceededError') {
+    // Fallback code goes here
+  }
+}
+
+
+
+
+
+
+
+// Check if site's storage has been marked as persistent
+if (navigator.storage && navigator.storage.persist) {
+  const isPersisted = await navigator.storage.persisted();
+  console.log(`Persisted storage granted: ${isPersisted}`);
+}
+
+// Request persistent storage for site -- A PERMISSION GRANTED BY THE USER
+if (navigator.storage && navigator.storage.persist) {
+  const isPersisted = await navigator.storage.persist();
+  console.log(`Persisted storage granted: ${isPersisted}`);
+}
+
+
+// If the persistent storage permission is granted, the browser will not evict data stored in:
+
+//     Cache API
+//     Cookies
+//     DOM Storage (Local Storage)
+//     File System API (browser-provided and sandboxed file system)
+//     IndexedDB
+//     Service workers
+//     App Cache (deprecated, should not be used)
+//     WebSQL (deprecated, should not be used)
+
+
+*/
+
 
 
 </script>

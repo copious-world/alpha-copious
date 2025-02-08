@@ -402,8 +402,8 @@ html {
 		border-left: solid 3px navy;
 		border-top: solid 3px navy;
 		border-bottom: solid 3px rgba(252,252,255,0.7);
-		min-height: 90px
-		padding: 20px
+		min-height: 90px;
+		padding: 20px;
 		background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
 		background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
 		
@@ -909,12 +909,14 @@ html {
 </html>
 <script>
 
+
+	// SERVICE WORKER
 	
 	function postDataFromThePage() {}  // TBD
 
 
 
-	const APPLICATON_URL = `https://cloud.copious.world/pwa/safe-recorder/recorder/`
+	const APPLICATON_URL = `https://safe-recorder.copious.world/recorder/`
 
 
 	if ( !('serviceWorker' in navigator) ) {
@@ -1027,7 +1029,7 @@ html {
 		}
 
 		async function ready_service_worker() {
-
+			//
 			try {
 				let registration = await navigator.serviceWorker.ready
 				if ( registration.sync ) {
@@ -1042,7 +1044,7 @@ html {
 			} catch (e) {
 				postDataFromThePage(e);
 			}
-
+			//
 		}
 
 
@@ -2277,10 +2279,12 @@ get_known_users
 */
 
 
+
 // END OF DATABASE
 
-// FETCH POST
 
+
+// FETCH POST
 	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 	async function postData(url = '', data = {}, creds = 'omit', do_stringify = true) {
@@ -2612,7 +2616,7 @@ function tell_human_page_new_source(app_url) {
 
 //  container (special verion) CWC
 function install_new_user_response() {
-    window.addEventListener("message", (event) => {
+    window.addEventListener("message", async (event) => {
         let page_source = event.origin
         if ( page_source !== '*' ) {
             // let opener = event.source --- the site page is assumed to be the top level of the interactions
@@ -2623,11 +2627,13 @@ function install_new_user_response() {
                 let action = mobj.action
                 let direction = mobj.direction
                 //
-                if ( direction === NEW_USER_TO_FRAME ) {
+				// NEW_USER_TO_FRAME sent by `new_user.html`
+                if ( direction === NEW_USER_TO_FRAME ) {		// done first when nothing about the user is in the DB
                     let _starter_page = event.source
                     if ( category === HOST_APP_PERSONALIZATION ) {
                         if ( action === FRAME_HAS_PERSONALIZATION ) {
-                            update_frame_source(mobj.data)
+                            update_frame_source(mobj.data)   // just change the page to the one indicated by `new_user.html`
+							// then nothing else happens until a user identity builder sends partial (public) initial identity
                         }
                     }
                 } else if ( direction === HOSTED_APP_TO_FRAME ) {
@@ -2637,6 +2643,51 @@ function install_new_user_response() {
                             update_frame_source(mobj.data)
                         }
                     }
+				} else if ( direction === BUILDER_PAGE_TO_SITE ) {
+                    if ( category === FRAME_COMPONENT_MANAGE_ID ) {
+                        if ( action === FRAME_ACTION_INJECT ) {
+							let public_component = mobj.data;
+							if ( typeof public_component === 'object') {
+								await store_public_identity(public_component)  // public to local DB
+							}
+                        } else if ( action === FRAME_ACTION_INSTALL ) {
+							let identity = mobj.data;
+							if ( typeof identity === 'object' ) {
+								keep_identity_for_human_frame_startup(identity)
+								if ( typeof identity.public_component === 'object' ) {
+									//
+									if ( identity.public_component.human_frame_url ) {
+										update_frame_source(identity.public_component.human_frame_url)
+										try {
+											let ok = await alive_response("human_frame")
+											if ( ok ) {
+												let identity = get_identity_for_human_frame_startup()
+												let message = {
+													"category" : FRAME_COMPONENT_MANAGE_ID,
+													"action" : FRAME_ACTION_INSTALL,
+													"data" : identity
+												}
+												tell_frame_page(message)
+											}
+										} catch (e) {
+										}
+									}
+									//
+								}
+							}
+                        }
+                    }
+				} else if ( direction === FRAME_PAGE_TO_SITE ) {
+					if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+						if ( action === FRAME_COMPONENT_RESPONDING ) {
+							if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
+								g_responder_tables.human_frame.resolver(relationship,action)
+							}
+						}
+					} else {
+						let data = mobj.data
+						human_frame_page_application_handlers(category,action,data,relationship)
+					}
 				}
             } catch (e) {
             }    
