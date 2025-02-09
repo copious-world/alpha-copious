@@ -2596,7 +2596,11 @@ update_frame_source("./new_user.html")
 
 
 function tell_frame_page(message) {
-    if ( !g_frame_page ) return(false)
+    if ( !g_frame_page ) {
+		let id="app-human-frame"
+		g_frame_page = document.getElementById(id)
+		if ( !(g_frame_page) ) return(false)
+	}
     let msg = Object.assign({},g_message_template)
     msg.direction = SITE_PAGE_TO_FRAME
     msg.relationship = SITE_RELATES_TO_FRAME
@@ -2691,6 +2695,26 @@ function install_new_user_response() {
 						if ( action === FRAME_COMPONENT_RESPONDING ) {
 							if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
 								g_responder_tables.human_frame.resolver(relationship,action)
+							} else {
+								let id_state = mobj.data
+								// "has_identity" : has_identity,
+					            // "identity_complete" : complete_identity
+								if ( id_state.has_identity === false ) {
+									let pub_id = await load_public_identity()
+									let id_packet = {
+										"name" : pub_id.name,
+										"ccwid" : pub_id.ccwid,
+										"human_frame_url" : pub_id.human_frame_url,
+										"name_as_uri" : pub_id.name_as_uri,
+										"public_component" : pub_id
+									}
+									let message = {
+										"category" : FRAME_COMPONENT_MANAGE_ID,
+										"action" : FRAME_ACTION_INSTALL,
+										"data" : id_packet
+									}
+									tell_frame_page(message)
+								}
 							}
 						}
 					} else {
