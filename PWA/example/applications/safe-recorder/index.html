@@ -22,7 +22,6 @@
 	<meta name="msapplication-TileImage" content="link to the image in static folder">
 	<meta name="msapplication-TileColor" content="#000">
 
-
 	<title>Copious World :: Safe Recorder</title>
 	<meta name="description" content="An entry point into the our world of AI, IoT, and Communities built around songs, etc.">
 <style>
@@ -2422,6 +2421,7 @@ function get_identity_for_human_frame_startup() {
 
 
 async function store_public_identity(public_component) {
+	await store_user(public_component)
 	// dB operation
 }
 
@@ -2430,7 +2430,13 @@ async function load_public_identity() {
 	// dB operation
 	let [users,identities] = await get_known_users()
 	if ( users && users.length ) {
-		return identities[0]
+		let u_record = identities[0]
+		try {
+			let upub = JSON.parse(u_record.data["user-meta"])
+			return upub
+		} catch(e) {
+			console.log("parse error user data")
+		}
 	}
 	return false
 }
@@ -2586,6 +2592,8 @@ function update_frame_source(url_str) {
 	}
 }
 
+update_frame_source("./new_user.html")
+
 
 function tell_frame_page(message) {
     if ( !g_frame_page ) return(false)
@@ -2657,6 +2665,7 @@ function install_new_user_response() {
 								if ( typeof identity.public_component === 'object' ) {
 									//
 									if ( identity.public_component.human_frame_url ) {
+										await store_public_identity(identity.public_component)  // public to local DB
 										update_frame_source(identity.public_component.human_frame_url)
 										try {
 											let ok = await alive_response("human_frame")
@@ -2727,18 +2736,15 @@ async function run_finalizers() {
 async function startup() {
 	await run_finalizers()
 	let pub_id = await load_public_identity()
-	if ( pub_id == false ) {
-		install_new_user_response()
-		// not only is the response installed, but also, 
-		// the iframe @ "app-human-frame" is left as the default `./new_user.html`
-		// users optionally click on the button to start the process of getting an identity
-	} else {
+	if ( pub_id !== false ) {
 		let url = pub_id.human_frame_url
-		update_frame_source(url)
+		if ( url !== undefined ) {
+			update_frame_source(url)
+		}
 	}
 }
 
-
+install_new_user_response()
 startup()
 
 
