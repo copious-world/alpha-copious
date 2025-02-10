@@ -2625,6 +2625,10 @@ function tell_human_page_new_source(app_url) {
 	tell_frame_page(message)
 }
 
+async function human_frame_page_application_handlers(category,action,data,relationship) {
+
+}
+
 
 //  container (special verion) CWC
 function install_new_user_response() {
@@ -2714,6 +2718,11 @@ function install_new_user_response() {
 										"data" : id_packet
 									}
 									tell_frame_page(message)
+								} else {
+									if ( id_state.identity_complete ) {
+										let app_url = APPLICATON_URL
+										tell_human_page_new_source(APPLICATON_URL)
+									}
 								}
 							}
 						}
