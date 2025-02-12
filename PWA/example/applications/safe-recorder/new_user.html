@@ -640,12 +640,36 @@ html {
 		.new-user-message {
 			width: 100%;
 		}
+		.return-user-message {
+			width: 100%;
+			border: 1px solid darkgreen;
+			padding:2px;
+		}
 	}
 
 	@media screen and (min-width: 601px) {
 		.new-user-message {
 			width: 60%;
 		}
+		.return-user-message {
+			width: 60%;
+			border: 1px solid darkgreen;
+			padding:2px;
+		}
+	}
+
+
+	.human-user-query {
+		position: absolute;
+		top : 0px;
+		left: 60px;
+		bottom: 0px;
+		right: 220px;
+		background-color: #cae5ffb0;
+		border: solid 1px yellowgreen;
+		text-align: center;
+		vertical-align: middle;
+		padding-top: 10%;
 	}
 
 	</style>
@@ -695,9 +719,25 @@ html {
 			<br><br>
 			Please click on this link that follows to begin this process.
 			<br><br>
-			<button onclick="go_get_identity()">MY BUTTON</button>
+			<button onclick="go_get_identity()" style="width: fit-content;">Create Intergalactic Identity</button>
 	</div>
-	
+	<div class="return-user-message">
+		Already have an intergalactic identity?
+		<button onclick="prompt_restore_identity()" style="width: fit-content;">Install your identity</button>
+	</div>
+
+<div id="human-user-query" class="human-user-query" style="display: none;">
+
+	<div style="background-color:#FAFAFF;padding:2px;border:solid 1px navy">
+		<label for="human-user-field">Enter the url version of your human name:</label>
+		<input id="human-user-field" type="text" value="" />
+		<button onclick="go_get_human_url()">load your page</button>	
+	</div>
+	<div style="text-align: right;">
+		<button onclick="hide_hu_query()">close</button>
+	</div>
+
+</div>
 	</main>
 
 <footer>
@@ -792,12 +832,35 @@ html {
 		})
 	}
 
+	function prompt_restore_identity() {
+		let human_url_query = document.getElementById("human-user-query")
+		if ( human_url_query ) {
+			human_url_query.style.display = "block"
+		}
+	}
+
+	function hide_hu_query() {
+		let human_url_query = document.getElementById("human-user-query")
+		if ( human_url_query ) {
+			human_url_query.style.display = "none"
+		}
+	}
+
+	function go_get_human_url() {
+		let human_url_entry = document.getElementById("human-user-field")
+		if ( human_url_entry ) {
+			let human_name_as_url = human_url_entry.value
+			let url = `https://${human_name_as_url}.of-this.world `
+			tell_frame_page({
+				"data" : url
+			})
+		}
+	}
+
 
 	const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
-	const NEW_USER_TO_FRAME = "new_user_to_frame"
 	const HOST_APP_PERSONALIZATION = "personalization"
 	const FRAME_HAS_PERSONALIZATION = "has-personalization"
-	const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
 
 
 	let g_frame_page = window.parent
@@ -805,8 +868,8 @@ html {
 	//
 	g_message_template = {
 		"category" : HOST_APP_PERSONALIZATION,
-		"direction" : NEW_USER_TO_FRAME,
-		"action" : ID_MANAGER_ACTION_TO_FRAME,
+		"direction" : HOSTED_APP_TO_FRAME,
+		"action" : FRAME_HAS_PERSONALIZATION,
 		"relationship" : "phone-install"
 	}
 

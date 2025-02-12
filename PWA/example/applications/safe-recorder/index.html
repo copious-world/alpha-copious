@@ -891,7 +891,7 @@ html {
 		</table>
 	</nav>
 	<main id="app-sourcing">
-	<iframe src="./new_user.html" id="app-human-frame">
+	<iframe src="./new_user.html" id="app-human-frame" allow="camera;microphone;geolocation">
 
 	</iframe>
 	</main>
@@ -2648,7 +2648,11 @@ function install_new_user_response() {
                     let _starter_page = event.source
                     if ( category === HOST_APP_PERSONALIZATION ) {
                         if ( action === FRAME_HAS_PERSONALIZATION ) {
-                            update_frame_source(mobj.data)   // just change the page to the one indicated by `new_user.html`
+							if ( mobj.data ) {
+								update_frame_source(mobj.data)   // just change the page to the one indicated by `new_user.html`
+							} else {
+								await prompt_for_identity()
+							}
 							// then nothing else happens until a user identity builder sends partial (public) initial identity
                         }
                     }
@@ -2755,6 +2759,10 @@ function setup_iframe_readiness_response() {
 
 }
 
+
+async function prompt_for_identity() {
+	// TBD
+}
 
 
 
