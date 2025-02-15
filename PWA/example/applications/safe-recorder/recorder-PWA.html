@@ -196,6 +196,21 @@
     width: calc(100vw - 10% - 2px);
   }
 
+  .demoC {
+    width: 24px;
+    height: 24px;
+    background: black;
+    clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
+  }
+
+  #stop {
+    font-weight: bolder;
+    color:lime;
+    background-color: black;
+  }
+
+</style>
+ 
 </style>
 </head>
 <body>
@@ -207,13 +222,15 @@
     </div>
 
     <div id="big-recorder" class="component-container">
-      <span style="font-weight: bolder;">Record Audio</span>:&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-weight: bolder;">Record Audio</span>:&nbsp;&nbsp;&nbsp;
+      <!-- Next thing-->
+      <button id="record_state_radio" style="background-color:#6cb187;border-radius: 50%;width:24px;height:24px;border:solid 3px steelblue" x_prop_on="false" onclick="set_record_radio_state(event)" >&nbsp;</button>
+      &nbsp;&nbsp;
+      <button id="play" class="demoC" style="display: inline-block;border:solid 3px steelblue;cursor: pointer;" onclick="start_playing_recording(event)">&RightArrow;</button>
+      <button id="stop"  style="display: none;border:solid 3px steelblue;cursor: pointer;" onclick="stop_playing_recording(event)">I&nbsp;I</button>
       <span id="show-session-name" style="font-weight: bolder;"></span>
-      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
-      <button id="record" disabled>Record</button>
-      <button id="stop" disabled>Stop</button>
-      <button id="play" disabled>Play</button>
-      <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
+
+      <div style="margin-top:4px;max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
 
       <div>
         <svg
@@ -230,12 +247,10 @@
            viewBox="0 0 68 120"
            version="1.1"
            id="svg891"
-           inkscape:version="1.0 (4035a4f, 2020-05-01)"
            sodipodi:docname="mic3.svg">
           <defs
              id="defs885">
             <linearGradient
-               inkscape:collect="always"
                id="linearGradient1530">
               <stop
                  style="stop-color:#b4b4ea;stop-opacity:1;"
@@ -247,7 +262,6 @@
                  id="stop1528" />
             </linearGradient>
             <radialGradient
-               inkscape:collect="always"
                xlink:href="#linearGradient1530"
                id="radialGradient1532"
                cx="70.303574"
@@ -258,7 +272,6 @@
                gradientTransform="matrix(1,0,0,1.8775141,0,-83.007784)"
                gradientUnits="userSpaceOnUse" />
             <filter
-               inkscape:collect="always"
                style="color-interpolation-filters:sRGB"
                id="filter1542"
                x="-0.010729634"
@@ -266,12 +279,10 @@
                y="-0.010154477"
                height="1.020309">
               <feGaussianBlur
-                 inkscape:collect="always"
                  stdDeviation="0.24396645"
                  id="feGaussianBlur1544" />
             </filter>
             <linearGradient
-               inkscape:collect="always"
                xlink:href="#linearGradient1530"
                id="linearGradient1566"
                x1="37.726753"
@@ -281,7 +292,6 @@
                gradientUnits="userSpaceOnUse"
                gradientTransform="translate(1.0583333,-21.166674)" />
             <filter
-               inkscape:collect="always"
                style="color-interpolation-filters:sRGB"
                id="filter1568"
                x="-0.023304667"
@@ -289,7 +299,6 @@
                y="-0.19960953"
                height="1.3992192">
               <feGaussianBlur
-                 inkscape:collect="always"
                  stdDeviation="0.63265998"
                  id="feGaussianBlur1570" />
             </filter>
@@ -299,20 +308,7 @@
              pagecolor="#ffffff"
              bordercolor="#666666"
              borderopacity="1.0"
-             inkscape:pageopacity="0.0"
-             inkscape:pageshadow="2"
-             inkscape:zoom="0.76"
-             inkscape:cx="341.44737"
-             inkscape:cy="273.1579"
-             inkscape:document-units="mm"
-             inkscape:current-layer="layer1"
-             inkscape:document-rotation="0"
-             showgrid="false"
-             inkscape:window-width="1440"
-             inkscape:window-height="786"
-             inkscape:window-x="0"
-             inkscape:window-y="25"
-             inkscape:window-maximized="0" />
+             showgrid="false" />
           <metadata
              id="metadata888">
             <rdf:RDF>
@@ -326,13 +322,9 @@
             </rdf:RDF>
           </metadata>
           <g
-             inkscape:label="Layer 1"
-             inkscape:groupmode="layer"
              id="layer1">
             <g
                transform="translate(-37.069517,-52.178614)"
-               inkscape:export-ydpi="96"
-               inkscape:export-xdpi="96"
                id="g2453">
               <ellipse
                  style="opacity:1;fill:#2d425a;fill-opacity:1;stroke:none;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -383,13 +375,14 @@
                  d="M 97.58876,100.03481 A 27.285156,56.794891 0 0 1 83.825856,149.36439 27.285156,56.794891 0 0 1 56.421436,148.92931 27.285156,56.794891 0 0 1 43.021622,99.168489"
                  transform="matrix(1.0021394,0,0,0.80882113,-0.15040456,18.900547)" />
               <ellipse
-                 ry="39.626862"
-                 rx="21.106026"
-                 cy="93.991211"
-                 cx="70.303574"
-                 id="path895"
-                 style="opacity:0.948553;fill:#becb5b;fill-opacity:1;stroke:#4a4e87;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-              <g
+                id = "recording_indicator"
+                ry="39.626862"
+                rx="21.106026"
+                cy="93.991211"
+                cx="70.303574"
+                id="path895"
+                style="opacity:0.948553;fill:#f2ec7d;fill-opacity:1;stroke:#4a4e87;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <g
                  transform="matrix(0.0635,0,0,0.0635,27.80487,27.117761)"
                  id="g943">
                 <rect
@@ -458,12 +451,13 @@
                    transform="matrix(-0.97077409,0.23999515,0.23999515,0.97077409,0,0)" />
               </g>
               <ellipse
-                 style="opacity:0.765273;mix-blend-mode:color-dodge;fill:url(#radialGradient1532);fill-opacity:1;stroke:none;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                 id="ellipse897"
-                 cx="70.303574"
-                 cy="93.462044"
-                 rx="21.106026"
-                 ry="39.626862" />
+                onclick="recording_view(event)"
+                style="opacity:0.765273;mix-blend-mode:color-dodge;fill:url(#radialGradient1532);fill-opacity:1;stroke:none;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;cursor:pointer"
+                id="ellipse897"
+                cx="70.303574"
+                cy="93.462044"
+                rx="21.106026"
+                ry="39.626862" />
             </g>
           </g>
         </svg>        
@@ -778,12 +772,12 @@ let g_pub_verification_key = ""
 let g_nonce_buffer = new Uint8Array((128/8))    // 16 bytes or 128 bit IV for AES
 
 //
-const g_recordButton = document.getElementById('record');
+const g_recordButton = document.getElementById('record_state_radio');
+//
 const g_stopButton = document.getElementById('stop');
 const g_playButton = document.getElementById('play');
 const g_saveButton = document.getElementById('save');
 const g_deleteButton = document.getElementById('delete');
-const g_send_session = document.getElementById('send-session')
 //
 const savedAudioMessagesContainer = document.querySelector('#saved-audio-messages');
 
@@ -800,6 +794,54 @@ var g_window_can_process = true
 // INDEXED DB DEFIND IN CONTAINING WINDOW .... this code is loaded lazily and attached in the window context
 
 
+function disable_interruptors(controller) {
+  switch ( controller ) {
+    case "recording" : {
+      g_recordButton.removeAttribute('disabled')
+      g_stopButton.setAttribute('disabled',true)
+      g_playButton.setAttribute('disabled',true)
+      g_saveButton.setAttribute('disabled',true)
+      g_deleteButton.setAttribute('disabled',true)
+      break;
+    }
+    case "all":
+    default: {
+      g_recordButton.setAttribute('disabled',true)
+      g_stopButton.setAttribute('disabled',true)
+      g_playButton.setAttribute('disabled',true)
+      g_saveButton.setAttribute('disabled',true)
+      g_deleteButton.setAttribute('disabled',true)
+      break;
+    }
+  }
+}
+
+function reenable_interruptors(controller) {
+  switch ( controller ) {
+    case "recording" : {
+      g_recordButton.removeAttribute('disabled')
+      g_stopButton.removeAttribute('disabled')
+      g_playButton.removeAttribute('disabled')
+      g_saveButton.removeAttribute('disabled')
+      g_deleteButton.removeAttribute('disabled')
+      break;
+    }
+    case "all":
+    default: {
+      g_recordButton.removeAttribute('disabled')
+      g_stopButton.removeAttribute('disabled')
+      g_playButton.removeAttribute('disabled')
+      g_saveButton.removeAttribute('disabled')
+      g_deleteButton.removeAttribute('disabled')
+      break;
+    }
+  }
+}
+
+
+
+// DATA BASE ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 //
 
@@ -812,7 +854,7 @@ function beep() {
 const g_audioContext = new AudioContext();
 
 
-
+let g_config_auto_start = false
 
 
 
@@ -2131,11 +2173,17 @@ async function wv_human_frame_app_initialization(sess_name) {
 
 
 async function wv_default_session_readiness() {
-  await wv_load_name_list()
-  let n = g_session_name_list.length
-  g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
+  try {
+    await wv_load_name_list()
+    let n = g_session_name_list.length
+    g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
+    //
+    await wv_human_frame_app_initialization(g_current_session_name)
+  } catch (e) {
+    return false
+  }
   //
-  await wv_human_frame_app_initialization(g_current_session_name)
+  return true
 }
 
 
@@ -2874,7 +2922,7 @@ async function add_in_new_session(name) {
     g_current_session_name = name
     g_session_name_list.push(name)
     sess_name_el.innerHTML = name
-    g_recordButton.removeAttribute('disabled');     // Turn on recording 
+    //g_recordButton.removeAttribute('disabled');     // Turn on recording 
     //
     let propagate_session = (sessionObj) => {
       // sessionObj.name  === g_current_session_name // session of this name is going into the DB
@@ -2892,6 +2940,7 @@ async function add_in_new_session(name) {
     await update_session_name_selections(g_current_session_name,g_session_name_list)
   }
 }
+
 
 function ask_user_session() {
   let proceed = confirm("Start a new session?")
@@ -2921,9 +2970,9 @@ async function choose_edit_user_session(name) {
       g_current_session_name = 'none'
       sess_name_el.innerHTML = '<span style="color:orange">select or create a session</span>'
 
-      g_recordButton.setAttribute('disabled', true);
-      g_stopButton.setAttribute('disabled', true);
-      g_playButton.setAttribute('disabled', true);
+      // g_recordButton.setAttribute('disabled', true);
+      // g_stopButton.setAttribute('disabled', true);
+      // g_playButton.setAttribute('disabled', true);
       g_saveButton.setAttribute('disabled', true);
       g_deleteButton.setAttribute('disabled', true);
       clear_play_list()
@@ -2942,9 +2991,9 @@ async function choose_edit_user_session(name) {
     if ( sess_name_el ) {
       g_current_session_name = name
       sess_name_el.innerHTML = name
-      g_recordButton.removeAttribute('disabled');
-      g_stopButton.setAttribute('disabled', true);
-      g_playButton.setAttribute('disabled', true);
+      // g_recordButton.removeAttribute('disabled');
+      // g_stopButton.setAttribute('disabled', true);
+      // g_playButton.setAttribute('disabled', true);
       g_saveButton.setAttribute('disabled', true);
       g_deleteButton.setAttribute('disabled', true);
       //
@@ -3014,9 +3063,9 @@ const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 function wv_initialize_global_buttons() {
   //
-  g_recordButton.setAttribute('disabled', true);
-  g_stopButton.setAttribute('disabled', true);
-  g_playButton.setAttribute('disabled', true);
+  // g_recordButton.setAttribute('disabled', true);
+  // g_stopButton.setAttribute('disabled', true);
+  // g_playButton.setAttribute('disabled', true);
   g_saveButton.setAttribute('disabled', true);
   g_deleteButton.setAttribute('disabled', true);
   let sess_op_el = null
@@ -3031,36 +3080,19 @@ function wv_initialize_global_buttons() {
 
   // RECORD
   g_recordButton.addEventListener('click', async () => {
-    stop_geo_update()
-    g_recordButton.setAttribute('disabled', true);
-    g_stopButton.removeAttribute('disabled');
-    g_playButton.setAttribute('disabled', true);
-    g_saveButton.setAttribute('disabled', true);
-    g_deleteButton.setAttribute('disabled', true);
-    g_app_recoder.start();
-  });
-
-  // STOP RECORD
-  g_stopButton.addEventListener('click', async () => {
-    restart_geo_update()
-    g_recordButton.removeAttribute('disabled');
-    g_stopButton.setAttribute('disabled', true);
-    g_playButton.removeAttribute('disabled');
-    g_saveButton.removeAttribute('disabled');
-    g_deleteButton.removeAttribute('disabled');
-    g_app_recoder.stop();
-  });
-
-  // PLAY
-  g_playButton.addEventListener('click', () => {
-    stop_geo_update()
-    g_app_recoder.play();
+    // stop_geo_update()
+    // g_recordButton.setAttribute('disabled', true);
+    // g_stopButton.removeAttribute('disabled');
+    // g_playButton.setAttribute('disabled', true);
+    // g_saveButton.setAttribute('disabled', true);
+    // g_deleteButton.setAttribute('disabled', true);
+    // g_app_recoder.start();
   });
 
   // DELETE
   g_deleteButton.addEventListener('click', async () => {
     g_saveButton.setAttribute('disabled', true);
-    g_playButton.setAttribute('disabled', true);
+    // g_playButton.setAttribute('disabled', true);
     g_deleteButton.setAttribute('disabled', true);
     g_app_recoder.delete_last_recorderd_audio()
   })
@@ -3075,6 +3107,37 @@ function wv_initialize_global_buttons() {
   });
 
 }
+
+
+  // STOP RECORD
+  function stop_playing_recording(ev) {
+    restart_geo_update()
+    //
+    g_playButton.style.display = "inline-block"
+    g_stopButton.style.display = "none"
+    //
+    g_recordButton.removeAttribute('disabled');
+    g_saveButton.removeAttribute('disabled');
+    g_deleteButton.removeAttribute('disabled');
+    //
+    g_app_recoder.stop();
+  }
+
+  // PLAY
+
+  function start_playing_recording(ev) {
+    stop_geo_update()
+    //
+    g_recordButton.setAttribute('disabled', true);
+    g_saveButton.setAttribute('disabled', true);
+    g_deleteButton.setAttribute('disabled', true);
+    //
+    g_stopButton.style.display = "inline-block"
+    g_playButton.style.display = "none"
+    //
+    g_app_recoder.play();
+    //
+  }
 
 
   function wv_rect_vertical_intersect_size(r1,r2) {
@@ -4101,25 +4164,84 @@ function restart_geo_update() {
   //g_geo_update = setInterval(wv_getLocation,GEO_UPDATE_INTERVAL)
 }
 
-// ---- ---- ---- ---- ---- ----
-async function initialize_data_operations() {
-  g_audio_db = await wv_init_database()
-}
-
-
-
-async function application_initialization() {
-  //
-  wv_getLocation()
-  wv_init_recorder()
-  wv_initialize_global_buttons()
-  //
-  await initialize_data_operations()
-  await wv_default_session_readiness()
-}
-
 
 // ---- ----
+let r_i_el_name = "recording_indicator"
+const off_state_recording_indicator_color = "#f2ec7d"
+const on_state_recording_indicator_color = "#da4848"
+
+const radio_recording_sate_fill_on = "#f50404"
+const radio_recording_sate_fill_off = "#6cb187"
+
+
+let current_indicator_color = off_state_recording_indicator_color
+//
+
+function initialize_record_radio_state() {
+  let recording_radio_btn = document.getElementById("record_state_radio")
+  recording_radio_btn.x_prop_on = "false"
+}
+
+initialize_record_radio_state()
+
+function set_record_radio_state(evnt) {
+  //  "#6cb187"
+  let recording_radio_btn = document.getElementById("record_state_radio")
+  let cc = recording_radio_btn.x_prop_on
+  //
+  let do_enable = false
+  if ( cc == "false" ) {
+    cc = "true"
+    do_enable = false
+    recording_radio_btn.style.backgroundColor = radio_recording_sate_fill_on
+  } else {
+    cc = "false"
+    recording_radio_btn.style.backgroundColor = radio_recording_sate_fill_off
+    do_enable = true
+  }
+  //
+  recording_radio_btn.x_prop_on = cc
+  //
+  if ( evnt ) {
+    recording_view()
+    if ( do_enable ) {
+      reenable_interruptors("recording")
+    } else {
+      disable_interruptors("recording")
+    }
+  }
+  //
+}
+
+
+
+function recording_view(evnt) {
+  //
+  let do_enable = false
+  if ( off_state_recording_indicator_color === current_indicator_color ) {
+    current_indicator_color = on_state_recording_indicator_color
+    do_enable = false
+  } else {
+    current_indicator_color = off_state_recording_indicator_color
+    do_enable = true
+  }
+  let ellipse_el = document.getElementById(r_i_el_name)
+  if ( ellipse_el ) {
+    ellipse_el.style.fill = current_indicator_color
+  }
+  //
+  if ( evnt ) {
+    set_record_radio_state()
+    if ( do_enable ) {
+      disable_interruptors("recording")
+    } else {
+      enable_interruptors("recording")
+    }
+  }
+  //
+}
+
+
 
 function show_recorder(event) {
   let rec_el_nm = "big-recorder"
@@ -4160,13 +4282,32 @@ function show_manager(event) {
 }
 
 
+
+
+async function application_initialization() {
+  //
+  wv_getLocation()
+  wv_init_recorder()
+  wv_initialize_global_buttons()
+  //
+  g_audio_db = await wv_init_database()
+  if ( await wv_default_session_readiness() ) {
+    await add_in_new_session(name)
+  }
+}
+
+
+
 // async wrapper 
-async function first_initializer() {
+async function startup() {
+  show_recorder(event)
   await application_initialization()
+  if ( g_config_auto_start ) {
+    g_recordButton.click()
+  }
 }
 //
-first_initializer()
-show_recorder(event)
+startup()
 /*
 */
 
