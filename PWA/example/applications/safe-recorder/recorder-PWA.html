@@ -224,14 +224,22 @@
  
 </style>
 </head>
+<!-- BODY HTML -->
 <body>
+
+<!--  PAGE OUTLINE -->
 <div style="width:100%">
+
+  <!--  CONTAINER FOR PAGES -->
   <div class="boxes">
     <div id="select-mode" >
       <button id="btn-pick_recorder" onclick="show_recorder(event)">recorder</button>&nbsp;
-      <button id="btn-pick_manager" onclick="show_manager(event)">manage records</button>
+      <button id="btn-pick_manager" onclick="show_manager(event)">manage records</button>&nbsp;&nbsp;
+      <span id="audio-playing" style="display:none">&#128266;</span>
     </div>
 
+
+    <!-- RECORDER PAGE -->
     <div id="big-recorder" class="component-container">
       <span style="font-weight: bolder;">Record Audio</span>:&nbsp;&nbsp;&nbsp;
       <!-- Next thing-->
@@ -241,24 +249,21 @@
       <button id="stop"  style="display: none;border:solid 3px steelblue;cursor: pointer;" onclick="stop_playing_recording(event)">I&nbsp;I</button>
       <span id="show-session-name" style="font-weight: bolder;"></span>
 
+
       <div style="margin-top:4px;max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
 
+      <!-- MICROPHONE PICTURE -->
       <div>
         <svg
-           xmlns:dc="http://purl.org/dc/elements/1.1/"
-           xmlns:cc="http://creativecommons.org/ns#"
-           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            xmlns:svg="http://www.w3.org/2000/svg"
            xmlns="http://www.w3.org/2000/svg"
            xmlns:xlink="http://www.w3.org/1999/xlink"
-           xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-           xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
            width="68mm"
            height="120mm"
            viewBox="0 0 68 120"
            version="1.1"
-           id="svg891"
-           sodipodi:docname="mic3.svg">
+           id="svg891" 
+          >
           <defs
              id="defs885">
             <linearGradient
@@ -314,12 +319,6 @@
                  id="feGaussianBlur1570" />
             </filter>
           </defs>
-          <sodipodi:namedview
-             id="base"
-             pagecolor="#ffffff"
-             bordercolor="#666666"
-             borderopacity="1.0"
-             showgrid="false" />
           <metadata
              id="metadata888">
             <rdf:RDF>
@@ -360,29 +359,11 @@
                  style="opacity:1;mix-blend-mode:normal;fill:#bebbc7;fill-opacity:1;stroke:none;stroke-width:0.893326;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
               <path
                  d="M 97.693861,99.984879 A 27.390249,47.135029 0 0 1 83.877947,140.92432 27.390249,47.135029 0 0 1 56.367974,140.56324 27.390249,47.135029 0 0 1 42.916549,99.265902"
-                 sodipodi:arc-type="arc"
-                 sodipodi:open="true"
-                 sodipodi:end="3.1568468"
-                 sodipodi:start="0"
-                 sodipodi:ry="47.135029"
-                 sodipodi:rx="27.390249"
-                 sodipodi:cy="99.984879"
-                 sodipodi:cx="70.303612"
-                 sodipodi:type="arc"
                  id="path891"
                  style="opacity:1;fill:none;fill-opacity:1;stroke:#6cb187;stroke-width:2.72188;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
               <path
                  style="opacity:0.768489;fill:none;fill-opacity:1;stroke:#160c19;stroke-width:2.11666;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1542)"
                  id="path893"
-                 sodipodi:type="arc"
-                 sodipodi:cx="70.303604"
-                 sodipodi:cy="100.03481"
-                 sodipodi:rx="27.285156"
-                 sodipodi:ry="56.794891"
-                 sodipodi:start="0"
-                 sodipodi:end="3.1568468"
-                 sodipodi:open="true"
-                 sodipodi:arc-type="arc"
                  d="M 97.58876,100.03481 A 27.285156,56.794891 0 0 1 83.825856,149.36439 27.285156,56.794891 0 0 1 56.421436,148.92931 27.285156,56.794891 0 0 1 43.021622,99.168489"
                  transform="matrix(1.0021394,0,0,0.80882113,-0.15040456,18.900547)" />
               <ellipse
@@ -477,6 +458,7 @@
 
     </div>
 
+    <!-- MANAGEMENT PAGE -->
     <div  id="record-manager"  class="component-container" style="display: none;">
       <span style="font-weight: bolder;">Manage Recording Sessions</span>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
@@ -524,7 +506,7 @@
 
 </div>
 
-
+<!-- WAVE GRAPH ABSOLUTE POSITION SUBWINDOW -->
 <div id="wave-graph-tmplt" class='wave-graph-container'>
   <div class="drag-bar-control"
         onmousedown="wv_capture_cursor(event)"
@@ -553,9 +535,9 @@
     <canvas class="wave-graph-canvas"></canvas>
   </div>
 </div>
+<!-- end wave template-->
 
-<!-- wave template-->
-
+<!-- DIALOG FOR MOVING RECORDED DATA IN AND OUT OF THE MANANGER-->
 <dialog id='wave-download-box'>
   <h3 class="modal-header">Click on the link below to begin downloading an audio file of this session</h3>
   <div class="modal-body">
@@ -569,6 +551,7 @@
 </dialog>
 <!-- end of dialog-->
 
+<!-- BOX FOR AN OUTLINE INDICATING THAT AN AUDIO DISPLAY IS BEING MOVED -->
 <div id="audioBoxGhost" >
     &nbsp;
 </div>
@@ -783,11 +766,18 @@ let g_pub_verification_key = ""
 //
 let g_nonce_buffer = new Uint8Array((128/8))    // 16 bytes or 128 bit IV for AES
 
+// button... Pick 'recorder'!
+const g_recording_page_button = document.getElementById('btn-pick_recorder')
+// button... Pick 'manager'!
+const g_manager_page_button = document.getElementById('btn-pick_manager')
 //
+//
+// Recording controls ...
 const g_recordButton = document.getElementById('record_state_radio');
-//
 const g_stopButton = document.getElementById('stop');
 const g_playButton = document.getElementById('play');
+
+// Manager controls ...
 const g_saveButton = document.getElementById('save');
 const g_deleteButton = document.getElementById('delete');
 //
@@ -798,7 +788,6 @@ const g_audio_download_modal = document.getElementById('wave-download-box')
 //
 
 var g_geo_update = null
-
 var g_window_can_process = true
 // In the following line, you should include the prefixes of implementations you want to test.
 
@@ -814,10 +803,14 @@ function disable_interruptors(controller) {
       g_playButton.setAttribute('disabled',true)
       g_saveButton.setAttribute('disabled',true)
       g_deleteButton.setAttribute('disabled',true)
+      g_manager_page_button.setAttribute('disabled',true)
       break;
     }
     case "all":
     default: {
+      g_recording_page_button.setAttribute('disabled',true)
+      g_manager_page_button.setAttribute('disabled',true)
+      //
       g_recordButton.setAttribute('disabled',true)
       g_stopButton.setAttribute('disabled',true)
       g_playButton.setAttribute('disabled',true)
@@ -831,6 +824,7 @@ function disable_interruptors(controller) {
 function reenable_interruptors(controller) {
   switch ( controller ) {
     case "recording" : {
+      g_manager_page_button.removeAttribute('disabled')
       g_recordButton.removeAttribute('disabled')
       g_stopButton.removeAttribute('disabled')
       g_playButton.removeAttribute('disabled')
@@ -840,6 +834,8 @@ function reenable_interruptors(controller) {
     }
     case "all":
     default: {
+      g_recording_page_button.removeAttribute('disabled')
+      g_manager_page_button.removeAttribute('disabled')
       g_recordButton.removeAttribute('disabled')
       g_stopButton.removeAttribute('disabled')
       g_playButton.removeAttribute('disabled')
@@ -4147,6 +4143,14 @@ function restart_geo_update() {
 }
 
 
+// ---- APPEARANCE
+/**
+ * Variables
+ * 
+ * This might be a class, but it is rendered as a set of functions accessible from the element handlers.
+ */
+
+
 // ---- ----
 let g_r_i_el_name = "recording_indicator"
 const off_state_recording_indicator_color = "#f2ec7d"
@@ -4212,6 +4216,10 @@ function stop_playing_recording(ev) {
   g_deleteButton.removeAttribute('disabled');
   //
   g_app_recoder.stop();
+
+  let audio_play_icn = document.getElementById("audio-playing")
+  audio_play_icn.style.display = "none"
+
 }
 
 // PLAY
@@ -4227,6 +4235,9 @@ function start_playing_recording(ev) {
   //
   g_stopButton.style.display = "inline-block"
   g_playButton.style.display = "none"
+  let audio_play_icn = document.getElementById("audio-playing")
+  audio_play_icn.style.display = "inline-block"
+
   //
   g_app_recoder.play();
   //
@@ -4312,6 +4323,18 @@ function recording_view(evnt) {
 }
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// TWO PAGES...
+// 1) Recording page
+// 2) Management page
+//
+
+/**
+ * show_recorder
+ * 
+ * Show the recorder page... (shown at initialization)
+ * 
+ */
 
 function show_recorder(event) {
   let rec_el_nm = "big-recorder"
@@ -4331,6 +4354,17 @@ function show_recorder(event) {
     plain_guy.style.borderRadius = "4px"
   }
 }
+
+
+/**
+ * show_manager
+ * 
+ * The manager page allows for uploaded recordings currently in the DB 
+ * to be managed, deleted, uploaded to the app, downloaded to the disk. 
+ * Within the human page context, the manager will send new recording to the human page 
+ * for storing in its database. In turn, the database in the human page will provided entries to the 
+ * file manager available on the dashboard. 
+ */
 
 function show_manager(event) {
   let rec_el_nm = "big-recorder"
@@ -4353,6 +4387,10 @@ function show_manager(event) {
 
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// INITIALIZER          INITIALIZER          INITIALIZER          INITIALIZER          INITIALIZER
+//
+//  all initialization for the page, including the controls, databases, appearance and synchronization
+//  with the ownership worker.
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
