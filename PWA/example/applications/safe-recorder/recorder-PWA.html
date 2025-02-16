@@ -196,10 +196,21 @@
     width: calc(100vw - 10% - 2px);
   }
 
-  .demoC {
+  .playReady {
+    cursor: pointer;
     width: 24px;
     height: 24px;
     background: black;
+    border:solid 3px steelblue;
+    clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
+  }
+
+  .playDisabled {
+    cursor: none;
+    width: 24px;
+    height: 24px;
+    background: rgb(213, 220, 224);
+    border:solid 3px rgb(248, 244, 222);
     clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
   }
 
@@ -226,7 +237,7 @@
       <!-- Next thing-->
       <button id="record_state_radio" style="background-color:#6cb187;border-radius: 50%;width:24px;height:24px;border:solid 3px steelblue" x_prop_on="false" onclick="set_record_radio_state(event)" >&nbsp;</button>
       &nbsp;&nbsp;
-      <button id="play" class="demoC" style="display: inline-block;border:solid 3px steelblue;cursor: pointer;" onclick="start_playing_recording(event)">&RightArrow;</button>
+      <button id="play" class="playReady" style="display: inline-block;" onclick="start_playing_recording(event)">&RightArrow;</button>
       <button id="stop"  style="display: none;border:solid 3px steelblue;cursor: pointer;" onclick="stop_playing_recording(event)">I&nbsp;I</button>
       <span id="show-session-name" style="font-weight: bolder;"></span>
 
@@ -451,6 +462,7 @@
                    transform="matrix(-0.97077409,0.23999515,0.23999515,0.97077409,0,0)" />
               </g>
               <ellipse
+                id="ellipse_clicker_recording"
                 onclick="recording_view(event)"
                 style="opacity:0.765273;mix-blend-mode:color-dodge;fill:url(#radialGradient1532);fill-opacity:1;stroke:none;stroke-width:1.05834;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;cursor:pointer"
                 id="ellipse897"
@@ -3109,36 +3121,6 @@ function wv_initialize_global_buttons() {
 }
 
 
-  // STOP RECORD
-  function stop_playing_recording(ev) {
-    restart_geo_update()
-    //
-    g_playButton.style.display = "inline-block"
-    g_stopButton.style.display = "none"
-    //
-    g_recordButton.removeAttribute('disabled');
-    g_saveButton.removeAttribute('disabled');
-    g_deleteButton.removeAttribute('disabled');
-    //
-    g_app_recoder.stop();
-  }
-
-  // PLAY
-
-  function start_playing_recording(ev) {
-    stop_geo_update()
-    //
-    g_recordButton.setAttribute('disabled', true);
-    g_saveButton.setAttribute('disabled', true);
-    g_deleteButton.setAttribute('disabled', true);
-    //
-    g_stopButton.style.display = "inline-block"
-    g_playButton.style.display = "none"
-    //
-    g_app_recoder.play();
-    //
-  }
-
 
   function wv_rect_vertical_intersect_size(r1,r2) {
     //
@@ -4166,7 +4148,7 @@ function restart_geo_update() {
 
 
 // ---- ----
-let r_i_el_name = "recording_indicator"
+let g_r_i_el_name = "recording_indicator"
 const off_state_recording_indicator_color = "#f2ec7d"
 const on_state_recording_indicator_color = "#da4848"
 
@@ -4174,15 +4156,94 @@ const radio_recording_sate_fill_on = "#f50404"
 const radio_recording_sate_fill_off = "#6cb187"
 
 
+let g_big_mic_cant_click = false;
+
 let current_indicator_color = off_state_recording_indicator_color
+let current_recording_sate_fill = radio_recording_sate_fill_off
 //
+
 
 function initialize_record_radio_state() {
   let recording_radio_btn = document.getElementById("record_state_radio")
   recording_radio_btn.x_prop_on = "false"
 }
 
-initialize_record_radio_state()
+
+
+function appearance_of_mic_disable(onoff) {
+  let recording_radio_btn = document.getElementById("record_state_radio")
+  let ellipse_el = document.getElementById(g_r_i_el_name)
+
+  if ( onoff ) {
+    if ( recording_radio_btn ) {
+      recording_radio_btn.style.backgroundColor = "grey"
+    }
+    if ( ellipse_el ) {
+      ellipse_el.style.fill = "orange"
+      let ellipse_clicker = document.getElementById("ellipse_clicker_recording")
+      if ( ellipse_clicker ) { ellipse_clicker.style.cursor = "default" }
+    }
+  } else {
+    if ( recording_radio_btn ) {
+      recording_radio_btn.style.backgroundColor = current_recording_sate_fill
+    }
+    if ( ellipse_el ) {
+      ellipse_el.style.fill = current_indicator_color
+      let ellipse_clicker = document.getElementById("ellipse_clicker_recording")
+      if ( ellipse_clicker ) { ellipse_clicker.style.cursor = "pointer" }
+    }
+  }
+}
+
+
+
+
+// STOP RECORD
+function stop_playing_recording(ev) {
+  restart_geo_update()
+  g_big_mic_cant_click = false;
+  appearance_of_mic_disable(false)
+  //
+  g_playButton.style.display = "inline-block"
+  g_stopButton.style.display = "none"
+  //
+  g_recordButton.removeAttribute('disabled');
+  g_saveButton.removeAttribute('disabled');
+  g_deleteButton.removeAttribute('disabled');
+  //
+  g_app_recoder.stop();
+}
+
+// PLAY
+
+function start_playing_recording(ev) {
+  stop_geo_update()
+  g_big_mic_cant_click = true;
+  appearance_of_mic_disable(true)
+  //
+  g_recordButton.setAttribute('disabled', true);
+  g_saveButton.setAttribute('disabled', true);
+  g_deleteButton.setAttribute('disabled', true);
+  //
+  g_stopButton.style.display = "inline-block"
+  g_playButton.style.display = "none"
+  //
+  g_app_recoder.play();
+  //
+}
+
+
+function appearance_of_play_disable(onoff) {
+  if ( g_playButton ) {
+    if ( onoff == true ) {
+      g_playButton.className = "playDisabled"
+    } else {
+      g_playButton.className = "playReady"
+    }
+  }
+}
+
+
 
 function set_record_radio_state(evnt) {
   //  "#6cb187"
@@ -4192,13 +4253,14 @@ function set_record_radio_state(evnt) {
   let do_enable = false
   if ( cc == "false" ) {
     cc = "true"
+    current_recording_sate_fill = radio_recording_sate_fill_on
     do_enable = false
-    recording_radio_btn.style.backgroundColor = radio_recording_sate_fill_on
   } else {
     cc = "false"
-    recording_radio_btn.style.backgroundColor = radio_recording_sate_fill_off
+    current_recording_sate_fill = radio_recording_sate_fill_off
     do_enable = true
   }
+  recording_radio_btn.style.backgroundColor = current_recording_sate_fill
   //
   recording_radio_btn.x_prop_on = cc
   //
@@ -4206,8 +4268,10 @@ function set_record_radio_state(evnt) {
     recording_view()
     if ( do_enable ) {
       reenable_interruptors("recording")
+      appearance_of_play_disable(false)
     } else {
       disable_interruptors("recording")
+      appearance_of_play_disable(true)
     }
   }
   //
@@ -4216,6 +4280,9 @@ function set_record_radio_state(evnt) {
 
 
 function recording_view(evnt) {
+  if ( g_big_mic_cant_click ) {
+    return;
+  }
   //
   let do_enable = false
   if ( off_state_recording_indicator_color === current_indicator_color ) {
@@ -4225,7 +4292,8 @@ function recording_view(evnt) {
     current_indicator_color = off_state_recording_indicator_color
     do_enable = true
   }
-  let ellipse_el = document.getElementById(r_i_el_name)
+  //
+  let ellipse_el = document.getElementById(g_r_i_el_name)
   if ( ellipse_el ) {
     ellipse_el.style.fill = current_indicator_color
   }
@@ -4233,9 +4301,11 @@ function recording_view(evnt) {
   if ( evnt ) {
     set_record_radio_state()
     if ( do_enable ) {
-      disable_interruptors("recording")
+      reenable_interruptors("recording")
+      appearance_of_play_disable(false)
     } else {
-      enable_interruptors("recording")
+      disable_interruptors("recording")
+      appearance_of_play_disable(true)
     }
   }
   //
@@ -4282,8 +4352,14 @@ function show_manager(event) {
 }
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
+// Set the intial state of the recording button
+initialize_record_radio_state()
+
+// initialize everthing that has to be initalized
 async function application_initialization() {
   //
   wv_getLocation()
@@ -4312,6 +4388,8 @@ startup()
 */
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
 
