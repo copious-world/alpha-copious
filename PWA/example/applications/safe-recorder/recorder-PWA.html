@@ -214,7 +214,7 @@
     clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
   }
 
-  #stop {
+  #stop,  #stop_M {
     font-weight: bolder;
     color:lime;
     background-color: black;
@@ -248,7 +248,6 @@
       <button id="play" class="playReady" style="display: inline-block;" onclick="start_playing_recording(event)">&RightArrow;</button>
       <button id="stop"  style="display: none;border:solid 3px steelblue;cursor: pointer;" onclick="stop_playing_recording(event)">I&nbsp;I</button>
       <span id="show-session-name" style="font-weight: bolder;"></span>
-
 
       <div style="margin-top:4px;max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
 
@@ -461,7 +460,11 @@
     <!-- MANAGEMENT PAGE -->
     <div  id="record-manager"  class="component-container" style="display: none;">
       <span style="font-weight: bolder;">Manage Recording Sessions</span>
+      <button id="play_M" class="playReady" style="display: inline-block;" onclick="start_playing_recording(event)">&RightArrow;</button>
+      <button id="stop_M"  style="display: none;border:solid 3px steelblue;cursor: pointer;" onclick="stop_playing_recording(event)">I&nbsp;I</button>
+
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
+
       <div class="like-button" style="display: inline;" >
         <label  for="wv-geo-location">Session Geolocation:</label>
         <span id="wv-geo-location">NaN,NaN</span>
@@ -559,9 +562,40 @@
 
 <script>
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-//
+var g_window_in_frame = false
+
+function check_frame_status() {
+    if ( window.frameElement ) {
+        g_window_in_frame = true
+    } else {
+        if ( window.parent !== window ) {
+            g_window_in_frame = true
+            g_site_page = window.parent
+        }
+    }
+    return g_window_in_frame
+}
+
+check_frame_status()
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// USER PREFERENCES (defaults)
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
+let g_user_preference_start_on_open = true
+let g_config_auto_start = false
+
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // SHARED CONSTANTS
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 
 // SITE PAGE
 //
@@ -694,34 +728,6 @@ const g_message_template =  {
 
 
 
-// Data for persistence storage...
-// This is the same meta as in the file uploader
-function create_asset_meta(info_obj) {
-    let field_vars = {}
-    field_vars['asset-id'] = false
-    field_vars['rec-file-mtype'] = "audio/x-wav"
-    field_vars['rec-title'] = info_obj.name
-    field_vars['rec-subject'] = "New asset - " + Date.now()
-    field_vars['rec-keys'] = ""
-    field_vars['rec-abstract'] = ""
-    field_vars['rec-full-text'] = ""
-    //
-    field_vars['paid-checkbox'] = false
-    field_vars['WIP-checkbox'] = true
-    field_vars['rec-contract'] = false
-    //
-    field_vars['rec-file-name'] = info_obj.name
-    field_vars['rec-file-proper'] = info_obj
-    field_vars['rec-poster-name'] = ""
-    field_vars['rec-poster-proper'] = false
-    //
-    field_vars['rec-was-published'] = false
-    field_vars['rec-was-uploaded'] = false
-    return field_vars
-}
-
-
-
 const AUDIO_SESSION_STORE = 'audio_sessions'
 const AUDIO_USERID_STORE = 'audio_users'
 const AUDIO_SESSION_COMPLETE = 'audio_complete'
@@ -742,15 +748,15 @@ const REQ_WORKER_CODE = `./ownership.js`
 
 
 
-
-
-
-
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// GLOBALS
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 //
 let recorder = false
 let audio = false
-let g_app_recoder = false
+let g_app_recorder = false
 let g_current_session_name = 'none'
 let g_current_sesion_id = ''
 let g_session_name_list = []
@@ -778,6 +784,9 @@ const g_stopButton = document.getElementById('stop');
 const g_playButton = document.getElementById('play');
 
 // Manager controls ...
+const g_stop_MButton = document.getElementById('stop_M')
+const g_play_MButton = document.getElementById('play_M')
+
 const g_saveButton = document.getElementById('save');
 const g_deleteButton = document.getElementById('delete');
 //
@@ -787,12 +796,22 @@ const savedAudioMessagesContainer = document.querySelector('#saved-audio-message
 const g_audio_download_modal = document.getElementById('wave-download-box')
 //
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 var g_geo_update = null
 var g_window_can_process = true
 // In the following line, you should include the prefixes of implementations you want to test.
 
+function stop_geo_update() {
+  if ( g_geo_update ) clearInterval(g_geo_update)
+}
 
-// INDEXED DB DEFIND IN CONTAINING WINDOW .... this code is loaded lazily and attached in the window context
+function restart_geo_update() {
+  if ( g_geo_update ) clearInterval(g_geo_update)
+  //g_geo_update = setInterval(wv_getLocation,GEO_UPDATE_INTERVAL)
+}
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
 function disable_interruptors(controller) {
@@ -862,7 +881,32 @@ function beep() {
 const g_audioContext = new AudioContext();
 
 
-let g_config_auto_start = false
+
+// Data for persistence storage...
+// This is the same meta as in the file uploader
+function create_asset_meta(info_obj) {
+    let field_vars = {}
+    field_vars['asset-id'] = false
+    field_vars['rec-file-mtype'] = "audio/x-wav"
+    field_vars['rec-title'] = info_obj.name
+    field_vars['rec-subject'] = "New asset - " + Date.now()
+    field_vars['rec-keys'] = ""
+    field_vars['rec-abstract'] = ""
+    field_vars['rec-full-text'] = ""
+    //
+    field_vars['paid-checkbox'] = false
+    field_vars['WIP-checkbox'] = true
+    field_vars['rec-contract'] = false
+    //
+    field_vars['rec-file-name'] = info_obj.name
+    field_vars['rec-file-proper'] = info_obj
+    field_vars['rec-poster-name'] = ""
+    field_vars['rec-poster-proper'] = false
+    //
+    field_vars['rec-was-published'] = false
+    field_vars['rec-was-uploaded'] = false
+    return field_vars
+}
 
 
 
@@ -1342,11 +1386,11 @@ class AppDBWrapper {
             }
             //
             let not_found_callback = () => {
-                warn(`The session ${sess_name} is not in the database`)
+                warn(`The session ${part_id} is not in the database`)
                 resolve(false)
             }
             //
-            this._apply_find_by_name(this.current_session_name, dataStore, update_list_elem_callback, not_found_callback)    
+            this._apply_find_by_name(this.current_session_name, dataStore, add_elem_original_chunks_callback, not_found_callback)    
 
         })
 
@@ -1837,13 +1881,13 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
 
   //
   async remove_file(file_name) {
-      this.session_name = file_name
+      this.current_session_name = file_name
       await this.remove_data(file_name,this.current_user_name)
   }
 
   // 
   async get_file_names() {
-      let sess_name = this.session_name
+      let sess_name = this.current_session_name
       try {
           let sess_data = await this.get_session(sess_name)
           if ( sess_data ) {
@@ -1857,7 +1901,7 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   }
 
   async get_file_entries() {
-      let sess_name = this.session_name
+      let sess_name = this.current_session_name
       try {
           let sess_data = await this.get_session(sess_name)
           if ( sess_data ) {
@@ -1887,7 +1931,7 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
     let sess_loc_str = JSON.stringify(g_wv_current_locaion)
     //
     let sessionObj = {
-        'name' : this.session_name,
+        'name' : this.current_session_name,
         'sess_date_time' : '' + Date.now(),
         'sess_geo_location' : sess_loc_str,
         'data' : { },
@@ -1910,9 +1954,9 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   // ----
   async application_data_update(blob_url,part_id,blob_data,other_id) {
       // implemented by derived method (override)
-      add_audio_element(blob_url,part_id,audioBlob,other_id)
+      add_audio_element(blob_url,part_id,blob_data,other_id)
       if ( other_id !== undefined ) {
-        await wv_secure_total_session(this.session_name)
+        await wv_secure_total_session(this.current_session_name)
       }
   }
 
@@ -1931,7 +1975,7 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   // ----
   async app_post_update_action(blob_data,part_id,blob_url) {
     update_audio_element(blob_url,part_id,blob_data)  // visual rep
-    await wv_secure_total_session(this.session_name)
+    await wv_secure_total_session(this.current_session_name)
   }
 
   //
@@ -1943,7 +1987,7 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   application_revise_current_session(sess_name) {
       // implemented by derived method (override)
       this.current_session_name = sess_name
-      choose_edit_user_session(this.session_name)
+      choose_edit_user_session(this.current_session_name)
   }
   
   //
@@ -2002,6 +2046,8 @@ async function wv_init_database() {
   return p
 };
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 
 
 
@@ -2009,9 +2055,10 @@ async function wv_init_database() {
 
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
 // HOSTED APP PAGE COM
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
 //
 if ( typeof g_message_template === undefined ) {
     window.g_message_template = g_message_template = {
@@ -2170,27 +2217,14 @@ async function wv_human_frame_app_initialization(sess_name) {
         'user' : user_info,
         "session" : sess_name
       }
-      g_ownership_worker.postMessage(message) //, no keys sent on initialization... worker sends "keys-up"
+      if ( g_ownership_worker ) {
+        g_ownership_worker.postMessage(message) //, no keys sent on initialization... worker sends "keys-up"
+      }
     }
   } catch (e) {
     console.log(e)
     return false
   }
-  return true
-}
-
-
-async function wv_default_session_readiness() {
-  try {
-    await wv_load_name_list()
-    let n = g_session_name_list.length
-    g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
-    //
-    await wv_human_frame_app_initialization(g_current_session_name)
-  } catch (e) {
-    return false
-  }
-  //
   return true
 }
 
@@ -2207,7 +2241,9 @@ function wv_prep_secure_relay(data_chunk,section_id) {
     'section' : section_id,
     'sess_name' : g_current_session_name
   }
-  g_ownership_worker.postMessage(message) // ,[data_chunk]
+  if ( g_ownership_worker ) {
+    g_ownership_worker.postMessage(message) // ,[data_chunk]
+  }
 }
 
 
@@ -2222,7 +2258,9 @@ function wv_secure(op,audioBlob,id_param) {  // called for these states of proce
     'op' : op,
     'blob_id' : id_param
   }
-  g_ownership_worker.postMessage(message) // ,[data_chunk]
+  if ( g_ownership_worker ) {
+    g_ownership_worker.postMessage(message) // ,[data_chunk]
+  }
 }
 
 
@@ -2312,6 +2350,64 @@ function wv_verify_ownership(location,sess_name) {
 // <- end of ... WORKER MESSAGES
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// OWNERSHIP WORKER!!!
+//
+let g_ownership_worker = false
+try {
+  //
+  g_ownership_worker = new Worker(REQ_WORKER_CODE)
+
+  g_ownership_worker.onmessage = async (msg) => {
+    //
+    switch ( msg.data.type ) {
+      case 'status' : {
+        worker_status_view(msg.data.message)
+        break;
+      }
+      case 'info-ws' : {
+        msg.category = HOSTED_APP_WORKER_OPERATION
+        msg.action = HOSTED_APP_DATABASE_STORE
+        tell_frame_page(msg)
+        break;
+      }
+      case 'op-complete' : {
+        if ( msg.transition === 'chunk-final' || msg.transition ===  'edit-update' ) {
+          msg.category = FRAME_ACTION_FROM_PUBLISHER
+          msg.action = HOSTED_APP_FILE_OPERATION
+          let sessionObj = await get_audio_data(msg.session)
+          msg.data = {
+            "op" : "store",
+            "audio_data" : create_asset_meta(sessionObj)
+          }
+          tell_frame_page(msg)      /// 
+        }
+        break;
+      }
+      case 'keys-up' : {
+        msg.category = HOSTED_APP_WORKER_OPERATION
+        msg.action = HOSTED_APP_DATABASE_STORE
+        tell_frame_page(msg)
+      }
+      default: {
+        // ----
+      }
+    }
+  }
+
+
+} catch (e) {
+  g_ownership_worker = false
+}
+
+
+
+//  MEDIA MEDIA
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// TOOLS -- UTILITIES
+
 
 
 var BASE64_MARKER = ';base64,';
@@ -2330,51 +2426,7 @@ function convertDataURIToBinary(dataURI) {
 }
 
 
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// OWNERSHIP WORKER!!!
-let g_ownership_worker = new Worker(REQ_WORKER_CODE)
 
-g_ownership_worker.onmessage = async (msg) => {
-  //
-  switch ( msg.data.type ) {
-    case 'status' : {
-      worker_status_view(msg.data.message)
-      break;
-    }
-    case 'info-ws' : {
-      msg.category = HOSTED_APP_WORKER_OPERATION
-      msg.action = HOSTED_APP_DATABASE_STORE
-      tell_frame_page(msg)
-      break;
-    }
-    case 'op-complete' : {
-      if ( msg.transition === 'chunk-final' || msg.transition ===  'edit-update' ) {
-        msg.category = FRAME_ACTION_FROM_PUBLISHER
-        msg.action = HOSTED_APP_FILE_OPERATION
-        let sessionObj = await get_audio_data(msg.session)
-        msg.data = {
-          "op" : "store",
-          "audio_data" : create_asset_meta(sessionObj)
-        }
-        tell_frame_page(msg)      /// 
-      }
-      break;
-    }
-    case 'keys-up' : {
-      msg.category = HOSTED_APP_WORKER_OPERATION
-      msg.action = HOSTED_APP_DATABASE_STORE
-      tell_frame_page(msg)
-    }
-    default: {
-      // ----
-    }
-  }
-}
-
-
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// TOOLS -- UTILITIES
 //>--
 function get_client_device_name() {
     let oscpu = navigator.oscpu
@@ -2456,127 +2508,11 @@ function concatTypedArrays(a, b) { // a, b TypedArray of same type
 
 
 
-function lst_remove(list,index) {
-    list.splice(index,1)
-  }
 
-  function lst_insert_before(list,el,index) {
-    list.splice(index,0,el)
-  }
+// WAVE HANDLING ...
 
 
-
-
-// ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-var g_current_session_machine_name = "tester"
-
-
-
-/**
- * AppAudioRecorder
- *
- *  Manage the use of the media recorder 
- */
-
-class AppAudioRecorder {
-  //  //  //
-  constructor(stream,chunck_interval) {
-    //
-    this.audioChunks = [];
-    let mediaRecorder = new MediaRecorder(stream);
-
-    // send a frame to ownership
- 
-    this.mediaRecorder = mediaRecorder
-    this.audio_instance = null
-    this.section_id = 0
-    //
-    this.chunk_interval = chunck_interval
-    //
-    mediaRecorder.addEventListener('dataavailable', event => {    // DATA AVAILABLE
-      this.data_handler(event)
-    });
-
-    mediaRecorder.addEventListener('stop',  event => {
-      this.stop_handler(event)
-    });
-  }
-  
-
-  //  data_handler
-  //
-  data_handler(data) {      /// called at the interval (see setup in constructore)
-    let chunk = event.data
-    this.audioChunks.push(chunk);
-    wv_prep_secure_relay(chunk,this.section_id)       // pass to thread (thread will do calculations)
-  }
-
-
-  //  start
-  //
-  start() {                // wrap the recorder start method and make sure configuration parameters are stored
-    this.section_id = 'ER' + uuidv4() // use ER to signify End(Edit) Recording and be different than other randoms
-    //
-    this.audioChunks = []
-    if ( typeof this.chunk_interval === 'number' ) {
-      this.mediaRecorder.start(this.chunk_interval);
-    } else {
-      this.mediaRecorder.start();
-    }
-  }
-
-  //  stop_handler
-  //
-  stop_handler(event) {
-    this.audio_results()
-  }
-
-  // stop
-  //
-  stop() {
-    this.mediaRecorder.stop();
-  }
-
-  // audio_results
-  // Called when recording stops.. This makes the first record of a collection of audio chunks
-  // A section ID is produced. The section ID will be used later when the user decideds to save 
-  // the section... However, the section hash will be sent on to the server. (note: section v.s. session)
-  async audio_results() {
-    let audioBlob = new Blob(this.audioChunks);
-    let audioUrl = URL.createObjectURL(audioBlob);
-    this.audioBlob = audioBlob
-    this.audio_instance = new Audio(audioUrl);
-    await wv_backup_audio_chunks_for_verification(this.section_id,this.audioChunks)
-    wv_secure('end-recording',audioBlob,this.section_id)
-  }
-
-  // add_current_data
-  // Called when the user decides to save the audio as part of the named session
-  // At this point, there is a section_id. It is used to make sure the indexedDB storage 
-  // maps to the blob
-  add_current_data() {
-    if ( this.audioBlob ) {
-      add_audio_data(this.audioBlob,this.section_id)
-    }
-  }
-
-  delete_last_recorderd_audio() {
-    this.audio_instance = null
-    this.audioBlob = null
-  }
-
-  play() {
-    if ( this.audio_instance ) {
-      this.audio_instance.play()
-    }
-  }
-
-}
-// END OF CLASS AUDIO RECORDER
-
-
-  ////////////////
+////////////////
 
 class WaveBlob {
   constructor() {
@@ -2690,6 +2626,160 @@ class WaveBlob {
 
 
 
+
+function lst_remove(list,index) {
+    list.splice(index,1)
+  }
+
+  function lst_insert_before(list,el,index) {
+    list.splice(index,0,el)
+  }
+
+
+// ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+// RECORDING ...
+
+// ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+var g_current_session_machine_name = "tester"
+
+
+
+/**
+ * AppAudioRecorder
+ *
+ *  Manage the use of the media recorder 
+ */
+
+class AppAudioRecorder {
+  //  //  //
+  constructor(stream,chunck_interval,config) {
+    //
+    this.config = config
+    //
+    this.audioChunks = [];
+    let mediaRecorder = new MediaRecorder(stream);
+
+    // send a frame to ownership
+ 
+    this.mediaRecorder = mediaRecorder
+    this.audio_instance = null
+    this.section_id = 0
+    //
+    this.chunk_interval = chunck_interval
+    //
+    mediaRecorder.addEventListener('dataavailable', event => {    // DATA AVAILABLE
+      this.data_handler(event)
+    });
+    //
+    mediaRecorder.addEventListener('stop',  event => {
+      this.stop_handler(event)
+    });
+    //
+  }
+  
+
+  //  data_handler
+  //
+  data_handler(data) {      /// called at the interval (see setup in constructore)
+    let chunk = event.data
+    this.audioChunks.push(chunk);
+    wv_prep_secure_relay(chunk,this.section_id)       // pass to thread (thread will do calculations)
+  }
+
+
+  //  start
+  //
+  start() {                // wrap the recorder start method and make sure configuration parameters are stored
+    this.section_id = 'ER' + uuidv4() // use ER to signify End(Edit) Recording and be different than other randoms
+    //
+    this.audioChunks = []
+    if ( typeof this.chunk_interval === 'number' ) {
+      this.mediaRecorder.start(this.chunk_interval);
+    } else {
+      this.mediaRecorder.start();
+    }
+  }
+
+  //  stop_handler
+  //
+  async stop_handler(event) {
+    this.audio_results()
+    if ( this.config.save_on_stop ) {
+      this.add_current_data()
+      wv_app_visual_save_recording()
+    }
+  }
+
+
+  // stop
+  //
+  stop() {
+    this.mediaRecorder.stop();
+  }
+
+
+
+  /**
+   * audio_results
+   * 
+   * Called when recording stops.. This makes the first record of a collection of audio chunks
+   * A section ID is produced. The section ID will be used later when the user decideds to save 
+   * the section... However, the section hash will be sent on to the server. (note: section v.s. session)
+   */
+  async audio_results() {
+    let audioBlob = new Blob(this.audioChunks);
+    let audioUrl = URL.createObjectURL(audioBlob);
+    this.audioBlob = audioBlob
+    this.audio_instance = new Audio(audioUrl);
+    wv_secure('end-recording',audioBlob,this.section_id)  // SEND LAST BENCHMARK
+  }
+
+
+  // add_current_data
+  // Called when the user decides to save the audio as part of the named session
+  // At this point, there is a section_id. It is used to make sure the indexedDB storage 
+  // maps to the blob
+  add_current_data() {
+    if ( this.audioBlob ) {
+      add_audio_data(this.audioBlob,this.section_id)
+    }
+  }
+
+  delete_last_recorderd_audio() {
+    this.audio_instance = null
+    this.audioBlob = null
+  }
+
+  play() {
+    if ( this.audio_instance ) {
+      this.audio_instance.play()
+    }
+  }
+
+  stop_playing() {
+    if ( this.audio_instance ) {
+      this.audio_instance.pause()
+    }
+  }
+}
+// END OF CLASS AUDIO RECORDER
+
+
+
+// RECORDER
+async function wv_init_recorder() {
+  const stream = await navigator.mediaDevices.getUserMedia({ 'audio': true });
+  g_app_recorder = new AppAudioRecorder(stream,MILSEC_CHUNK_INTERVAL,{ 
+                                                                        "save_on_stop" : true
+                                                                    })
+}
+
+
+
+
+
 //  ----   AUDIO TOOLS
 
 function wv_concat_sections(raw_sections) {
@@ -2723,7 +2813,9 @@ async function make_complete_session_record(sess_name_cmplt,sessionObj,contentTy
   for ( let i = 0; i < n; i++ ) {
     let wave_name = mapkys[i]
     let raw_wave = await get_wave_data(wave_name)
-    raw_sections.push(raw_wave)
+    if ( raw_wave ) {
+      raw_sections.push(raw_wave)
+    }
   }
   //
   let total_sections = wv_concat_sections(raw_sections)
@@ -2736,6 +2828,7 @@ async function make_complete_session_record(sess_name_cmplt,sessionObj,contentTy
   }
   //
 }
+
 
 
 // AUDIO MODAL
@@ -2950,6 +3043,21 @@ async function add_in_new_session(name) {
 }
 
 
+async function delete_session() {
+  if ( g_audio_db === null ) {
+    console.log("db not initialized :: remove_audio_data")
+    return;
+  }
+  await g_audio_db.delete_session()
+}
+
+
+
+
+
+
+// USER INTERACTION
+
 function ask_user_session() {
   let proceed = confirm("Start a new session?")
   if ( proceed ) {
@@ -3027,14 +3135,6 @@ function edit_user_session(event) {
 }
 
 
-async function delete_session() {
-  if ( g_audio_db === null ) {
-    console.log("db not initialized :: remove_audio_data")
-    return;
-  }
-  await g_audio_db.delete_session()
-}
-
 
 async function wv_reset_audio_sections_order(map_ids) {
   if ( g_current_session_name !== 'none ') {
@@ -3060,12 +3160,6 @@ async function wv_reset_audio_sections_order(map_ids) {
 }
 
 
-// RECORDER
-async function wv_init_recorder() {
-  const stream = await navigator.mediaDevices.getUserMedia({ 'audio': true });
-  g_app_recoder = new AppAudioRecorder(stream,MILSEC_CHUNK_INTERVAL)
-}
-
 //
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
@@ -3086,212 +3180,206 @@ function wv_initialize_global_buttons() {
     sess_op_el.style.visibility = "hidden"
   }
 
-  // RECORD
-  g_recordButton.addEventListener('click', async () => {
-    // stop_geo_update()
-    // g_recordButton.setAttribute('disabled', true);
-    // g_stopButton.removeAttribute('disabled');
-    // g_playButton.setAttribute('disabled', true);
-    // g_saveButton.setAttribute('disabled', true);
-    // g_deleteButton.setAttribute('disabled', true);
-    // g_app_recoder.start();
-  });
-
   // DELETE
   g_deleteButton.addEventListener('click', async () => {
     g_saveButton.setAttribute('disabled', true);
     // g_playButton.setAttribute('disabled', true);
     g_deleteButton.setAttribute('disabled', true);
-    g_app_recoder.delete_last_recorderd_audio()
+    g_app_recorder.delete_last_recorderd_audio()
   })
 
   // SAVE
   g_saveButton.addEventListener('click', () => {
-    g_app_recoder.add_current_data()
-    let sess_op_el = document.getElementById('send-session')
-    if ( sess_op_el ) {
-      sess_op_el.style.visibility = "visible"
-    }
+    g_app_recorder.add_current_data()
+    wv_app_visual_save_recording()
   });
 
 }
 
 
-
-  function wv_rect_vertical_intersect_size(r1,r2) {
-    //
-    let y1_top = r1.top
-    let y1_bot = r1.bottom
-    //
-    let y2_top = r2.top
-    let y2_bot = r2.bottom
-    if ( (y2_bot <= y1_top) || (y1_bot <= y2_top) ) return 0
-    //
-    if ( y1_top < y2_top ) {
-      return(y1_bot - y2_top)  // increasing downward
-    } else {
-      return(y2_bot - y1_top)  // increasing downward
-    }
+function wv_app_visual_save_recording() {
+  let sess_op_el = document.getElementById('send-session')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "visible"
   }
+}
 
-  g_audio_play_list_order = []
-  function getIntersectedElement(rect) {
-    if ( g_audio_play_list_order.length > 1 ) {
-      let max_area = 0
-      let area_owner = null
-      g_audio_play_list_order.forEach(divEl => {
-        let check_rect = divEl.getBoundingClientRect()
-        let intersect_size = wv_rect_vertical_intersect_size(rect,check_rect)
-        if ( intersect_size > max_area ) {
-          max_area = intersect_size
-          area_owner = divEl
-        }
-      })
-      return area_owner
-    }
-    return false
+
+
+function wv_rect_vertical_intersect_size(r1,r2) {
+  //
+  let y1_top = r1.top
+  let y1_bot = r1.bottom
+  //
+  let y2_top = r2.top
+  let y2_bot = r2.bottom
+  if ( (y2_bot <= y1_top) || (y1_bot <= y2_top) ) return 0
+  //
+  if ( y1_top < y2_top ) {
+    return(y1_bot - y2_top)  // increasing downward
+  } else {
+    return(y2_bot - y1_top)  // increasing downward
   }
+}
 
-
-  function wv_reposition(srcEl,dstEl) {
-    let i = 0;
-    let n = g_audio_play_list_order.length
-    let from = -1
-    let to = -1
-    while ( i < n ) {
-      let tst_el = g_audio_play_list_order[i]
-      if ( tst_el == srcEl ) from = i
-      if ( tst_el == dstEl ) to = i
-      if ( (from != -1) && (to != -1) ) break
-      i++
-    }
-    if ( ( from != -1 )&& ( to != -1 ) && ( from !== to ) ) {
-      // not a swap...
-      // swap the two elements according to their position in the childNodes of the parent
-      let p_node = srcEl.parentNode
-      if ( p_node ) {
-        if ( from > to ) {
-          lst_remove(g_audio_play_list_order,from)
-          lst_insert_before(g_audio_play_list_order,srcEl,to)
-          //
-          p_node.insertBefore(srcEl,dstEl)
-        } else if ( from < to ) {
-          lst_remove(g_audio_play_list_order,from)
-          lst_insert_before(g_audio_play_list_order,srcEl,to)
-          //    
-          let dst_follow_node = dstEl.nextSibling
-          if ( dst_follow_node ) {
-            p_node.insertBefore(srcEl,dst_follow_node)
-          } else {
-            p_node.appendChild(srcEl)
-          } 
-        }
+g_audio_play_list_order = []
+function getIntersectedElement(rect) {
+  if ( g_audio_play_list_order.length > 1 ) {
+    let max_area = 0
+    let area_owner = null
+    g_audio_play_list_order.forEach(divEl => {
+      let check_rect = divEl.getBoundingClientRect()
+      let intersect_size = wv_rect_vertical_intersect_size(rect,check_rect)
+      if ( intersect_size > max_area ) {
+        max_area = intersect_size
+        area_owner = divEl
       }
-      //
-      if ( from !== to ) {
-        let map_ids = g_audio_play_list_order.map(divEl => {
-          let id = divEl.id
-          id = id.replace('audio-div-','')
-          return(id)
-        })
+    })
+    return area_owner
+  }
+  return false
+}
+
+
+function wv_reposition(srcEl,dstEl) {
+  let i = 0;
+  let n = g_audio_play_list_order.length
+  let from = -1
+  let to = -1
+  while ( i < n ) {
+    let tst_el = g_audio_play_list_order[i]
+    if ( tst_el == srcEl ) from = i
+    if ( tst_el == dstEl ) to = i
+    if ( (from != -1) && (to != -1) ) break
+    i++
+  }
+  if ( ( from != -1 )&& ( to != -1 ) && ( from !== to ) ) {
+    // not a swap...
+    // swap the two elements according to their position in the childNodes of the parent
+    let p_node = srcEl.parentNode
+    if ( p_node ) {
+      if ( from > to ) {
+        lst_remove(g_audio_play_list_order,from)
+        lst_insert_before(g_audio_play_list_order,srcEl,to)
         //
-        wv_reset_audio_sections_order(map_ids)
+        p_node.insertBefore(srcEl,dstEl)
+      } else if ( from < to ) {
+        lst_remove(g_audio_play_list_order,from)
+        lst_insert_before(g_audio_play_list_order,srcEl,to)
+        //    
+        let dst_follow_node = dstEl.nextSibling
+        if ( dst_follow_node ) {
+          p_node.insertBefore(srcEl,dst_follow_node)
+        } else {
+          p_node.appendChild(srcEl)
+        } 
       }
-      //
     }
-
+    //
+    if ( from !== to ) {
+      let map_ids = g_audio_play_list_order.map(divEl => {
+        let id = divEl.id
+        id = id.replace('audio-div-','')
+        return(id)
+      })
+      //
+      wv_reset_audio_sections_order(map_ids)
+    }
+    //
   }
 
+}
 
 
-  function wv_move_html_element(elem,track_source) {
-    //
-    if ( elem._tracker ) {
-      elem.removeEventListener('mousemove',elem._tracker)
-    }
-    elem._tracker = (ev) => {
-      let mover = elem;
-      let y = ev.clientY;
-      let delta_y = mover._app_mouse_y - ev.clientY;
-      mover._app_mouse_y = ev.clientY;
-      // set the element's new position:
-      let new_y = (mover.offsetTop - delta_y)
-      // lower bound
-      if ( new_y > 8 ) mover.style.top = new_y + "px";
-    }
-    window.addEventListener('mousemove',elem._tracker)
-    track_source.addEventListener('mousemove',elem._tracker)
-    //
-    elem._releaser = (ev) => {
-      track_source.removeEventListener('mousemove',elem._tracker)
-      window.removeEventListener('mousemove',elem._tracker)
-      window.removeEventListener('mouseup',elem._releaser)
-      elem._releaser = null
-      elem._tracker = null
-      //
-      let divEl = elem._source
-      divEl._ghost = false
-      elem._source = false
-      divEl._moving_audio_box = 0
-      divEl._dragging = false
-      //
-      let y = ev.clientY;
-      let rect = elem.getBoundingClientRect();
-      elem.style.visibility = 'hidden'
-      elem.style.display = 'none'
-      //
-      let overEl = getIntersectedElement(rect)
-      if ( overEl && (overEl !== track_source) ) {
-        let ydiff = elem._app_mouse_y - y;
-        wv_reposition(divEl,overEl)
-      }
-      //
-    }
-    window.addEventListener('mouseup',elem._releaser)
+
+function wv_move_html_element(elem,track_source) {
+  //
+  if ( elem._tracker ) {
+    elem.removeEventListener('mousemove',elem._tracker)
   }
+  elem._tracker = (ev) => {
+    let mover = elem;
+    let y = ev.clientY;
+    let delta_y = mover._app_mouse_y - ev.clientY;
+    mover._app_mouse_y = ev.clientY;
+    // set the element's new position:
+    let new_y = (mover.offsetTop - delta_y)
+    // lower bound
+    if ( new_y > 8 ) mover.style.top = new_y + "px";
+  }
+  window.addEventListener('mousemove',elem._tracker)
+  track_source.addEventListener('mousemove',elem._tracker)
+  //
+  elem._releaser = (ev) => {
+    track_source.removeEventListener('mousemove',elem._tracker)
+    window.removeEventListener('mousemove',elem._tracker)
+    window.removeEventListener('mouseup',elem._releaser)
+    elem._releaser = null
+    elem._tracker = null
+    //
+    let divEl = elem._source
+    divEl._ghost = false
+    elem._source = false
+    divEl._moving_audio_box = 0
+    divEl._dragging = false
+    //
+    let y = ev.clientY;
+    let rect = elem.getBoundingClientRect();
+    elem.style.visibility = 'hidden'
+    elem.style.display = 'none'
+    //
+    let overEl = getIntersectedElement(rect)
+    if ( overEl && (overEl !== track_source) ) {
+      let ydiff = elem._app_mouse_y - y;
+      wv_reposition(divEl,overEl)
+    }
+    //
+  }
+  window.addEventListener('mouseup',elem._releaser)
+}
 
-  
-  function add_audio_playback_box_responsiveness(divEl) {
-    //
-    g_audio_play_list_order.push(divEl)
-    //
+
+function add_audio_playback_box_responsiveness(divEl) {
+//
+g_audio_play_list_order.push(divEl)
+//
+divEl._wait_to_drag = null
+//
+divEl.addEventListener('mousedown',(ev) => {
+  if ( divEl !== ev.target ) return;
+  divEl._wait_to_drag = setTimeout(() => {
+    clearTimeout(divEl._wait_to_drag)
     divEl._wait_to_drag = null
     //
-    divEl.addEventListener('mousedown',(ev) => {
-      if ( divEl !== ev.target ) return;
-      divEl._wait_to_drag = setTimeout(() => {
-        clearTimeout(divEl._wait_to_drag)
-        divEl._wait_to_drag = null
-        //
-        let outliner = document.getElementById('audioBoxGhost')
-        outliner.style.position = "absolute"
-        outliner.style.zIndex = 1000
-        let d_rect = divEl.getBoundingClientRect()
-        outliner.style.top = d_rect.top + "px"
-        outliner.style.left = d_rect.left + "px"
-        outliner.style.width = d_rect.width + "px"
-        outliner.style.height = d_rect.height + "px"
-        outliner._source = divEl
-        divEl._ghost = outliner
-        outliner.style.display = 'block'
-        outliner.style.visibility = "inherit"
-        let y = ev.clientY;
-        outliner._app_mouse_y = y
-        //---
-        wv_move_html_element(outliner,divEl)
-        //--
-      },350)
-    })
-    //
-    let quic_hit = (ev) => {
-      if ( divEl._wait_to_drag !== null ) {
-        clearTimeout(divEl._wait_to_drag)
-        divEl._wait_to_drag = null
-      }
-      window.removeEventListener('mouseup',quic_hit)
-    }
-    divEl.addEventListener('mouseup',quic_hit)
+    let outliner = document.getElementById('audioBoxGhost')
+    outliner.style.position = "absolute"
+    outliner.style.zIndex = 1000
+    let d_rect = divEl.getBoundingClientRect()
+    outliner.style.top = d_rect.top + "px"
+    outliner.style.left = d_rect.left + "px"
+    outliner.style.width = d_rect.width + "px"
+    outliner.style.height = d_rect.height + "px"
+    outliner._source = divEl
+    divEl._ghost = outliner
+    outliner.style.display = 'block'
+    outliner.style.visibility = "inherit"
+    let y = ev.clientY;
+    outliner._app_mouse_y = y
+    //---
+    wv_move_html_element(outliner,divEl)
+    //--
+  },350)
+})
+//
+let quic_hit = (ev) => {
+  if ( divEl._wait_to_drag !== null ) {
+    clearTimeout(divEl._wait_to_drag)
+    divEl._wait_to_drag = null
   }
+  window.removeEventListener('mouseup',quic_hit)
+}
+divEl.addEventListener('mouseup',quic_hit)
+}
 
 
 
@@ -3343,7 +3431,7 @@ function add_audio_element(audio_el_url,index,audioBlob,section_id) {
 
 
 function clear_play_list() {
-    g_audio_play_list_order = []
+  g_audio_play_list_order = []
   if ( savedAudioMessagesContainer ) {
     let wave_keys = Object.keys(g_wave_open_editors)
     wave_keys.forEach( wave_name => { remove_wave_editor(wave_name) } )
@@ -3446,29 +3534,35 @@ function wv_clear_selection(player_info) {
 }
 
 
-const getBlobData = (wave_name) => {
+function getBlobData(wave_name) {
   let player_div = document.getElementById(`audio-div-${wave_name}`)
-  let audio_blob = player_div._ref_audio_data
-  return audio_blob
+  if ( player_div ) {
+    let audio_blob = player_div._ref_audio_data
+    return audio_blob
+  }
+  return false
 }
 
 async function get_wave_data(wave_name,channels,blob_fetcher) {  // sample_ratio up or down sample
   let audio_blob = blob_fetcher ? blob_fetcher(wave_name) : getBlobData(wave_name)
-  const audioContext = new AudioContext();
-  // audio blob contains blob data
-  let arrayBuffer = await audio_blob.arrayBuffer();
-  let audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
-  if ( (channels === undefined) || (channels === 1) ) {
-    let rawData = audioBuffer.getChannelData(0);
-    return rawData      
-  } else {
-    let rawData = []
-    let nchan = Math.min(audioBuffer.numberOfChannels,channels)
-    for ( let i = 0; i < nchan; i++ ) {
-      rawData.push(audioBuffer.getChannelData(i))
+  if ( audio_blob ) {
+    const audioContext = new AudioContext();
+    // audio blob contains blob data
+    let arrayBuffer = await audio_blob.arrayBuffer();
+    let audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+    if ( (channels === undefined) || (channels === 1) ) {
+      let rawData = audioBuffer.getChannelData(0);
+      return rawData      
+    } else {
+      let rawData = []
+      let nchan = Math.min(audioBuffer.numberOfChannels,channels)
+      for ( let i = 0; i < nchan; i++ ) {
+        rawData.push(audioBuffer.getChannelData(i))
+      }
+      return(rawData)
     }
-    return(rawData)
   }
+  return false
 }
 
 function get_wave_seconds(wave_name) {  // use the element
@@ -3574,6 +3668,14 @@ function isElementVisible(el,topOffset,leftOffset) {
     ||  el.contains(efp(rect_left,  rect.bottom))
   );
 }
+
+
+
+/**
+ * open_wave_editor
+ * 
+ * parameter: wave_name
+ */
 
 async function open_wave_editor(wave_name) {
   let el = g_wave_open_editors[wave_name]
@@ -3892,6 +3994,8 @@ function find_new_z(wave_name,container,open_containers) {
   }
 }
 
+
+
 //
 function wv_capture_cursor(ev,el_depth)  {
   ev = ev || window.event;
@@ -4023,7 +4127,6 @@ function wv_delete_checked() {
   })
 }
 
-// ---- ---- ---- ---- ---- ----
 
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -4129,21 +4232,12 @@ function wv_getLocation() {
 
 
 
-// ---- ---- ---- ---- ---- ----
-// ---- ---- ---- ---- ---- ----
 
-
-function stop_geo_update() {
-  if ( g_geo_update ) clearInterval(g_geo_update)
-}
-
-function restart_geo_update() {
-  if ( g_geo_update ) clearInterval(g_geo_update)
-  //g_geo_update = setInterval(wv_getLocation,GEO_UPDATE_INTERVAL)
-}
-
-
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- APPEARANCE
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
 /**
  * Variables
  * 
@@ -4201,29 +4295,10 @@ function appearance_of_mic_disable(onoff) {
 
 
 
+// LISTEN TO RECORDED MEDIA
 
-// STOP RECORD
-function stop_playing_recording(ev) {
-  restart_geo_update()
-  g_big_mic_cant_click = false;
-  appearance_of_mic_disable(false)
-  //
-  g_playButton.style.display = "inline-block"
-  g_stopButton.style.display = "none"
-  //
-  g_recordButton.removeAttribute('disabled');
-  g_saveButton.removeAttribute('disabled');
-  g_deleteButton.removeAttribute('disabled');
-  //
-  g_app_recoder.stop();
 
-  let audio_play_icn = document.getElementById("audio-playing")
-  audio_play_icn.style.display = "none"
-
-}
-
-// PLAY
-
+// PLAY  (START)
 function start_playing_recording(ev) {
   stop_geo_update()
   g_big_mic_cant_click = true;
@@ -4234,13 +4309,39 @@ function start_playing_recording(ev) {
   g_deleteButton.setAttribute('disabled', true);
   //
   g_stopButton.style.display = "inline-block"
+  g_stop_MButton.style.display = "inline-block"
   g_playButton.style.display = "none"
+  g_play_MButton.style.display = "none"
   let audio_play_icn = document.getElementById("audio-playing")
   audio_play_icn.style.display = "inline-block"
 
   //
-  g_app_recoder.play();
+  g_app_recorder.play();
   //
+}
+
+
+// PLAY (STOP)
+function stop_playing_recording(ev) {
+  restart_geo_update()
+  g_big_mic_cant_click = false;
+  appearance_of_mic_disable(false)
+  //
+  g_playButton.style.display = "inline-block"
+  g_play_MButton.style.display = "inline-block"
+  g_stopButton.style.display = "none"
+  g_stop_MButton.style.display = "none"
+  
+  //
+  g_recordButton.removeAttribute('disabled');
+  g_saveButton.removeAttribute('disabled');
+  g_deleteButton.removeAttribute('disabled');
+  //
+  g_app_recorder.stop_playing();
+
+  let audio_play_icn = document.getElementById("audio-playing")
+  audio_play_icn.style.display = "none"
+
 }
 
 
@@ -4255,7 +4356,12 @@ function appearance_of_play_disable(onoff) {
 }
 
 
-
+/**
+ * set_record_radio_state
+ * 
+ *  VISUAL CHANGES AND MEDIA ELEMENT CONTROL
+ * 
+ */
 function set_record_radio_state(evnt) {
   //  "#6cb187"
   let recording_radio_btn = document.getElementById("record_state_radio")
@@ -4280,15 +4386,29 @@ function set_record_radio_state(evnt) {
     if ( do_enable ) {
       reenable_interruptors("recording")
       appearance_of_play_disable(false)
+      //
+      if ( g_app_recorder ) {
+        g_app_recorder.stop();
+      }
+      //
     } else {
       disable_interruptors("recording")
       appearance_of_play_disable(true)
+      //
+      if ( g_app_recorder ) {
+        g_app_recorder.start();
+      }
+      //
     }
   }
   //
 }
 
 
+/**
+ * recording_view
+ * 
+ */
 
 function recording_view(evnt) {
   if ( g_big_mic_cant_click ) {
@@ -4314,9 +4434,19 @@ function recording_view(evnt) {
     if ( do_enable ) {
       reenable_interruptors("recording")
       appearance_of_play_disable(false)
+      //
+      if ( g_app_recorder ) {
+        g_app_recorder.stop();
+      }
+      //
     } else {
       disable_interruptors("recording")
       appearance_of_play_disable(true)
+      //
+      if ( g_app_recorder ) {
+        g_app_recorder.start();
+      }
+      //
     }
   }
   //
@@ -4394,6 +4524,29 @@ function show_manager(event) {
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
+async function wv_default_session_readiness() {
+  try {
+    await wv_load_name_list()
+    let n = g_session_name_list.length
+    g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
+    //
+    if ( g_window_in_frame ) {
+      if ( await wv_human_frame_app_initialization(g_current_session_name) ) {
+        if ( g_user_preference_start_on_open ) {
+          return g_current_session_name
+        }
+      }
+    } else {
+      return g_current_session_name
+    }
+  } catch (e) {
+    return false
+  }
+  //
+  return g_current_session_name
+}
+
+
 // Set the intial state of the recording button
 initialize_record_radio_state()
 
@@ -4405,16 +4558,18 @@ async function application_initialization() {
   wv_initialize_global_buttons()
   //
   g_audio_db = await wv_init_database()
-  if ( await wv_default_session_readiness() ) {
+  let name = await wv_default_session_readiness()
+  if ( typeof name === "string" ) {
     await add_in_new_session(name)
   }
+  //
 }
 
 
 
 // async wrapper 
 async function startup() {
-  show_recorder(event)
+  show_recorder()
   await application_initialization()
   if ( g_config_auto_start ) {
     g_recordButton.click()
