@@ -725,7 +725,7 @@ const g_message_template =  {
 
 /// END OF CONSTANTS  (ALPHA)
 
-
+const ui_session_create_prompt  = `<span style="color:orange;border: solid 1px grey; padding:2px;cursor:pointer;" onclick="navigate_to_create_session()">select or create a session</span>`
 
 
 const AUDIO_SESSION_STORE = 'audio_sessions'
@@ -759,7 +759,6 @@ let audio = false
 let g_app_recorder = false
 let g_current_session_name = 'none'
 let g_current_sesion_id = ''
-let g_session_name_list = []
 let g_preferred_download_format = 'audio/mpeg'
 let g_wave_current_container = null
 
@@ -985,6 +984,56 @@ class AppDBWrapper {
     get name_list() {
         return this._session_name_list
     }
+
+    has_name(name) {
+      return ( this._session_name_list.indexOf(name) >= 0 )
+    }
+
+
+
+  session_count() {
+    let names = this.name_list
+    if ( names && Array.isArray(names) ) {
+      return names.length
+    }
+    return 0;
+  }
+
+
+  new_counted_name(prefix) {
+    let new_index = 0;
+    let try_name = `${prefix}${new_index}`
+
+    let n = this.session_count()
+    if ( n === 0 ) {
+      return try_name
+    }
+
+    while ( new_index <= n ) {
+      try_name = `${prefix}${new_index}`
+      if ( !(this.has_name(try_name)) ) {
+        return try_name
+      }
+      new_index++
+    }
+
+    // should have worked ... find highest index and go one more
+    let max_index = 0
+    for ( let name in this._session_name_list ) {
+      let matches = name.match(/\d+$/);
+      if ( matches ) {
+        numbers = matches[0];
+        let index = parseInt(numbers)
+        if ( index > max_index ) max_index = index
+      }
+    }
+
+    max_index++
+    try_name = `${prefix}${new_index}`
+    return try_name
+    
+  }
+
 
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 
@@ -1563,6 +1612,10 @@ class AppDBWrapper {
         //
         if ( !(this._can_process_db) ) return false
 
+        if ( sess_name === undefined ) {
+          sess_name = this.current_session_name
+        }
+
         if ( sess_name !== 'none ') {
             if ( this.db === null ) {
                 console.log("db not initialized :: delete_session")
@@ -1842,13 +1895,12 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
       this.current_user_object = false
       this.current_user_data = false
       //
-      this.clear_identity_list_data()
   }
 
 
   set session_name(name) {
         this.current_session_name = name
-        g_current_session_name = name
+        g_current_session_name = name  // allow this one shadow
   }
 
 
@@ -1992,24 +2044,10 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   
   //
   application_update_session_name_selections(sess_name,name_list) {
+    wv_update_session_name_selections(sess_name,name_list)
   }
 
-  //
-  clear_identity_list_data() {
-      this.identity_list = []
-      this.user_list = []
-  }
-
-  application_total_entry(identity) {
-      this.identity_list.push(identity)
-      this.user_list.push(identity.user_info)
-  }
-
-
-  async get_known_users() {
-      this.clear_identity_list_data()
-      await g_human_user_storage.load_name_list()
-      return [this.user_list,this.identity_list]
+  application_total_entry(session_object) {
   }
 
 }
@@ -2733,6 +2771,7 @@ class AppAudioRecorder {
     let audioUrl = URL.createObjectURL(audioBlob);
     this.audioBlob = audioBlob
     this.audio_instance = new Audio(audioUrl);
+    this.audio_instance.addEventListener("ended", () => { wv_end_audio_play_view() }, false);
     wv_secure('end-recording',audioBlob,this.section_id)  // SEND LAST BENCHMARK
   }
 
@@ -2976,24 +3015,16 @@ async function remove_audio_data(audio_key) {
   await g_audio_db.remove_file(audio_key)
 }
 
-function is_new_name(name) {
-  if ( g_session_name_list.indexOf(name) >= 0 ) return(false)
-  return(true)
-}
-
-async function wv_load_name_list() {
-  if ( g_audio_db === null ) {
-    console.log("db not initialized :: remove_audio_data")
-    return;
+function wv_is_new_name(name) {
+  if ( g_audio_db ) {
+    g_audio_db.has_name(name)
+    return true
   }
-  //
-  g_session_name_list = await g_audio_db.get_file_entries()
-  update_session_name_selections(g_audio_db.session_name,g_session_name_list)
-  //
+  return(false)
 }
 
 
-function update_session_name_selections(sess_name,name_list) {
+function wv_update_session_name_selections(sess_name,name_list) {
   if ( sess_name === undefined ) return;
   //
   let session_options = name_list.map(name => {
@@ -3010,35 +3041,33 @@ function update_session_name_selections(sess_name,name_list) {
     sessNameSel.value = sess_name
   }
   let sess_name_el = document.getElementById('show-session-name')
-  if ( sess_name_el ) sess_name_el.innerHTML = (sess_name === 'none') ? '<span style="color:orange">select or create a session</span>' : sess_name
+  if ( sess_name_el ) sess_name_el.innerHTML = (sess_name === 'none') ? ui_session_create_prompt : sess_name
 }
 
 function warn(str) {
   //
 }
 
-async function add_in_new_session(name) {
+async function wv_add_in_new_session(name) {
   let sess_name_el = document.getElementById('show-session-name')
   if ( sess_name_el && name ) {
     g_current_session_name = name
-    g_session_name_list.push(name)
     sess_name_el.innerHTML = name
     //g_recordButton.removeAttribute('disabled');     // Turn on recording 
     //
-    let propagate_session = (sessionObj) => {
+    let propagate_session = async (sessionObj) => {
       // sessionObj.name  === g_current_session_name // session of this name is going into the DB
+      await g_audio_db.load_name_list()
       wv_change_session_name()      // uses g_current_session_name
     }
-    g_audio_db.add_empty_session(name,propagate_session)              // creating a new session
     //
     clear_play_list()
     let sess_op_el = document.getElementById('delete-session')
     if ( sess_op_el ) {
       sess_op_el.style.visibility = "visible"
     }
-
-    // Put the new session name into the list
-    await update_session_name_selections(g_current_session_name,g_session_name_list)
+    //
+    await g_audio_db.add_empty_session(name,propagate_session)              // creating a new session
   }
 }
 
@@ -3062,9 +3091,9 @@ function ask_user_session() {
   let proceed = confirm("Start a new session?")
   if ( proceed ) {
     let name = prompt("Name this session:", "new session");
-    let new_name = is_new_name(name)
+    let new_name = wv_is_new_name(name)
     if ( new_name ) {
-      add_in_new_session(name)
+      wv_add_in_new_session(name)
     } else {
       warn("Session already exists. Do you want to edit it?")
     }
@@ -3080,11 +3109,14 @@ async function choose_edit_user_session(name) {
   //
   g_save_up_audio_elements = {}
   //
+  g_audio_db.session_name = name
+  //
   if ( name === 'none' ) {
+    disable_recording()
     let sess_name_el = document.getElementById('show-session-name')
     if ( sess_name_el ) {
       g_current_session_name = 'none'
-      sess_name_el.innerHTML = '<span style="color:orange">select or create a session</span>'
+      sess_name_el.innerHTML = ui_session_create_prompt
 
       // g_recordButton.setAttribute('disabled', true);
       // g_stopButton.setAttribute('disabled', true);
@@ -3103,6 +3135,7 @@ async function choose_edit_user_session(name) {
       }
     }
   } else {
+    enable_recording()
     let sess_name_el = document.getElementById('show-session-name')
     if ( sess_name_el ) {
       g_current_session_name = name
@@ -4322,7 +4355,7 @@ function start_playing_recording(ev) {
 
 
 // PLAY (STOP)
-function stop_playing_recording(ev) {
+function stop_playing_recording(ev,respond_to_end_event = false) {
   restart_geo_update()
   g_big_mic_cant_click = false;
   appearance_of_mic_disable(false)
@@ -4337,11 +4370,18 @@ function stop_playing_recording(ev) {
   g_saveButton.removeAttribute('disabled');
   g_deleteButton.removeAttribute('disabled');
   //
-  g_app_recorder.stop_playing();
+  if ( !respond_to_end_event ) {
+    g_app_recorder.stop_playing();
+  }
 
   let audio_play_icn = document.getElementById("audio-playing")
   audio_play_icn.style.display = "none"
 
+}
+
+
+function wv_end_audio_play_view() {
+  stop_playing_recording(false,true)
 }
 
 
@@ -4362,7 +4402,9 @@ function appearance_of_play_disable(onoff) {
  *  VISUAL CHANGES AND MEDIA ELEMENT CONTROL
  * 
  */
-function set_record_radio_state(evnt) {
+async function set_record_radio_state(evnt) {
+  g_audioContext.resume()
+
   //  "#6cb187"
   let recording_radio_btn = document.getElementById("record_state_radio")
   let cc = recording_radio_btn.x_prop_on
@@ -4410,10 +4452,11 @@ function set_record_radio_state(evnt) {
  * 
  */
 
-function recording_view(evnt) {
+async function recording_view(evnt) {
   if ( g_big_mic_cant_click ) {
     return;
   }
+  g_audioContext.resume()
   //
   let do_enable = false
   if ( off_state_recording_indicator_color === current_indicator_color ) {
@@ -4453,6 +4496,19 @@ function recording_view(evnt) {
 }
 
 
+function enable_recording() {
+  let rec_pick_btn = document.getElementById("btn-pick_recorder")
+  rec_pick_btn.removeAttribute("disabled")
+}
+
+function disable_recording() {
+  let rec_pick_btn = document.getElementById("btn-pick_recorder")
+  rec_pick_btn.setAttribute("disabled",true)
+}
+
+
+
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // TWO PAGES...
 // 1) Recording page
@@ -4466,7 +4522,9 @@ function recording_view(evnt) {
  * 
  */
 
-function show_recorder(event) {
+async function show_recorder(event) {
+  //
+  g_audioContext.resume()
   let rec_el_nm = "big-recorder"
   let mng_el_nm = "record-manager"
   let rec_el = document.getElementById(rec_el_nm)
@@ -4496,7 +4554,9 @@ function show_recorder(event) {
  * file manager available on the dashboard. 
  */
 
-function show_manager(event) {
+async function show_manager(event) {
+  g_audioContext.resume()
+  //
   let rec_el_nm = "big-recorder"
   let mng_el_nm = "record-manager"
   let rec_el = document.getElementById(rec_el_nm)
@@ -4516,6 +4576,11 @@ function show_manager(event) {
 }
 
 
+async function navigate_to_create_session(evnt) {
+  await show_manager(evnt)
+}
+
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // INITIALIZER          INITIALIZER          INITIALIZER          INITIALIZER          INITIALIZER
 //
@@ -4526,9 +4591,8 @@ function show_manager(event) {
 
 async function wv_default_session_readiness() {
   try {
-    await wv_load_name_list()
-    let n = g_session_name_list.length
-    g_current_session_name = `safe-record-session-${n}`   // the greatest possible index based name
+    //
+    g_current_session_name = g_audio_db.new_counted_name('safe-record-session-')   // the greatest possible index based name
     //
     if ( g_window_in_frame ) {
       if ( await wv_human_frame_app_initialization(g_current_session_name) ) {
@@ -4560,7 +4624,7 @@ async function application_initialization() {
   g_audio_db = await wv_init_database()
   let name = await wv_default_session_readiness()
   if ( typeof name === "string" ) {
-    await add_in_new_session(name)
+    await wv_add_in_new_session(name)
   }
   //
 }
