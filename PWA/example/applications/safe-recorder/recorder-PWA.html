@@ -474,6 +474,7 @@
       
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
       <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
+      <button class="wv_button" onclick="ask_user_upload_session()" >New&nbsp;Upload&nbsp;Session</button>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
       <!--   -->
       <!--   -->
@@ -485,6 +486,7 @@
           </select>
         </div>
         <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
+        <button class="wv_button" id="add-session-to-file" onclick="import_prompt()" >Add&nbsp;Session&nbsp;to&nbsp;files</button>
         <button class="wv_button_wordy" id="rename-session" onclick="rename_session(event)" >Rename&nbsp;Session</button>
         <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
       </div>
@@ -3081,20 +3083,6 @@ async function delete_session() {
 
 // USER INTERACTION
 
-function ask_user_session() {
-  let proceed = confirm("Start a new session?")
-  if ( proceed ) {
-    let name = prompt("Name this session:", "new session");
-    let new_name = wv_is_new_name(name)
-    if ( new_name ) {
-      wv_add_in_new_session(name)
-    } else {
-      warn("Session already exists. Do you want to edit it?")
-    }
-  }
-}
-
-
 async function choose_edit_user_session(name) {
   //
   if ( g_current_session_name !== 'none' ) {
@@ -3122,6 +3110,10 @@ async function choose_edit_user_session(name) {
       clear_play_list()
       let sess_op_el = null
       sess_op_el = document.getElementById('send-session')
+      if ( sess_op_el ) {
+        sess_op_el.style.visibility = "hidden"
+      }
+      sess_op_el = document.getElementById('add-session-to-file')
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "hidden"
       }
@@ -3158,11 +3150,14 @@ async function choose_edit_user_session(name) {
       let sess_op_el = null
       //
       sess_op_el = document.getElementById('send-session')
-      if ( sess_op_el ) {
+      sess_op_el_2 = document.getElementById('add-session-to-file')
+      if ( sess_op_el && sess_op_el_2 ) {
         if ( await g_audio_db.has_data(g_current_session_name) ) {
           sess_op_el.style.visibility = "inherit"
+          sess_op_el_2.style.visibility = "inherit"
         } else {
           sess_op_el.style.visibility = "hidden"
+          sess_op_el_2.style.visibility = "hidden"
         }
       }
       //
@@ -3228,6 +3223,10 @@ function wv_initialize_global_buttons() {
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "hidden"
   }
+  sess_op_el = document.getElementById('add-session-to-file')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "hidden"
+  }
   sess_op_el = document.getElementById('delete-session')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "hidden"
@@ -3256,6 +3255,10 @@ function wv_initialize_global_buttons() {
 
 function wv_app_visual_save_recording() {
   let sess_op_el = document.getElementById('send-session')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "visible"
+  }
+  sess_op_el = document.getElementById('add-session-to-file')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "visible"
   }
@@ -4367,6 +4370,38 @@ async function download_audio_session_record(sess_name,downloadlink) {
   return false
 }
 
+
+
+
+
+
+async function ask_user_session() {
+  let proceed = confirm("Start a new session?")
+  if ( proceed ) {
+    let name = prompt("Name this session:", "new session");
+    let new_name = wv_is_new_name(name)
+    if ( new_name ) {
+      wv_add_in_new_session(name)
+    } else {
+      warn("Session already exists. Do you want to edit it?")
+    }
+  }
+}
+
+
+/**
+ *  ask_user_upload_session
+ * 
+ * --- see rename session
+ */
+async function ask_user_upload_session() {
+
+}
+
+
+async function import_prompt() {
+
+}
 
 
 // // 
