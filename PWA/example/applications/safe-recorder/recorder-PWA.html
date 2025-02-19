@@ -489,12 +489,12 @@
         <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
       </div>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-      <!--   -->
-    
+      <!--  
       <span style="font-weight: bolder;">Save Audio</span>
+       -->
       <div style="max-height: 1px; background-color: rgb(12, 4, 4);width: 100%;margin-bottom: 2px;">&nbsp;</div>
-      <button id="save" disabled>Save</button>
-      <button id="delete" disabled>Delete</button>
+      <button id="save" style="display:none" disabled>Save</button>
+      <button id="delete" style="display:none" disabled>Delete</button>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
       <div style="width: 98%;">
         <div style="font-weight: bolder;">Session Components:</div>
@@ -545,15 +545,18 @@
 
 <!-- DIALOG FOR MOVING RECORDED DATA IN AND OUT OF THE MANANGER-->
 <dialog id='wave-download-box'>
-  <h3 class="modal-header">Click on the link below to begin downloading an audio file of this session</h3>
+  <h3 class="modal-header">Do you want to begin downloading an audio file of this session?</h3>
   <div class="modal-body">
     <blockquote class="wv-bq-dialog">
-      <a id='wave-download-link' href = "" >no file</a>
+      <span id="download-session-name">&nbsp;</span>
     </blockquote>
   </div>
   <footer class="modal-footer">
+    <button id="wave-download-OK" type="button">Download</button>
     <button id="wave-download-cancel" type="button">Cancel</button>
   </footer>
+  <a id='wave-download-link' style="display:none" href = "" >no file</a>
+
 </dialog>
 <!-- end of dialog-->
 
@@ -1193,7 +1196,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
+          console.log("db not initialized :: add_empty_session")
           return false;
         }
         //
@@ -1220,7 +1223,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: get_data")
+          console.log("db not initialized :: update_session")
           return false;
         }
         //
@@ -1377,7 +1380,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-            console.log("db not initialized :: remove_audio_data")
+            console.log("db not initialized :: update_data")
             return false;
         }
         //
@@ -1432,7 +1435,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-            console.log("db not initialized :: remove_audio_data")
+            console.log("db not initialized :: update_data_ops")
             return false;
         }
         //
@@ -1484,7 +1487,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
+          console.log("db not initialized :: remove_data")
           return false;
         }
         //
@@ -1541,11 +1544,11 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: remove_audio_data")
+          console.log("db not initialized :: get_data")
           return false;
         }
         //
-        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        let transaction = this.db.transaction(this.DATA_STORE, "get_data");
         if ( !(transaction) ) return false
         let dataStore = transaction.objectStore(this.DATA_STORE);
         if ( !(dataStore) ) return false
@@ -1593,7 +1596,7 @@ class AppDBWrapper {
         if ( !(this._can_process_db) ) return false
         //
         if ( this.db === null ) {
-          console.log("db not initialized :: get_data")
+          console.log("db not initialized :: get_session")
           return false;
         }
         //
@@ -1694,7 +1697,7 @@ class AppDBWrapper {
         if ( typeof session_object !== 'object')
         if ( !(this._can_process_db) ) return false
         if ( this.db === null ) {
-            console.log("db not initialized :: delete_session")
+            console.log("db not initialized :: install_session")
             return false;
         }
         //
@@ -1718,7 +1721,7 @@ class AppDBWrapper {
         if ( typeof storeObj !== 'object')
         if ( !(this._can_process_db) ) return false
         if ( this.db === null ) {
-            console.log("db not initialized :: delete_session")
+            console.log("db not initialized :: store_completion")
             return false;
         }
         //
@@ -1754,7 +1757,7 @@ class AppDBWrapper {
         //
         if ( !(this._can_process_db) ) return false
         if ( this.db === null ) {
-            console.log("db not initialized :: delete_session")
+            console.log("db not initialized :: get_completion")
             return false;
         }
         //
@@ -1788,7 +1791,7 @@ class AppDBWrapper {
     remove_completion(c_key) {
         if ( !(this._can_process_db) ) return false
         if ( this.db === null ) {
-            console.log("db not initialized :: delete_session")
+            console.log("db not initialized :: remove_completion")
             return false;
         }
         //
@@ -2046,6 +2049,16 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   }
 
   application_total_entry(session_object) {
+  }
+
+
+  async has_data(session_name) {
+    let sessObj = await this.get_session(session_name)
+    if ( typeof sessObj.data === 'object' ) {
+      let n = Object.keys(sessObj.data).length
+      if ( n > 0 ) return true
+    }
+    return false
   }
 
 }
@@ -2897,7 +2910,7 @@ async function get_audio_key(app_audio_key) {
     console.log("db not initialized :: update_audio_data")
     return;
   }
-  let storeObj = await g_audio_db.get_completion()
+  let storeObj = await g_audio_db.get_completion(app_audio_key)
   return storeObj
 }
 
@@ -2910,6 +2923,7 @@ async function remove_complete_if_exists(app_audio_key) {
   //
   await g_audio_db.remove_completion(app_audio_key)
 }
+
 
 
 //  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -3041,6 +3055,11 @@ async function wv_add_in_new_session(name) {
     if ( sess_op_el ) {
       sess_op_el.style.visibility = "visible"
     }
+    sess_op_el = document.getElementById('rename-session')
+    if ( sess_op_el ) {
+      sess_op_el.style.visibility = "visible"
+    }
+
     //
     await g_audio_db.add_empty_session(name,propagate_session)              // creating a new session
   }
@@ -3083,10 +3102,10 @@ async function choose_edit_user_session(name) {
   }
   //
   g_save_up_audio_elements = {}
-  //
   g_audio_db.session_name = name
   //
   if ( name === 'none' ) {
+    //
     disable_recording()
     appearance_of_play_disable(true)
     //
@@ -3115,7 +3134,9 @@ async function choose_edit_user_session(name) {
         sess_op_el.style.visibility = "hidden"
       }
     }
+    //
   } else {
+    //
     enable_recording()
     if ( name === g_last_recorder_session_name ) {
       appearance_of_play_disable(false)
@@ -3135,10 +3156,16 @@ async function choose_edit_user_session(name) {
       //
       clear_play_list()
       let sess_op_el = null
+      //
       sess_op_el = document.getElementById('send-session')
       if ( sess_op_el ) {
-        sess_op_el.style.visibility = "inherit"
+        if ( await g_audio_db.has_data(g_current_session_name) ) {
+          sess_op_el.style.visibility = "inherit"
+        } else {
+          sess_op_el.style.visibility = "hidden"
+        }
       }
+      //
       sess_op_el = document.getElementById('delete-session')
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "inherit"
@@ -3148,6 +3175,7 @@ async function choose_edit_user_session(name) {
         sess_op_el.style.visibility = "inherit"
       }
       await populate_play_list(g_current_session_name)
+      //
     }
   }
   wv_change_session_name()
@@ -3204,19 +3232,23 @@ function wv_initialize_global_buttons() {
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "hidden"
   }
+  sess_op_el = document.getElementById('rename-session')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "hidden"
+  }
 
   // DELETE
   g_deleteButton.addEventListener('click', async () => {
-    g_saveButton.setAttribute('disabled', true);
-    // g_playButton.setAttribute('disabled', true);
-    g_deleteButton.setAttribute('disabled', true);
-    g_app_recorder.delete_last_recorderd_audio()
+    // g_saveButton.setAttribute('disabled', true);
+    // // g_playButton.setAttribute('disabled', true);
+    // g_deleteButton.setAttribute('disabled', true);
+    // g_app_recorder.delete_last_recorderd_audio()
   })
 
   // SAVE
   g_saveButton.addEventListener('click', () => {
-    g_app_recorder.add_current_data()
-    wv_app_visual_save_recording()
+    // g_app_recorder.add_current_data()
+    // wv_app_visual_save_recording()
   });
 
 }
@@ -4176,6 +4208,8 @@ function wv_delete_checked() {
 // AUDIO MODAL
 const dmodal = g_audio_download_modal
 const cancel_dmodal = document.getElementById('wave-download-cancel');
+const OK_dmodal = document.getElementById('wave-download-OK');
+let dmodal_resolver = false
 
 dmodal.addEventListener('cancel', () => {
   //modal.close('cancelled');
@@ -4184,9 +4218,16 @@ dmodal.addEventListener('cancel', () => {
 // close when clicking on backdrop
 dmodal.addEventListener('click', (event) => {
   if (event.target === dmodal) {
+    event.preventDefault();
     dmodal.close('cancelled');
   }
 });
+
+
+OK_dmodal.addEventListener('click', () => {
+  event.preventDefault();
+  dmodal.close('OK');
+})
 
 // 
 cancel_dmodal.addEventListener('click', () => {
@@ -4195,6 +4236,16 @@ cancel_dmodal.addEventListener('click', () => {
 });
 
 
+dmodal.addEventListener("close", (e) => {
+  if ( dmodal_resolver ) {
+    if ( dmodal.returnValue !== "cancelled" ) {
+      dmodal_resolver(true)
+    } else {
+      dmodal_resolver(false)
+    }
+  }
+});
+
 
 
 // AUDIO MODAL
@@ -4202,6 +4253,7 @@ const rmodal = g_rename_modal
 const cancel_rmodal = document.getElementById('rename-cancel');
 const OK_rmodal = document.getElementById('rename-OK');
 const rmodal_new_session = document.getElementById('rename-dialog-new_name');
+let rmodal_resolver = false
 
 rmodal.addEventListener('cancel', () => {
   //modal.close('cancelled');
@@ -4228,14 +4280,13 @@ OK_rmodal.addEventListener('click', () => {
   rmodal.close(new_sess_name);
 })
 
-let rmodal_promise = false
-let remodal_resolver = false
+
 rmodal.addEventListener("close", (e) => {
-  if ( remodal_resolver ) {
+  if ( rmodal_resolver ) {
     if ( rmodal.returnValue !== "cancelled" ) {
-      remodal_resolver(rmodal.returnValue)
+      rmodal_resolver(rmodal.returnValue)
     } else {
-      remodal_resolver(false)
+      rmodal_resolver(false)
     }
   }
 });
@@ -4243,7 +4294,7 @@ rmodal.addEventListener("close", (e) => {
 
 
 
-// AUDIO MODAL
+// WARNING MODAL
 const wmodal = g_warning_modal
 const OK_wmodal = document.getElementById('warn-OK');
 
@@ -4322,21 +4373,40 @@ async function download_audio_session_record(sess_name,downloadlink) {
 async function download_prompt() {
   let downloader = g_audio_download_modal
   let downloadlink = document.getElementById('wave-download-link')
+  let download_session_name_el = document.getElementById('download-session-name')
   if ( downloader && downloadlink ) {
-    downloadlink.innerHTML = `Download ${g_current_session_name}`
-    if ( downloader.showModal ) downloader.showModal()
-    else {
-      downloader.style.visibility = 'visible'
-      downloader.style.display = 'block'
-    }
-    let result = await download_audio_session_record(g_current_session_name,downloadlink)
-    if ( result ) {
-      // maybe send a copy to the server ???
-    }
-    if ( downloader.close ) downloader.close()
-    else {
-      downloader.style.visibility = 'hidden'
-      downloader.style.display = 'none'
+    //
+    download_session_name_el.innerHTML = g_current_session_name
+    let dmodal_promise = new Promise(async (resolve,reject) => {
+        //
+        dmodal_resolver = resolve
+        //
+        //
+        if ( downloader.showModal ) downloader.showModal()
+        else {
+          downloader.style.visibility = 'visible'
+          downloader.style.display = 'block'
+        }
+    })
+    //
+    try {
+      //
+      let yes_download = await dmodal_promise
+      if ( yes_download ) {
+        let result = await download_audio_session_record(g_current_session_name,downloadlink)
+        if ( result ) {
+          // maybe send a copy to the server ???
+        }
+      }
+      //
+      if ( downloader.close ) downloader.close()
+      else {
+        downloader.style.visibility = 'hidden'
+        downloader.style.display = 'none'
+      }
+      //
+    } catch (e) {
+
     }
   }
 }
@@ -4383,14 +4453,15 @@ function worker_op_response(data) {
 // // 
 async function rename_session() {
   let renamer = g_rename_modal
-
+  //
   let old_name_el = document.getElementById('rename-dialog-old_name')
   if ( renamer && old_name_el ) {
-    rmodal_promise = new Promise((resolve,reject) => {
+    let rmodal_promise = new Promise((resolve,reject) => {
       //
-      remodal_resolver = resolve
+      rmodal_resolver = resolve
       //
       old_name_el.innerText = g_current_session_name
+      //
       if ( renamer.showModal ) renamer.showModal()
       else {
         renamer.style.visibility = 'visible'
@@ -4407,6 +4478,12 @@ async function rename_session() {
           adata.name = name
           await g_audio_db.delete_session(g_current_session_name)
           await g_audio_db.install_session(adata)
+          //
+          let complete_obj = await get_audio_key(g_current_session_name)
+          console.log(complete_obj)
+          complete_obj.name = name
+          await remove_complete_if_exists(g_current_session_name)
+          await g_audio_db.store_completion(complete_obj)
         } else {
           warn(`The session, ${name}, already exists.`)
         }
@@ -4576,7 +4653,6 @@ function appearance_of_play_disable(onoff) {
     }
   }
 }
-
 
 /**
  * set_record_radio_state
@@ -4771,6 +4847,30 @@ async function navigate_to_create_session(evnt) {
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
+
+async function wv_remove_unused_sessions(name_scheme) {
+  let n = g_audio_db.session_count()
+  if ( n > 0 ) {
+    let count_removals = 0
+    let names = g_audio_db.name_list
+    for ( let name of names ) {
+      let sessObj = await g_audio_db.get_session(name)
+      let data = sessObj.data
+      let nk = Object.keys(data).length
+      if ( nk === 0 ) {
+        if (  sessObj.name.indexOf(name_scheme) === 0 ) {
+          await g_audio_db.delete_session(name)
+          count_removals++
+        }
+      }
+    }
+    if ( count_removals > 0 ) {
+      await g_audio_db.load_name_list()
+    }
+  }
+}
+
+
 async function wv_default_session_readiness() {
   try {
     //
@@ -4793,6 +4893,8 @@ async function wv_default_session_readiness() {
 }
 
 
+
+
 // Set the intial state of the recording button
 initialize_record_radio_state()
 
@@ -4804,6 +4906,7 @@ async function application_initialization() {
   wv_initialize_global_buttons()
   //
   g_audio_db = await wv_init_database()
+  await wv_remove_unused_sessions('safe-record-session-')
   let name = await wv_default_session_readiness()
   if ( typeof name === "string" ) {
     await wv_add_in_new_session(name)
