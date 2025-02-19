@@ -48,7 +48,9 @@
   }
 
   .wv_button_wordy {
-    width: 70%;
+    width: fit-content;
+    padding-left: 3px;
+    padding-right: 3px;
     font-size: 80%;
   }
 
@@ -474,16 +476,17 @@
       <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
       <!--   -->
-      <div class="like-button" style="display: inline;" >
-      <label  for="sess-names" style="text-align: left;">Edit Existing Session:</label>
-      <select name="sess-names" id="sess-names" onchange="edit_user_session(event)">
-        <option value="none">no selection</option>
-      </select>
-      </div>
       <!--   -->
-      <div>
-      <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
-      <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
+      <div style="width: 100%;">
+        <div class="like-button" style="display: inline;" >
+          <label  for="sess-names" style="text-align: left;">Edit Existing Session:</label>
+          <select name="sess-names" id="sess-names" onchange="edit_user_session(event)">
+            <option value="none">no selection</option>
+          </select>
+        </div>
+        <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
+        <button class="wv_button_wordy" id="rename-session" onclick="rename_session(event)" >Rename&nbsp;Session</button>
+        <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
       </div>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
       <!--   -->
@@ -553,6 +556,31 @@
   </footer>
 </dialog>
 <!-- end of dialog-->
+
+
+<!-- DIALOG RENAMING SESSIONS-->
+<dialog id='rename-box'>
+  <h3 class="modal-header"><span id="rename-dialog-old_name"></span> ... Rename this session?</h3>
+  <div class="modal-body">
+    <input id="rename-dialog-new_name" type="text" placeholder="session name" value="" />
+  </div>
+  <footer class="modal-footer">
+    <button id="rename-OK" type="button">OK</button>
+    <button id="rename-cancel" type="button">Cancel</button>
+  </footer>
+</dialog>
+<!-- end of dialog-->
+
+
+<!-- DIALOG WARNINGS-->
+<dialog id='warning-box'>
+  <h3 class="modal-header"><span id="warn-dialog-msg"></span></h3>
+  <footer class="modal-footer">
+    <button id="warn-OK" type="button">OK</button>
+  </footer>
+</dialog>
+<!-- end of dialog-->
+
 
 <!-- BOX FOR AN OUTLINE INDICATING THAT AN AUDIO DISPLAY IS BEING MOVED -->
 <div id="audioBoxGhost" >
@@ -758,6 +786,7 @@ let recorder = false
 let audio = false
 let g_app_recorder = false
 let g_current_session_name = 'none'
+let g_last_recorder_session_name = 'none'
 let g_current_sesion_id = ''
 let g_preferred_download_format = 'audio/mpeg'
 let g_wave_current_container = null
@@ -793,6 +822,8 @@ const savedAudioMessagesContainer = document.querySelector('#saved-audio-message
 
 // MODAL DIALOGS
 const g_audio_download_modal = document.getElementById('wave-download-box')
+const g_rename_modal = document.getElementById('rename-box')
+const g_warning_modal = document.getElementById('warning-box')
 //
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -936,10 +967,6 @@ describe_data
 
 */
 
-
-function warn(str) {
-    //
-}
 
 
 // a session is a project...
@@ -1616,7 +1643,7 @@ class AppDBWrapper {
           sess_name = this.current_session_name
         }
 
-        if ( sess_name !== 'none ') {
+        if ( sess_name !== 'none') {
             if ( this.db === null ) {
                 console.log("db not initialized :: delete_session")
                 return false;
@@ -1713,7 +1740,7 @@ class AppDBWrapper {
                 result.onsuccess = (event) => {
                     resolve(event.target.result)
                 }
-                result.error = (error) => {
+                result.onerror = (error) => {
                     reject(error)
                 }
             })
@@ -1935,35 +1962,6 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   async remove_file(file_name) {
       this.current_session_name = file_name
       await this.remove_data(file_name,this.current_user_name)
-  }
-
-  // 
-  async get_file_names() {
-      let sess_name = this.current_session_name
-      try {
-          let sess_data = await this.get_session(sess_name)
-          if ( sess_data ) {
-              let f_names = Object.keys(sess_data.data)
-              return f_names
-          }    
-      } catch (e) {
-          console.log("get_file_names")
-      }
-      return []
-  }
-
-  async get_file_entries() {
-      let sess_name = this.current_session_name
-      try {
-          let sess_data = await this.get_session(sess_name)
-          if ( sess_data ) {
-              let f_names = sess_data.data.map((f_data) => JSON.parse(f_data))
-              return f_names
-          }
-      } catch (e) {
-          console.log("get_file_entries")
-      }
-      return []    
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -2743,6 +2741,7 @@ class AppAudioRecorder {
   //  stop_handler
   //
   async stop_handler(event) {
+    g_last_recorder_session_name = g_current_session_name
     this.audio_results()
     if ( this.config.save_on_stop ) {
       this.add_current_data()
@@ -2870,27 +2869,6 @@ async function make_complete_session_record(sess_name_cmplt,sessionObj,contentTy
 
 
 
-// AUDIO MODAL
-const dmodal = g_audio_download_modal
-const cancel_dmodal = document.getElementById('wave-download-cancel');
-
-dmodal.addEventListener('cancel', () => {
-  //modal.close('cancelled');
-});
-
-// close when clicking on backdrop
-dmodal.addEventListener('click', (event) => {
-  if (event.target === dmodal) {
-    dmodal.close('cancelled');
-  }
-});
-
-// 
-cancel_dmodal.addEventListener('click', () => {
-  dmodal.close('cancelled');
-});
-
-
 //
 async function store_audio_key(app_audio_key,audioBlob) {
   if ( g_audio_db === null ) {
@@ -2904,11 +2882,12 @@ async function store_audio_key(app_audio_key,audioBlob) {
         'blob' : storable,
         'lastModified' : Date.now(),
         'type' : 'audio/x-wav',
-        'size' : audioBlob.size(),
+        'size' : audioBlob.size,
         'pub_verification_key' : g_pub_verification_key
       }
     await g_audio_db.store_completion(storeObj)
   } catch (e) {
+    console.log(e)
   }
 }
 
@@ -3017,10 +2996,9 @@ async function remove_audio_data(audio_key) {
 
 function wv_is_new_name(name) {
   if ( g_audio_db ) {
-    g_audio_db.has_name(name)
-    return true
+    return !(g_audio_db.has_name(name))
   }
-  return(false)
+  return(true)
 }
 
 
@@ -3044,9 +3022,6 @@ function wv_update_session_name_selections(sess_name,name_list) {
   if ( sess_name_el ) sess_name_el.innerHTML = (sess_name === 'none') ? ui_session_create_prompt : sess_name
 }
 
-function warn(str) {
-  //
-}
 
 async function wv_add_in_new_session(name) {
   let sess_name_el = document.getElementById('show-session-name')
@@ -3113,6 +3088,8 @@ async function choose_edit_user_session(name) {
   //
   if ( name === 'none' ) {
     disable_recording()
+    appearance_of_play_disable(true)
+    //
     let sess_name_el = document.getElementById('show-session-name')
     if ( sess_name_el ) {
       g_current_session_name = 'none'
@@ -3133,9 +3110,19 @@ async function choose_edit_user_session(name) {
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "hidden"
       }
+      sess_op_el = document.getElementById('rename-session')
+      if ( sess_op_el ) {
+        sess_op_el.style.visibility = "hidden"
+      }
     }
   } else {
     enable_recording()
+    if ( name === g_last_recorder_session_name ) {
+      appearance_of_play_disable(false)
+    } else {
+      appearance_of_play_disable(true)
+    }
+    //
     let sess_name_el = document.getElementById('show-session-name')
     if ( sess_name_el ) {
       g_current_session_name = name
@@ -3156,21 +3143,26 @@ async function choose_edit_user_session(name) {
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "inherit"
       }
+      sess_op_el = document.getElementById('rename-session')
+      if ( sess_op_el ) {
+        sess_op_el.style.visibility = "inherit"
+      }
       await populate_play_list(g_current_session_name)
     }
   }
   wv_change_session_name()
 }
 
-function edit_user_session(event) {
+function edit_user_session(evnt) {
   let sessNameSel = document.getElementById('sess-names')
   choose_edit_user_session(sessNameSel.value)
 }
 
 
 
+
 async function wv_reset_audio_sections_order(map_ids) {
-  if ( g_current_session_name !== 'none ') {
+  if ( g_current_session_name !== 'none') {
       //
       if ( g_audio_db === null ) {
         console.log("db not initialized :: delete_session")
@@ -3864,6 +3856,21 @@ function wv_zoom_in(ev) {
   }
 }
 
+
+// //
+// //
+function wv_zoom_out(ev) {
+  ev = ev || window.event;
+  ev.preventDefault();
+  let the_button = ev.target
+  let container = the_button.parentNode.parentNode
+  if ( container ) {
+
+  }
+}
+
+
+
 function wv_scroll_left(ev) {
   ev = ev || window.event;
   ev.preventDefault();
@@ -4161,6 +4168,111 @@ function wv_delete_checked() {
 }
 
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+// MODALS
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
+
+// AUDIO MODAL
+const dmodal = g_audio_download_modal
+const cancel_dmodal = document.getElementById('wave-download-cancel');
+
+dmodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+dmodal.addEventListener('click', (event) => {
+  if (event.target === dmodal) {
+    dmodal.close('cancelled');
+  }
+});
+
+// 
+cancel_dmodal.addEventListener('click', () => {
+  event.preventDefault();
+  dmodal.close('cancelled');
+});
+
+
+
+
+// AUDIO MODAL
+const rmodal = g_rename_modal
+const cancel_rmodal = document.getElementById('rename-cancel');
+const OK_rmodal = document.getElementById('rename-OK');
+const rmodal_new_session = document.getElementById('rename-dialog-new_name');
+
+rmodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+  console.log("renamer cancelled")
+});
+
+// close when clicking on backdrop
+rmodal.addEventListener('click', (event) => {
+  if (event.target === rmodal) {
+    rmodal.close('cancelled');
+  }
+});
+
+// 
+cancel_rmodal.addEventListener('click', () => {
+  event.preventDefault();
+  rmodal.close('cancelled');
+});
+
+
+OK_rmodal.addEventListener('click', () => {
+  event.preventDefault();
+  let new_sess_name = rmodal_new_session.value
+  rmodal.close(new_sess_name);
+})
+
+let rmodal_promise = false
+let remodal_resolver = false
+rmodal.addEventListener("close", (e) => {
+  if ( remodal_resolver ) {
+    if ( rmodal.returnValue !== "cancelled" ) {
+      remodal_resolver(rmodal.returnValue)
+    } else {
+      remodal_resolver(false)
+    }
+  }
+});
+
+
+
+
+// AUDIO MODAL
+const wmodal = g_warning_modal
+const OK_wmodal = document.getElementById('warn-OK');
+
+wmodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+wmodal.addEventListener('click', (event) => {
+  if (event.target === wmodal) {
+    event.preventDefault();
+    wmodal.close('OK');
+  }
+});
+
+OK_wmodal.addEventListener('click',() => {
+  event.preventDefault();
+  if ( wmodal.close ) wmodal.close('OK')
+  else {
+    wmodal.style.visibility = 'hidden'
+    wmodal.style.display = 'none'
+  }
+})
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+// END MODALS
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
 // ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -4230,6 +4342,26 @@ async function download_prompt() {
 }
 
 
+
+
+
+
+async function warn(str) {
+  //
+  let warner = g_warning_modal
+  let wmsg = document.getElementById("warn-dialog-msg")
+  if ( warner && wmsg ) {
+    wmsg.innerHTML = str
+    if ( warner.showModal ) warner.showModal()
+    else {
+      warner.style.visibility = 'visible'
+      warner.style.display = 'block'
+    }
+  }
+  //
+}
+
+
 /// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 function handle_session_upload(ev) {
@@ -4245,6 +4377,54 @@ function worker_op_response(data) {
 }
 
 // ---- ---- ---- ---- ---- ----
+
+
+
+// // 
+async function rename_session() {
+  let renamer = g_rename_modal
+
+  let old_name_el = document.getElementById('rename-dialog-old_name')
+  if ( renamer && old_name_el ) {
+    rmodal_promise = new Promise((resolve,reject) => {
+      //
+      remodal_resolver = resolve
+      //
+      old_name_el.innerText = g_current_session_name
+      if ( renamer.showModal ) renamer.showModal()
+      else {
+        renamer.style.visibility = 'visible'
+        renamer.style.display = 'block'
+      }
+    })
+  }
+  try {
+    let name = await rmodal_promise
+    if ( name ) {
+        let new_name = wv_is_new_name(name)
+        if ( new_name ) {
+          let adata = await get_audio_data(g_current_session_name)
+          adata.name = name
+          await g_audio_db.delete_session(g_current_session_name)
+          await g_audio_db.install_session(adata)
+        } else {
+          warn(`The session, ${name}, already exists.`)
+        }
+    }
+    if ( renamer.close ) renamer.close()
+    else {
+      renamer.style.visibility = 'hidden'
+      renamer.style.display = 'none'
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
+  
+
+
+
+
 
 // ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ----
@@ -4389,8 +4569,10 @@ function appearance_of_play_disable(onoff) {
   if ( g_playButton ) {
     if ( onoff == true ) {
       g_playButton.className = "playDisabled"
+      g_play_MButton.className = "playDisabled"
     } else {
       g_playButton.className = "playReady"
+      g_play_MButton.className = "playReady"
     }
   }
 }
@@ -4634,6 +4816,7 @@ async function application_initialization() {
 // async wrapper 
 async function startup() {
   show_recorder()
+  appearance_of_play_disable(true)
   await application_initialization()
   if ( g_config_auto_start ) {
     g_recordButton.click()
