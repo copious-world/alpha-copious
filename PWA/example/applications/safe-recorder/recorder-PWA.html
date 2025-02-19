@@ -1964,9 +1964,8 @@ class UsersAudioDB extends AppDBWrapper {   // This page component is embedded i
   }
 
   //
-  async remove_file(file_name) {
-      this.current_session_name = file_name
-      await this.remove_data(file_name,this.current_user_name)
+  async remove_file(file_name,session_name) {
+      await this.remove_data(file_name,session_name)
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -3002,12 +3001,12 @@ async function get_audio_data(sess_name) {
 }
 
 
-async function remove_audio_data(audio_key) {
+async function remove_audio_data(audio_key,session_name) {
   if ( g_audio_db === null ) {
     console.log("db not initialized :: remove_audio_data")
     return;
   }
-  await g_audio_db.remove_file(audio_key)
+  await g_audio_db.remove_file(audio_key,session_name)
 }
 
 function wv_is_new_name(name) {
@@ -4189,6 +4188,8 @@ function wv_edit_checked() {
 }
 // 
 function wv_delete_checked() {
+  console.log("wv_delete_checked", g_current_session_name, "++++", g_audio_db.current_session_name)
+
   var checkedBoxes = document.querySelectorAll('input[name=audioSections]:checked');
   checkedBoxes.forEach(cbox => {
     let cbox_id = cbox.id
@@ -4197,7 +4198,7 @@ function wv_delete_checked() {
     if ( container ) {
       let parent = savedAudioMessagesContainer //container.parentNode()
       parent.removeChild(container)
-      remove_audio_data(cbox_id.replace('audio-cbox-',''))
+      remove_audio_data(cbox_id.replace('audio-cbox-',''),g_audio_db.current_session_name)
     }
   })
 }
