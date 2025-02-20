@@ -235,8 +235,9 @@
   <!--  CONTAINER FOR PAGES -->
   <div class="boxes">
     <div id="select-mode" >
-      <button id="btn-pick_recorder" onclick="show_recorder(event)">recorder</button>&nbsp;
-      <button id="btn-pick_manager" onclick="show_manager(event)">manage records</button>&nbsp;&nbsp;
+      <button id="btn-pick_recorder" onclick="show_recorder(event)" onmouseover="hover_border(event)" onmouseleave="leave_border(event)">recorder</button>&nbsp;
+      <button id="btn-pick_manager" onclick="show_manager(event)" onmouseover="hover_border(event)" onmouseleave="leave_border(event)">manage records</button>&nbsp;&nbsp;
+
       <span id="audio-playing" style="display:none">&#128266;</span>
     </div>
 
@@ -474,19 +475,20 @@
       
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
       <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
-      <button class="wv_button" onclick="ask_user_upload_session()" >New&nbsp;Upload&nbsp;Session</button>
+      <button class="wv_button" onclick="ask_user_upload_session()" >Import&nbsp;Session</button>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
       <!--   -->
       <!--   -->
       <div style="width: 100%;">
         <div class="like-button" style="display: inline;" >
-          <label  for="sess-names" style="text-align: left;">Edit Existing Session:</label>
+          <label  for="sess-names" style="text-align: left;">Edit&nbsp;Existing&nbsp;Session:</label>
           <select name="sess-names" id="sess-names" onchange="edit_user_session(event)">
             <option value="none">no selection</option>
           </select>
         </div>
-        <button class="wv_button" id="send-session" onclick="download_prompt()" >Download&nbsp;Session</button>
-        <button class="wv_button" id="add-session-to-file" onclick="import_prompt()" >Add&nbsp;Session&nbsp;to&nbsp;files</button>
+        <button class="wv_button" id="add-session-to-file" onclick="export_prompt()" >Export&nbsp;this&nbsp;Session</button>
+        <button class="wv_button" id="export-session-audio" onclick="download_audio_prompt()" >Download&nbsp;Session&nbsp;Audio</button>
+        <button class="wv_button" id="transfer-session-audio" onclick="transfer_audio_prompt()" >Transfer&nbsp;Audio&nbsp;to&nbsp;File&nbsp;Manager</button>
         <button class="wv_button_wordy" id="rename-session" onclick="rename_session(event)" >Rename&nbsp;Session</button>
         <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
       </div>
@@ -501,6 +503,7 @@
       <div style="width: 98%;">
         <div style="font-weight: bolder;">Session Components:</div>
         <div style="display: inline;padding:2px;background-color: oldlace">
+          <button class="wv_button" onclick="wv_play_complete()" >play&nbsp;all</button>
           <button class="wv_button" onclick="wv_edit_checked()" >edit&nbsp;checked</button>
           <button class="wv_button" onclick="wv_delete_checked()" >delete&nbsp;checked</button>
         </div>
@@ -550,7 +553,7 @@
   <h3 class="modal-header">Do you want to begin downloading an audio file of this session?</h3>
   <div class="modal-body">
     <blockquote class="wv-bq-dialog">
-      <span id="download-session-name">&nbsp;</span>
+      <span id="download-session-audio-name">&nbsp;</span>
     </blockquote>
   </div>
   <footer class="modal-footer">
@@ -561,6 +564,28 @@
 
 </dialog>
 <!-- end of dialog-->
+
+
+
+<!-- DIALOG FOR MOVING SESSION OBJECTS IN AND OUT OF THE MANAGER-->
+<dialog id='session-download-box'>
+  <h3 class="modal-header">Do you want to import or export this session's data records, including private keys?</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+      Downloading is recommended because the browser can clear out its database at any time.
+      <span id="download-session-name">&nbsp;</span>
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="session-upload-OK" type="button">Import</button>
+    <button id="session-download-OK" type="button">Export</button>
+    <button id="session-download-cancel" type="button">Cancel</button>
+  </footer>
+  <a id='sesson-download-link' style="display:none" href = "" >no file</a>
+  <input type="file" id='sesson-file-uploader' />
+</dialog>
+<!-- end of dialog-->
+
 
 
 <!-- DIALOG RENAMING SESSIONS-->
@@ -826,6 +851,7 @@ const g_deleteButton = document.getElementById('delete');
 const savedAudioMessagesContainer = document.querySelector('#saved-audio-messages');
 
 // MODAL DIALOGS
+const g_session_import_export_modal = document.getElementById('session-download-box')
 const g_audio_download_modal = document.getElementById('wave-download-box')
 const g_rename_modal = document.getElementById('rename-box')
 const g_warning_modal = document.getElementById('warning-box')
@@ -3108,11 +3134,19 @@ async function choose_edit_user_session(name) {
       g_deleteButton.setAttribute('disabled', true);
       clear_play_list()
       let sess_op_el = null
-      sess_op_el = document.getElementById('send-session')
+      sess_op_el = document.getElementById('export-session-audio')
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "hidden"
       }
       sess_op_el = document.getElementById('add-session-to-file')
+      if ( sess_op_el ) {
+        sess_op_el.style.visibility = "hidden"
+      }
+      sess_op_el = document.getElementById('transfer-session-audio')
+      if ( sess_op_el ) {
+        sess_op_el.style.visibility = "hidden"
+      }
+      sess_op_el = document.getElementById('transfer-session-audio')
       if ( sess_op_el ) {
         sess_op_el.style.visibility = "hidden"
       }
@@ -3148,15 +3182,18 @@ async function choose_edit_user_session(name) {
       clear_play_list()
       let sess_op_el = null
       //
-      sess_op_el = document.getElementById('send-session')
-      sess_op_el_2 = document.getElementById('add-session-to-file')
-      if ( sess_op_el && sess_op_el_2 ) {
+      sess_op_el = document.getElementById('export-session-audio')
+      let sess_op_el_2 = document.getElementById('add-session-to-file')
+      let sess_op_el_3 = document.getElementById('transfer-session-audio')
+      if ( sess_op_el && sess_op_el_2 && sess_op_el_3) {
         if ( await g_audio_db.has_data(g_current_session_name) ) {
           sess_op_el.style.visibility = "inherit"
           sess_op_el_2.style.visibility = "inherit"
+          sess_op_el_3.style.visibility = "inherit"
         } else {
           sess_op_el.style.visibility = "hidden"
           sess_op_el_2.style.visibility = "hidden"
+          sess_op_el_3.style.visibility = "hidden"
         }
       }
       //
@@ -3218,7 +3255,7 @@ function wv_initialize_global_buttons() {
   g_saveButton.setAttribute('disabled', true);
   g_deleteButton.setAttribute('disabled', true);
   let sess_op_el = null
-  sess_op_el = document.getElementById('send-session')
+  sess_op_el = document.getElementById('export-session-audio')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "hidden"
   }
@@ -3231,6 +3268,10 @@ function wv_initialize_global_buttons() {
     sess_op_el.style.visibility = "hidden"
   }
   sess_op_el = document.getElementById('rename-session')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "hidden"
+  }
+  sess_op_el = document.getElementById('transfer-session-audio')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "hidden"
   }
@@ -3253,13 +3294,17 @@ function wv_initialize_global_buttons() {
 
 
 function wv_app_visual_save_recording() {
-  let sess_op_el = document.getElementById('send-session')
+  let sess_op_el = document.getElementById('export-session-audio')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "visible"
   }
   sess_op_el = document.getElementById('add-session-to-file')
   if ( sess_op_el ) {
     sess_op_el.style.visibility = "visible"
+  }
+  sess_op_el = document.getElementById('transfer-session-audio')
+  if ( sess_op_el ) {
+    sess_op_el.style.visibility = "hidden"
   }
 }
 
@@ -4208,6 +4253,74 @@ function wv_delete_checked() {
 // MODALS
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 
+const smodal = g_session_import_export_modal
+const cancel_smodal = document.getElementById('session-download-cancel');
+const OK_export_smodal = document.getElementById('session-upload-OK');
+const OK_import_smodal = document.getElementById('session-download-OK');
+let smodal_resolver = false
+
+
+smodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+smodal.addEventListener('click', (event) => {
+  if (event.target === smodal) {
+    event.preventDefault();
+    smodal.close('cancelled');
+  }
+});
+
+
+OK_export_smodal.addEventListener('click', () => {
+  event.preventDefault();
+  smodal.close('EXPOT');
+})
+
+OK_import_smodal.addEventListener('click', () => {
+  event.preventDefault();
+  smodal.close('IMPORT');
+})
+
+// 
+cancel_smodal.addEventListener('click', () => {
+  event.preventDefault();
+  smodal.close('cancelled');
+});
+
+
+smodal.addEventListener("close", (e) => {
+  if ( smodal_resolver ) {
+    if ( smodal.returnValue !== "cancelled" ) {
+      smodal_resolver(true)
+    } else {
+      smodal_resolver(false)
+    }
+  }
+});
+
+
+
+
+/*
+<dialog id='session-download-box'>
+  <h3 class="modal-header">Do you want to import or export this session's data records, including private keys?</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+      Downloading is recommended because the browser can clear out its database at any time.
+      <span id="download-session-name">&nbsp;</span>
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="session-upload-OK" type="button">Import</button>
+    <button id="session-download-OK" type="button">Export</button>
+    <button id="session-download-cancel" type="button">Cancel</button>
+  </footer>
+  <a id='sesson-download-link' style="display:none" href = "" >no file</a>
+  <input type="file" id='sesson-file-uploader' />
+<!-- end of dialog-->
+*/
 
 // AUDIO MODAL
 const dmodal = g_audio_download_modal
@@ -4399,17 +4512,22 @@ async function ask_user_upload_session() {
 
 }
 
+/**
+ *  export_prompt
+ * 
+ * --- see rename session
+ */
 
-async function import_prompt() {
+async function export_prompt() {
 
 }
 
 
 // // 
-async function download_prompt() {
+async function download_audio_prompt() {
   let downloader = g_audio_download_modal
   let downloadlink = document.getElementById('wave-download-link')
-  let download_session_name_el = document.getElementById('download-session-name')
+  let download_session_name_el = document.getElementById('download-session-audio-name')
   if ( downloader && downloadlink ) {
     //
     download_session_name_el.innerHTML = g_current_session_name
@@ -4448,7 +4566,18 @@ async function download_prompt() {
 }
 
 
+/**
+ * transfer_audio_prompt
+ * 
+ * Must be within the human frame... 
+ * 
+ *  transfers the audio file from the complete session to the user frame DB for file management with its prefered
+ *  file manager
+ * 
+ */
+async function transfer_audio_prompt(evnt) {
 
+}
 
 
 
@@ -4829,11 +4958,11 @@ async function show_recorder(event) {
     //
     let stylish_guy = document.getElementById("btn-pick_recorder")
     stylish_guy.style.border = "2px solid navy"
-    stylish_guy.style.borderRadius = "4px"
+    stylish_guy.style.borderRadius = "6px"
     //
     let plain_guy = document.getElementById("btn-pick_manager")
-    plain_guy.style.border = "1px solid black"
-    plain_guy.style.borderRadius = "4px"
+    plain_guy.style.border = "solid 1px grey"
+    plain_guy.style.borderRadius = "6px"
   }
 }
 
@@ -4861,14 +4990,32 @@ async function show_manager(event) {
     //
     let stylish_guy = document.getElementById("btn-pick_manager")
     stylish_guy.style.border = "2px solid navy"
-    stylish_guy.style.borderRadius = "4px"
+    stylish_guy.style.borderRadius = "6px"
     //
     let plain_guy = document.getElementById("btn-pick_recorder")
-    plain_guy.style.border = "1px solid black"
-    plain_guy.style.borderRadius = "4px"
+    plain_guy.style.border = "solid 1px grey"
+    plain_guy.style.borderRadius = "6px"
+    enable_recording()
   }
 }
 
+
+function hover_border(evnt) {
+  let curbrdr = evnt.target.style.border
+  if ( curbrdr.indexOf('1px') >= 0 ) {
+    let brdr = "solid 2px rgb(70, 229, 70)"
+    evnt.target.style.border = brdr
+  }
+}
+
+
+function leave_border(evnt) {
+  let curbrdr = evnt.target.style.border
+  if ( curbrdr.indexOf('rgb(70, 229, 70)') >= 0 ) {
+    let brdr = "solid 1px grey"
+    evnt.target.style.border = brdr
+  }
+}
 
 async function navigate_to_create_session(evnt) {
   await show_manager(evnt)
