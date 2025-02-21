@@ -45,6 +45,7 @@
 
   .wv_button {
     width: fit-content;
+    margin: 2px;
   }
 
   .wv_button_wordy {
@@ -52,6 +53,7 @@
     padding-left: 3px;
     padding-right: 3px;
     font-size: 80%;
+    margin:2px;
   }
 
   #saved-audio-messages {
@@ -486,9 +488,9 @@
             <option value="none">no selection</option>
           </select>
         </div>
-        <button class="wv_button" id="add-session-to-file" onclick="export_prompt()" >Export&nbsp;this&nbsp;Session</button>
-        <button class="wv_button" id="export-session-audio" onclick="download_audio_prompt()" >Download&nbsp;Session&nbsp;Audio</button>
-        <button class="wv_button" id="transfer-session-audio" onclick="transfer_audio_prompt()" >Transfer&nbsp;Audio&nbsp;to&nbsp;File&nbsp;Manager</button>
+        <button class="wv_button_wordy" id="add-session-to-file" onclick="export_prompt()" >Export&nbsp;this&nbsp;Session</button>
+        <button class="wv_button_wordy" id="export-session-audio" onclick="download_audio_prompt()" >Download&nbsp;Session&nbsp;Audio</button>
+        <button class="wv_button_wordy" id="transfer-session-audio" onclick="transfer_audio_prompt()" >Transfer&nbsp;Audio&nbsp;to&nbsp;File&nbsp;Manager</button>
         <button class="wv_button_wordy" id="rename-session" onclick="rename_session(event)" >Rename&nbsp;Session</button>
         <button class="wv_button_wordy" id="delete-session" onclick="delete_session()" >Delete&nbsp;Session&nbsp;from&nbsp;Device</button>
       </div>
@@ -502,20 +504,23 @@
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
       <div style="width: 98%;">
         <div style="font-weight: bolder;">Session Components:</div>
-        <div style="display: inline;padding:2px;background-color: oldlace">
-          <button class="wv_button" onclick="wv_play_complete()" >play&nbsp;all</button>
+        <div id="session-audio-controls" style="display: inline;padding:2px;background-color: oldlace">
+          <button class="wv_button" onclick="wv_play_complete()" >Play&nbsp;All</button>
           <button class="wv_button" onclick="wv_edit_checked()" >edit&nbsp;checked</button>
           <button class="wv_button" onclick="wv_delete_checked()" >delete&nbsp;checked</button>
         </div>
-      </div>
+        <div id="audio-div-complete" style="display:none;vertical-align: bottom;">
+          <button class="wv_button" onclick="wv_stop_play_complete()" >Close</button>
+          <audio id="audio-player-complete" class="audio-playback" controls src=""></audio>
+        </div>
+    </div>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;;margin-top: 2px;">&nbsp;</div>
       <div id="saved-audio-messages">
       </div>
     </div>
-    
   </div>
-
 </div>
+
 
 <!-- WAVE GRAPH ABSOLUTE POSITION SUBWINDOW -->
 <div id="wave-graph-tmplt" class='wave-graph-container'>
@@ -548,7 +553,31 @@
 </div>
 <!-- end wave template-->
 
-<!-- DIALOG FOR MOVING RECORDED DATA IN AND OUT OF THE MANANGER-->
+
+
+<!-- DIALOGS DIALOGS -->
+
+
+
+
+<!-- DIALOG FOR ASKING FOR A NEW SESSION -->
+<dialog id='session-creation-box'>
+  <h3 class="modal-header">Starting a new session?</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+      <input type="text" id="session-creation-session-name" value="" />
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="session-creation-OK" type="button">OK</button>
+    <button id="session-creation-cancel" type="button">Cancel</button>
+  </footer>
+</dialog>
+<!-- end of dialog-->
+
+
+
+<!-- DIALOG FOR MOVING RECORDED DATA FROM THE MANANGER TO A FILE-->
 <dialog id='wave-download-box'>
   <h3 class="modal-header">Do you want to begin downloading an audio file of this session?</h3>
   <div class="modal-body">
@@ -567,9 +596,27 @@
 
 
 
-<!-- DIALOG FOR MOVING SESSION OBJECTS IN AND OUT OF THE MANAGER-->
+<!-- DIALOG FOR MOVING RECORDED DATA FROM THE MANANGER TO THE HUMAN PAGE DB-->
+<dialog id='wave-transfer-box'>
+  <h3 class="modal-header">Do you want to transfer a copy of the audio file of this session to your URL storage?</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+      <span id="transfer-session-audio-name">&nbsp;</span>
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="wave-transfer-OK" type="button">Transfer</button>
+    <button id="wave-transfer-cancel" type="button">Cancel</button>
+  </footer>
+</dialog>
+<!-- end of dialog-->
+
+
+
+
+<!-- DIALOG FOR MOVING SESSION OBJECTS OUT OF THE MANAGER-->
 <dialog id='session-download-box'>
-  <h3 class="modal-header">Do you want to import or export this session's data records, including private keys?</h3>
+  <h3 class="modal-header">Do you want to export this session's data records, including private keys?</h3>
   <div class="modal-body">
     <blockquote class="wv-bq-dialog">
       Downloading is recommended because the browser can clear out its database at any time.
@@ -577,12 +624,27 @@
     </blockquote>
   </div>
   <footer class="modal-footer">
-    <button id="session-upload-OK" type="button">Import</button>
     <button id="session-download-OK" type="button">Export</button>
     <button id="session-download-cancel" type="button">Cancel</button>
   </footer>
   <a id='sesson-download-link' style="display:none" href = "" >no file</a>
-  <input type="file" id='sesson-file-uploader' />
+</dialog>
+<!-- end of dialog-->
+
+
+
+<!-- DIALOG FOR MOVING SESSION OBJECTS INTO THE MANAGER-->
+<dialog id='session-upload-box'>
+  <h3 class="modal-header">Do you want to import a session's data records, including private keys?</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+      <input type="file" id='session-file-uploader' />
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="session-upload-OK" type="button">Import</button>
+    <button id="session-upload-cancel" type="button">Cancel</button>
+  </footer>
 </dialog>
 <!-- end of dialog-->
 
@@ -592,7 +654,9 @@
 <dialog id='rename-box'>
   <h3 class="modal-header"><span id="rename-dialog-old_name"></span> ... Rename this session?</h3>
   <div class="modal-body">
-    <input id="rename-dialog-new_name" type="text" placeholder="session name" value="" />
+    <blockquote class="wv-bq-dialog">
+      <input id="rename-dialog-new_name" type="text" placeholder="new session name" value="" />
+    </blockquote>
   </div>
   <footer class="modal-footer">
     <button id="rename-OK" type="button">OK</button>
@@ -851,8 +915,12 @@ const g_deleteButton = document.getElementById('delete');
 const savedAudioMessagesContainer = document.querySelector('#saved-audio-messages');
 
 // MODAL DIALOGS
-const g_session_import_export_modal = document.getElementById('session-download-box')
+
+const g_create_session_modal = document.getElementById('session-creation-box')
+const g_session_export_modal = document.getElementById('session-download-box')
+const g_session_import_modal = document.getElementById('session-upload-box')
 const g_audio_download_modal = document.getElementById('wave-download-box')
+const g_audio_transfer_modal = document.getElementById('wave-transfer-box')
 const g_rename_modal = document.getElementById('rename-box')
 const g_warning_modal = document.getElementById('warning-box')
 //
@@ -2485,6 +2553,13 @@ try {
 // TOOLS -- UTILITIES
 
 
+function subst(str,c_seek,c_repl) {
+  while ( str.indexOf(c_seek) >= 0 ) {
+    str = str.replace(c_seek,c_repl)
+  }
+  return str
+}
+
 
 var BASE64_MARKER = ';base64,';
 //
@@ -3304,7 +3379,7 @@ function wv_app_visual_save_recording() {
   }
   sess_op_el = document.getElementById('transfer-session-audio')
   if ( sess_op_el ) {
-    sess_op_el.style.visibility = "hidden"
+    sess_op_el.style.visibility = "visible"
   }
 }
 
@@ -4224,6 +4299,9 @@ function wv_track_cursor(ev,el_depth) {
   }
 }
 //
+
+
+//
 function wv_edit_checked() {
   var checkedBoxes = document.querySelectorAll('input[name=audioSections]:checked');
   checkedBoxes.forEach(cbox => {
@@ -4253,10 +4331,110 @@ function wv_delete_checked() {
 // MODALS
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 
-const smodal = g_session_import_export_modal
+
+// CREATE SESSION MODAL
+const scmodal = g_create_session_modal
+const cancel_scmodal = document.getElementById('session-creation-cancel');
+const OK_scmodal = document.getElementById('session-creation-OK');
+let scmodal_resolver = false
+
+
+scmodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+scmodal.addEventListener('click', (event) => {
+  if (event.target === scmodal) {
+    event.preventDefault();
+    scmodal.close('cancelled');
+  }
+});
+
+
+OK_scmodal.addEventListener('click', () => {
+  event.preventDefault();
+  scmodal.close('OK');
+})
+
+// 
+cancel_scmodal.addEventListener('click', () => {
+  event.preventDefault();
+  scmodal.close('cancelled');
+});
+
+
+scmodal.addEventListener("close", (e) => {
+  if ( scmodal_resolver ) {
+    if ( scmodal.returnValue !== "cancelled" ) {
+      scmodal_resolver(true)
+    } else {
+      scmodal_resolver(false)
+    }
+  }
+});
+
+
+// IMPORT MODAL
+const imodal = g_session_import_modal
+const cancel_imodal = document.getElementById('session-upload-cancel');
+const OK_export_imodal = document.getElementById('session-upload-OK');
+const file_element_imodal = document.getElementById('session-file-uploader');
+let imodal_resolver = false
+
+
+
+file_element_imodal.addEventListener('change', () => {
+    const file = this.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      if ( imodal_resolver ) {
+        imodal_resolver(reader.result)
+      }
+    };
+    reader.readAsText(file);
+});
+
+
+imodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+imodal.addEventListener('click', (event) => {
+  if (event.target === imodal) {
+    event.preventDefault();
+    imodal.close('cancelled');
+  }
+});
+
+
+OK_export_imodal.addEventListener('click', () => {
+  event.preventDefault();
+  imodal.close('EXPORT');
+})
+
+// 
+cancel_imodal.addEventListener('click', () => {
+  event.preventDefault();
+  imodal.close('cancelled');
+});
+
+
+imodal.addEventListener("close", (e) => {
+  if ( imodal_resolver ) {
+    if ( imodal.returnValue === "cancelled" ) {
+      imodal_resolver(false)
+    }
+  }
+});
+
+
+
+// EXPORT MODAL
+const smodal = g_session_export_modal
 const cancel_smodal = document.getElementById('session-download-cancel');
-const OK_export_smodal = document.getElementById('session-upload-OK');
-const OK_import_smodal = document.getElementById('session-download-OK');
+const OK_export_smodal = document.getElementById('session-download-OK');
 let smodal_resolver = false
 
 
@@ -4275,12 +4453,7 @@ smodal.addEventListener('click', (event) => {
 
 OK_export_smodal.addEventListener('click', () => {
   event.preventDefault();
-  smodal.close('EXPOT');
-})
-
-OK_import_smodal.addEventListener('click', () => {
-  event.preventDefault();
-  smodal.close('IMPORT');
+  smodal.close('EXPORT');
 })
 
 // 
@@ -4301,26 +4474,50 @@ smodal.addEventListener("close", (e) => {
 });
 
 
+// AUDIO TRANSFER MODAL
+const tmodal = g_audio_transfer_modal
+const cancel_tmodal = document.getElementById('wave-transfer-cancel');
+const OK_tmodal = document.getElementById('wave-transfer-OK');
+let tmodal_resolver = false
+
+tmodal.addEventListener('cancel', () => {
+  //modal.close('cancelled');
+});
+
+// close when clicking on backdrop
+tmodal.addEventListener('click', (event) => {
+  if (event.target === tmodal) {
+    event.preventDefault();
+    tmodal.close('cancelled');
+  }
+});
 
 
-/*
-<dialog id='session-download-box'>
-  <h3 class="modal-header">Do you want to import or export this session's data records, including private keys?</h3>
-  <div class="modal-body">
-    <blockquote class="wv-bq-dialog">
-      Downloading is recommended because the browser can clear out its database at any time.
-      <span id="download-session-name">&nbsp;</span>
-    </blockquote>
-  </div>
-  <footer class="modal-footer">
-    <button id="session-upload-OK" type="button">Import</button>
-    <button id="session-download-OK" type="button">Export</button>
-    <button id="session-download-cancel" type="button">Cancel</button>
-  </footer>
-  <a id='sesson-download-link' style="display:none" href = "" >no file</a>
-  <input type="file" id='sesson-file-uploader' />
-<!-- end of dialog-->
-*/
+OK_tmodal.addEventListener('click', () => {
+  event.preventDefault();
+  tmodal.close('OK');
+})
+
+// 
+cancel_tmodal.addEventListener('click', () => {
+  event.preventDefault();
+  tmodal.close('cancelled');
+});
+
+
+tmodal.addEventListener("close", (e) => {
+  if ( tmodal_resolver ) {
+    if ( tmodal.returnValue !== "cancelled" ) {
+      tmodal_resolver(true)
+    } else {
+      tmodal_resolver(false)
+    }
+  }
+});
+
+
+
+
 
 // AUDIO MODAL
 const dmodal = g_audio_download_modal
@@ -4365,7 +4562,9 @@ dmodal.addEventListener("close", (e) => {
 
 
 
-// AUDIO MODAL
+
+
+// RENAME MODAL
 const rmodal = g_rename_modal
 const cancel_rmodal = document.getElementById('rename-cancel');
 const OK_rmodal = document.getElementById('rename-OK');
@@ -4478,6 +4677,8 @@ async function download_audio_session_record(sess_name,downloadlink) {
     let ext = data.ext ? data.ext : "mp3"
     downloadlink.download = sess_name + '.' + ext;
     downloadlink.click();
+    URL.revokeObjectURL(downloader_url)
+    downloadlink = null
     //
     return true
   }
@@ -4488,16 +4689,143 @@ async function download_audio_session_record(sess_name,downloadlink) {
 
 
 
+/**
+ * app_run_file_op
+ * 
+ * (This method copied from the default file manager.... user here for storing)
+ * 
+ */
+async function app_run_file_op(file_obj,operation) {
+  let message = {
+    "category": FRAME_ACTION_FROM_PUBLISHER,
+    "action" : HOSTED_APP_FILE_OPERATION,
+    "data" : {
+      "op" : operation,
+      "file" : file_obj
+    }
+  }
+  //
+  tell_frame_page(message)  // ask for the primary transition to be handled by the human frame...
+  //
+  try {
+    let file_info = await promise_handling("data-requests")
+    return file_info
+  } catch (e) {
+    console.log(e)
+  }
+  return false
+}
+
+
+
+
+function value_to_current_file(file_rep) {
+    file_rep.mime_type = "audio/mp3"
+    file_rep.title = file_rep.name
+    file_rep.subject = file_rep.name
+    file_rep.keys = ""
+    file_rep.abstract = ""
+    file_rep.full_text = ""
+    file_rep.is_paid = false
+    file_rep.is_WIP = true
+    file_rep.is_contract = false
+    file_rep.name = name
+    file_rep.poster = false
+    file_rep.published = false
+    file_rep.stored = true
+    file_rep.uploaded = false
+    file_rep.original_dir = "safe-recorder"
+}
+
+
+/**
+ * transfer_audio_session_record
+ * 
+ * DEBUG!!!
+ * SEE TO IT THAT THIS WORKS
+ */
+async function transfer_audio_session_record(sess_name) {
+  let sess_name_cmplt = sess_name + '-complete'
+  let data = await get_audio_key(sess_name_cmplt)
+  if ( data ) {
+    //
+    let sess_blob = data.blob
+    let barray = convertDataURIToBinary(sess_blob)
+    //
+    //let snd = new Audio(sess_blob)
+    //snd.play()
+    //  
+    let fileObj = {
+      "name" : sess_name_cmplt,
+      "lastModified" : Date.now(),
+      "description" : "recorded by user",
+      "blob" : sess_blob
+    }
+    value_to_current_file(fileObj)
+    fileObj.stored = true
+    fileObj.uploaded = true
+    //
+    if ( local_only ) {
+        current_file.blob = blob
+    }
+    //
+    // send data to the human frame (or start a stream)
+    await app_run_file_op(fileObj,'store')
+    //
+    return true
+  }
+  return false
+}
+
+
+
 
 async function ask_user_session() {
-  let proceed = confirm("Start a new session?")
-  if ( proceed ) {
-    let name = prompt("Name this session:", "new session");
-    let new_name = wv_is_new_name(name)
-    if ( new_name ) {
-      wv_add_in_new_session(name)
-    } else {
-      warn("Session already exists. Do you want to edit it?")
+  //
+  let session_creator = g_create_session_modal
+  let session_name_el = document.getElementById('session-creation-session-name')
+  if ( session_creator && session_name_el ) {
+    //
+    let scmodal_promise = new Promise(async (resolve,reject) => {
+        //
+        scmodal_resolver = resolve
+        //
+        //
+        if ( session_creator.showModal ) session_creator.showModal()
+        else {
+          session_creator.style.visibility = 'visible'
+          session_creator.style.display = 'block'
+        }
+    })
+    //
+    try {
+      //
+      let yes_create = await scmodal_promise
+      if ( yes_create ) {
+        let name = session_name_el.value
+        if ( name.indexOf(' ') >= 0 ) {
+          name = name.trim()
+          name = subst(name,' ','_')
+          name = subst(name,'/','-')
+        }
+        if ( name.length ) {
+          let new_name = wv_is_new_name(name)
+          if ( new_name ) {
+            wv_add_in_new_session(name)
+          } else {
+            warn("Session already exists. Do you want to edit it?")
+          }
+        }
+      }
+      //
+      if ( session_creator.close ) session_creator.close()
+      else {
+        session_creator.style.visibility = 'hidden'
+        session_creator.style.display = 'none'
+      }
+      //
+    } catch (e) {
+
     }
   }
 }
@@ -4508,8 +4836,51 @@ async function ask_user_session() {
  * 
  * --- see rename session
  */
+
 async function ask_user_upload_session() {
 
+  let uploader = g_session_import_modal
+  if ( uploader ) {
+    //
+    let smodal_promise = new Promise(async (resolve,reject) => {
+        //
+        smodal_resolver = resolve
+        //
+        if ( uploader.showModal ) uploader.showModal()
+        else {
+          uploader.style.visibility = 'visible'
+          uploader.style.display = 'block'
+        }
+    })
+    //
+    try {
+      //
+      let uploaded_data = await smodal_promise
+      if ( uploaded_data !== false ) {
+        //
+        if ( typeof uploaded_data === "string" ) {
+          let sessObjRecord = JSON.parse(uploaded_data)
+          let sessionObj = sessObjRecord.session
+          let sessCompleteObject = sessObjRecord.completion
+          //
+          await g_audio_db.install_session(sessionObj)
+          if ( sessCompleteObject ) {
+            await g_audio_db.store_completion(sessCompleteObject)
+          }
+        }
+        //
+      }
+      //
+      if ( uploader.close ) uploader.close()
+      else {
+        uploader.style.visibility = 'hidden'
+        uploader.style.display = 'none'
+      }
+      //
+    } catch (e) {
+
+    }
+  }
 }
 
 /**
@@ -4519,8 +4890,120 @@ async function ask_user_upload_session() {
  */
 
 async function export_prompt() {
+  //
+  let downloader = g_session_export_modal
+  let downloadlink = document.getElementById('sesson-download-link')
+  let download_session_name_el = document.getElementById('download-session-name')
+  if ( downloader && downloadlink && download_session_name_el ) {
+    //
+    download_session_name_el.innerHTML = g_current_session_name
+    let smodal_promise = new Promise(async (resolve,reject) => {
+        //
+        smodal_resolver = resolve
+        //
+        //
+        if ( downloader.showModal ) downloader.showModal()
+        else {
+          downloader.style.visibility = 'visible'
+          downloader.style.display = 'block'
+        }
+    })
+    //
+    try {
+      //
+      let yes_download = await smodal_promise
+      if ( yes_download ) {
+        let sessionObj = await g_audio_db.get_session(g_current_session_name)
+        if ( sessionObj ) {
+          let sess_name_cmplt = g_current_session_name + '-complete'
+          let sessCompleteObject = await get_audio_key(sess_name_cmplt)
 
+          let export_obj = {
+            "session" : sessionObj,
+            "completion" : sessCompleteObject,
+            "date" : Date.now()
+          }
+
+          let output_big_str = JSON.stringify(export_obj)
+          const file_data = new Blob([output_big_str], { type: "text/plain" });
+          //
+          //
+          let f_url = URL.createObjectURL(file_data);
+
+          if ( downloader_url !== null ) {
+            URL.revokeObjectURL(downloader_url)
+          }
+          downloader_url = f_url
+          downloadlink.href = f_url
+          let ext = "json"
+          downloadlink.download = sess_name + '.' + ext;
+          downloadlink.click();
+          URL.revokeObjectURL(downloader_url)
+          downloadlink = null
+        }
+      }
+      //
+      if ( downloader.close ) downloader.close()
+      else {
+        downloader.style.visibility = 'hidden'
+        downloader.style.display = 'none'
+      }
+      //
+    } catch (e) {
+
+    }
+  }
 }
+
+
+
+/*
+wv_play_complete
+wv_stop_play_complete
+"audio-div-complete"
+"audio-player-complete"
+"session-audio-controls"
+*/
+
+async function wv_play_complete() {
+  //
+  if ( await g_audio_db.has_data(g_current_session_name) ) {
+    let sess_ctrl_div = document.getElementById("session-audio-controls")
+    let audio_complt_div = document.getElementById("audio-div-complete")
+    let audio_player = document.getElementById("audio-player-complete")
+
+    sess_ctrl_div.style.display = "none"
+    audio_complt_div.style.display = "inline-block"
+    let sess_name_cmplt = g_current_session_name + '-complete'
+    let data = await get_audio_key(sess_name_cmplt)
+    if ( data ) {
+      //
+      let sess_blob = data.blob
+      let barray = convertDataURIToBinary(sess_blob)
+      // //
+      let contentType = g_preferred_download_format
+      let file_data = new Blob([barray], {type: contentType});
+      //
+      //
+      let f_url = URL.createObjectURL(file_data);
+      if ( audio_player ) {
+        audio_player.src = f_url
+      }
+    }
+  }
+  //
+}
+
+async function wv_stop_play_complete() {
+  //
+  let sess_ctrl_div = document.getElementById("session-audio-controls")
+  let audio_complt_div = document.getElementById("audio-div-complete")
+
+  sess_ctrl_div.style.display = "inline-block"
+  audio_complt_div.style.display = "none"
+  //
+}
+
 
 
 // // 
@@ -4575,7 +5058,49 @@ async function download_audio_prompt() {
  *  file manager
  * 
  */
+
+
+
+
 async function transfer_audio_prompt(evnt) {
+  let transferer = g_audio_transfer_modal
+  let transfer_session_name_el = document.getElementById('transfer-session-audio-name')
+  if ( transferer && transfer_session_name_el ) {
+    //
+    transfer_session_name_el.innerHTML = g_current_session_name
+    let tmodal_promise = new Promise(async (resolve,reject) => {
+        //
+        tmodal_resolver = resolve
+        //
+        //
+        if ( transferer.showModal ) transferer.showModal()
+        else {
+          transferer.style.visibility = 'visible'
+          transferer.style.display = 'block'
+        }
+    })
+    //
+    try {
+      //
+      let yes_transfer = await tmodal_promise
+      if ( yes_transfer ) {
+        //download_audio_session_record
+        let result = await transfer_audio_session_record(g_current_session_name)
+        if ( result ) {
+          // maybe send a copy to the server ???
+        }
+      }
+      //
+      if ( transferer.close ) transferer.close()
+      else {
+        transferer.style.visibility = 'hidden'
+        transferer.style.display = 'none'
+      }
+      //
+    } catch (e) {
+
+    }
+  }
 
 }
 
@@ -4633,33 +5158,33 @@ async function rename_session() {
         renamer.style.display = 'block'
       }
     })
-  }
-  try {
-    let name = await rmodal_promise
-    if ( name ) {
-        let new_name = wv_is_new_name(name)
-        if ( new_name ) {
-          let adata = await get_audio_data(g_current_session_name)
-          adata.name = name
-          await g_audio_db.delete_session(g_current_session_name)
-          await g_audio_db.install_session(adata)
-          //
-          let complete_obj = await get_audio_key(g_current_session_name)
-          console.log(complete_obj)
-          complete_obj.name = name
-          await remove_complete_if_exists(g_current_session_name)
-          await g_audio_db.store_completion(complete_obj)
-        } else {
-          warn(`The session, ${name}, already exists.`)
-        }
+    try {
+      let name = await rmodal_promise
+      if ( name ) {
+          let new_name = wv_is_new_name(name)
+          if ( new_name ) {
+            let adata = await get_audio_data(g_current_session_name)
+            adata.name = name
+            await g_audio_db.delete_session(g_current_session_name)
+            await g_audio_db.install_session(adata)
+            //
+            let complete_obj = await get_audio_key(g_current_session_name)
+            console.log(complete_obj)
+            complete_obj.name = name
+            await remove_complete_if_exists(g_current_session_name)
+            await g_audio_db.store_completion(complete_obj)
+          } else {
+            warn(`The session, ${name}, already exists.`)
+          }
+      }
+      if ( renamer.close ) renamer.close()
+      else {
+        renamer.style.visibility = 'hidden'
+        renamer.style.display = 'none'
+      }
+    } catch (e) {
+      console.log(e)
     }
-    if ( renamer.close ) renamer.close()
-    else {
-      renamer.style.visibility = 'hidden'
-      renamer.style.display = 'none'
-    }
-  } catch (e) {
-    console.log(e)
   }
 }
   
