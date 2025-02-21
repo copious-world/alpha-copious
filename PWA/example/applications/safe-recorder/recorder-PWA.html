@@ -224,6 +224,12 @@
     background-color: black;
   }
 
+  .readiness-flag {
+    color: darkblue;
+    font-weight: bolder;
+    font-size: 88%;
+  }
+
 </style>
  
 </style>
@@ -237,6 +243,7 @@
   <!--  CONTAINER FOR PAGES -->
   <div class="boxes">
     <div id="select-mode" >
+      <span class="readiness-flag">ready:&nbsp;<span id="wv-readiness">false</span>&nbsp;&nbsp;</span>
       <button id="btn-pick_recorder" onclick="show_recorder(event)" onmouseover="hover_border(event)" onmouseleave="leave_border(event)">recorder</button>&nbsp;
       <button id="btn-pick_manager" onclick="show_manager(event)" onmouseover="hover_border(event)" onmouseleave="leave_border(event)">manage records</button>&nbsp;&nbsp;
 
@@ -476,7 +483,7 @@
       </div>
       
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 12px;">&nbsp;</div>
-      <button class="wv_button" onclick="ask_user_session()" >New&nbsp;Recording&nbsp;Session</button>
+      <button class="wv_button" onclick="ask_user_for_session()" >New&nbsp;Recording&nbsp;Session</button>
       <button class="wv_button" onclick="ask_user_upload_session()" >Import&nbsp;Session</button>
       <div style="max-height: 1px; background-color: maroon;width: 100%;margin-bottom: 2px;">&nbsp;</div>
       <!--   -->
@@ -683,6 +690,10 @@
 </body>
 
 <script>
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+const SESSION_DEVICE_INITIALIZE_URL = `https://cloud.copious.world/song-search/initialize`
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -2272,7 +2283,7 @@ async function human_frame_user_info() {
 }
 
 let injest_personalization = false
-let injest_session = false
+//let injest_session = false
 let application_specific_handlers = (category,action,relationship,params) => {}
 
 let personalization = (post_params) => {}
@@ -2296,7 +2307,7 @@ hosted_page_application_handlers = async (category,action,relationship,params) =
         }
         case FRAME_TO_HOSTED_APP_SESSIONS : {          /// a hosted page that does not start a session.
             if ( typeof injest_session === "function" ) {
-                await injest_session(action,params)
+                await injest_session(params)
             }
             break;
         }
@@ -2346,6 +2357,49 @@ function relay_to_pages(message) {
 
 // operations:  init, chunk, benchmark, storage, session, geolocation
 
+
+
+async function injest_session(params) {
+
+}
+
+
+/// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+function handle_session_upload(ev) {
+  //
+}
+
+
+// This is a test...
+//
+
+let app_state_promise = false
+let app_state_resolver = false
+function worker_status_view(status) {
+  let status_rpt = document.getElementById("wv-readiness")
+  let state = true
+  if ( status_rpt === 'ready' ) {
+    state = true
+    status_rpt.innerText = "ready"
+  } else {
+    state = false
+    status_rpt.innerText = "no"
+  }
+  if ( app_state_promise ) {
+    app_state_resolver(state)
+  }
+  //
+}
+
+function worker_op_response(data) {
+  //
+}
+
+// ---- ---- ---- ---- ---- ----
+
+
+
 async function wv_human_frame_app_initialization(sess_name) {
   try {
     let frame_message = {
@@ -2358,11 +2412,25 @@ async function wv_human_frame_app_initialization(sess_name) {
     if ( user_info ) {
         let message = {
         "type" : "init",
-        'user' : user_info,
-        "session" : sess_name
+        'user' : user_info
       }
+      g_current_user_id = user_info.ccwid
+      g_current_user_name = user_info.name
       if ( g_ownership_worker ) {
         g_ownership_worker.postMessage(message) //, no keys sent on initialization... worker sends "keys-up"
+      }
+
+      let app_state_promise = new Promise((resolve,reject) => {
+        app_state_resolver = resolve
+      })
+      try {
+        let initialized = await app_state_promise
+        if ( initialized ) {
+          await wv_change_session_name(sess_name)
+        }
+      } catch (e) {
+        console.log(e)
+        return false
       }
     }
   } catch (e) {
@@ -2422,13 +2490,8 @@ async function wv_secure_total_session(sess_name) {
       'sess_id' : complete_name,
       'ext' : ext_from_download_format(g_preferred_download_format)
     }
-    //
-    let frame_message = {
-      "category" : HOSTED_APP_WORKER_OPERATION,
-      "action" : HOSTED_APP_DATABASE_STORE,
-      "data" : message
-    }
-    tell_frame_page(frame_message)
+    // get the session data and store it
+    g_ownership_worker.postMessage(message)  // just send the key for DB retrieval
     //
   } catch (e) {
   }
@@ -2438,17 +2501,15 @@ async function wv_secure_total_session(sess_name) {
 //  wv_change_session_name
 //    a high level session editing operation... tell worker what session is being edited
 //
-function wv_change_session_name() {  // tell worker what session is being edited
+function wv_change_session_name(sess_name) {  // tell worker what session is being edited
+  if ( sess_name !== undefined ) {
+    g_current_session_name = sess_name
+  }
   let message = {
-    'type' : 'session',
-    'sess_name' : g_current_session_name
-  }
-  let frame_message = {
-    "category" : HOSTED_APP_WORKER_OPERATION,
-    "action" : HOSTED_APP_PROPERTIES,
-    "data" : message
-  }
-  tell_frame_page(frame_message)
+      'type' : 'session',
+      'sess_name' : g_current_session_name
+    }
+    g_ownership_worker.postMessage(message)
 }
 
 //
@@ -2461,17 +2522,13 @@ function wv_update_geo_location(location) {
     'type' : 'geolocation',
     'geo_location' : location
   }
-  let frame_message = {
-    "category" : HOSTED_APP_WORKER_OPERATION,
-    "action" : HOSTED_APP_PROPERTIES,
-    "data" : message
-  }
-  tell_frame_page(frame_message)
+  g_ownership_worker.postMessage(message)
 }
 
 
+
 //
-//  wv_update_geo_location 
+//  wv_verify_ownership 
 //  this is applied to recording a part.  Each part may have a location at which it is recorded.
 //  This information is passed on to the work. The interface will request permission from the user.
 //
@@ -2506,7 +2563,7 @@ try {
     //
     switch ( msg.data.type ) {
       case 'status' : {
-        worker_status_view(msg.data.message)
+        worker_status_view(msg.data.status)
         break;
       }
       case 'info-ws' : {
@@ -2528,7 +2585,7 @@ try {
         }
         break;
       }
-      case 'keys-up' : {
+      case 'keys-up' : {                  // SESSION INITIALIZATION ....
         msg.category = HOSTED_APP_WORKER_OPERATION
         msg.action = HOSTED_APP_DATABASE_STORE
         tell_frame_page(msg)
@@ -4758,7 +4815,7 @@ async function transfer_audio_session_record(sess_name) {
     let fileObj = {
       "name" : sess_name_cmplt,
       "lastModified" : Date.now(),
-      "description" : "recorded by user",
+      "description" : `recorded by ${g_current_user_name}`,
       "blob" : sess_blob
     }
     value_to_current_file(fileObj)
@@ -4780,7 +4837,7 @@ async function transfer_audio_session_record(sess_name) {
 
 
 
-async function ask_user_session() {
+async function ask_user_for_session() {
   //
   let session_creator = g_create_session_modal
   let session_name_el = document.getElementById('session-creation-session-name')
@@ -4957,12 +5014,11 @@ async function export_prompt() {
 
 
 
-/*
-wv_play_complete
-wv_stop_play_complete
-"audio-div-complete"
-"audio-player-complete"
-"session-audio-controls"
+/**
+ * wv_play_complete
+ * 
+ * Play the complete recording made from concatenating the sections of a session...
+ * 
 */
 
 async function wv_play_complete() {
@@ -4993,6 +5049,7 @@ async function wv_play_complete() {
   }
   //
 }
+
 
 async function wv_stop_play_complete() {
   //
@@ -5121,22 +5178,6 @@ async function warn(str) {
   //
 }
 
-
-/// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-function handle_session_upload(ev) {
-  //
-}
-
-function worker_status_view(status) {
-  //
-}
-
-function worker_op_response(data) {
-  //
-}
-
-// ---- ---- ---- ---- ---- ----
 
 
 
@@ -5555,6 +5596,11 @@ async function navigate_to_create_session(evnt) {
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
+/**
+ * wv_remove_unused_sessions
+ * 
+ * 
+ */
 
 async function wv_remove_unused_sessions(name_scheme) {
   let n = g_audio_db.session_count()
@@ -5578,6 +5624,13 @@ async function wv_remove_unused_sessions(name_scheme) {
   }
 }
 
+
+/**
+ *
+ * wv_default_session_readiness
+ * 
+ * 
+ */
 
 async function wv_default_session_readiness() {
   try {

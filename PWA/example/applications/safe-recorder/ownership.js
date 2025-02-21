@@ -1562,31 +1562,6 @@ async function retrieve_hash_from_db(map_id,sess_name) {
 }
 
 
-async function fetch_compressed_session_from_db(sess_name) {
-    let transaction = g_audio_db.transaction(AUDIO_SESSION_COMPLETE, "readwrite");
-    let audioStore = transaction.objectStore(AUDIO_SESSION_COMPLETE);
-    //
-    let p = new Promise((resolve,reject) => {
-        let get_governing_session_callback = (value,dbIndex) => {
-            let keyRangeValue = IDBKeyRange.only(value.name);
-            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
-                var cursor = event.target.result;
-                if ( cursor ) {
-                    let sessionObj = cursor.value
-                    resolve(sessionObj)
-                }
-            }
-        }
-        //
-        let not_found_callback = () => {
-            reject(`The session ${sess_name} is not in the database`)
-        }
-        //
-        apply_find_audio_session(sess_name, audioStore, get_governing_session_callback, not_found_callback)
-    })
-    return p
-}
-
 
 var g_wss_active_session_id = "nothing"
 function set_current_app_ws_id(ws_id) {
@@ -1622,7 +1597,7 @@ function post_chunk(chunk_data) {
 self.onmessage = async (e) => {
     let message = e.data
     switch ( message.type ) {
-        case 'init' : {             // setup operation
+        case 'init' : {             // setup operation with the oracle service...
             try {
                 let user_info = message.user
                 g_current_session_machine_name = user_info.machine_name ? user_info.machine_name : 'tester'
@@ -1638,9 +1613,13 @@ self.onmessage = async (e) => {
                 }
                 //
                 wv_init_database(gc_song_db_name)
+                // This initializer should set up a session on the server in behalf of the user.
+                // Keys are generated for key exchange (public key of the service should be attainable)
+                // The session token should be available for all remaining transactions (including session change)
+                // In some sense, the organization that produces this app is signing in. 
+                // But, the user has given permission to sign in with its idenitifier by actively using the app 
+                // in the context of their human page URL.
                 g_app_web_socket = await web_socket_initializer(user_info,g_chunk_signer.signer_pk_str)
-                //
-                g_ui_data.set_user_id(user_info.ccwid)
                 //
                 interaction_state('ready')
             } catch(error) {
