@@ -915,8 +915,8 @@ html {
 
 
 
+	const LOGIN_URL = `https://cloud.copious.world/login`
 	const APPLICATON_URL = `https://safe-recorder.copious.world/recorder/`
-
 
 	if ( !('serviceWorker' in navigator) ) {
 		let main_contaier = document.getElementById("app-sourcing")
@@ -2518,6 +2518,7 @@ const NEW_USER_TO_FRAME = "new_user_to_frame"
 const FRAME_COMPONENT_RESPOND = "respond"
 const FRAME_COMPONENT_RESPONDING = "responding"
 const FRAME_ACTION_LOAD_APP = "load-app"
+const FRAME_PAGE_AUTO_LOGIN = "auto-login"
 const FRAME_ACTION_INSTALL = "install-id"
 const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
@@ -2613,17 +2614,31 @@ function tell_frame_page(message) {
 }
 
 
-function tell_human_page_new_source(app_url) {
+function tell_human_page_auto_login(app_url) {
 	let message = {
-		"category" : FRAME_ACTION_LOAD_APP,
-		"action" : "any",
+		"category" : FRAME_PAGE_AUTO_LOGIN,
+		"action" : FRAME_ACTION_LOAD_APP,
 		"data" : {
 			"revise_source" : app_url,
+			"use" : "login"
+		}
+	}
+	tell_frame_page(message)
+}
+
+function tell_human_page_new_source(app_url,use = 'app') {
+	let message = {
+		"category" : FRAME_ACTION_LOAD_APP,
+		"action" : FRAME_ACTION_LOAD_APP,
+		"data" : {
+			"revise_source" : app_url,
+			"use" : frame_use,
 			"publications" : false
 		}
 	}
 	tell_frame_page(message)
 }
+
 
 async function human_frame_page_application_handlers(category,action,data,relationship) {
 
@@ -2723,8 +2738,9 @@ function install_new_user_response() {
 									}
 									tell_frame_page(message)
 								} else {
-									if ( id_state.identity_complete ) {
-										let app_url = APPLICATON_URL
+									if ( id_state.identity_complete && !(id_state.app_ready) ) {
+										tell_human_page_auto_login(LOGIN_URL)
+									} else if ( id_state.identity_complete && id_state.app_ready ){
 										tell_human_page_new_source(APPLICATON_URL)
 									}
 								}
