@@ -2377,10 +2377,18 @@ let g_responder_tables = {
         "resolver" : false,
         "rejector" : false
     },
+    "human_frame_loaded_app" : {
+        "resolver" : false,
+        "rejector" : false
+    },
     "builder" : {
         "resolver" : false,
         "rejector" : false
-    }
+    },
+	"signed" : {
+        "resolver" : false,
+        "rejector" : false
+	}
 }
 
 
@@ -2407,6 +2415,11 @@ function alive_response(source_name) {
     return false
 }
 
+
+
+function human_page_has_app() {
+	return alive_response("human_frame_loaded_app")
+}
 
 
 
@@ -2535,6 +2548,9 @@ const FRAME_REQ_DATA = "send-request-respond"
 
 const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
 const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
+const FRAME_ACTION_REGISTER = "id-session-setup"
+const FRAME_ACTION_GET_LOGIN_URL = "id-session-setup-get-login"
+const FRAME_ACTION_LOGIN = "id-session-get"
 const FRAME_ACTION_REMOVE = "id-manager-remove-id"
 const FRAME_ACTION_UPLOAD = "id-manager-upload-id"
 const FRAME_ACTION_DOWNLOAD = "id-manager-download-id"
@@ -2613,11 +2629,13 @@ function tell_frame_page(message) {
     return true
 }
 
+//const FRAME_ACTION_REGISTER = "id-session-setup"
+//const FRAME_ACTION_LOGIN = "id-session-get"
 
 function tell_human_page_auto_login(app_url) {
 	let message = {
 		"category" : FRAME_PAGE_AUTO_LOGIN,
-		"action" : FRAME_ACTION_LOAD_APP,
+		"action" : FRAME_ACTION_REGISTER,
 		"data" : {
 			"revise_source" : app_url,
 			"use" : "login"
@@ -2713,49 +2731,107 @@ function install_new_user_response() {
 							}
                         }
                     }
-				} else if ( direction === FRAME_PAGE_TO_SITE ) {
-					if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
-						if ( action === FRAME_COMPONENT_RESPONDING ) {
-							if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
-								g_responder_tables.human_frame.resolver(relationship,action)
-							} else {
-								let id_state = mobj.data
-								// "has_identity" : has_identity,
-					            // "identity_complete" : complete_identity
-								if ( id_state.has_identity === false ) {
-									let pub_id = await load_public_identity()
-									let id_packet = {
-										"name" : pub_id.name,
-										"ccwid" : pub_id.ccwid,
-										"human_frame_url" : pub_id.human_frame_url,
-										"name_as_uri" : pub_id.name_as_uri,
-										"public_component" : pub_id
-									}
-									let message = {
-										"category" : FRAME_COMPONENT_MANAGE_ID,
-										"action" : FRAME_ACTION_INSTALL,
-										"data" : id_packet
-									}
-									tell_frame_page(message)
-								} else {
-									if ( id_state.identity_complete && !(id_state.app_ready) ) {
-										tell_human_page_auto_login(LOGIN_URL)
-									} else if ( id_state.identity_complete && id_state.app_ready ){
-										tell_human_page_new_source(APPLICATON_URL)
-									}
-								}
-							}
-						}
-					} else {
-						let data = mobj.data
-						human_frame_page_application_handlers(category,action,data,relationship)
-					}
 				}
             } catch (e) {
             }    
         }
     })
 }
+
+
+function install_frame_page_response() {
+    window.addEventListener("message", async (event) => {
+        let page_source = event.origin
+        if ( page_source !== '*' ) {
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+				if ( direction === FRAME_PAGE_TO_SITE ) {
+					if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+						//
+						if ( action === FRAME_COMPONENT_RESPONDING ) {
+							// some action waiting for alive response
+							if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
+								g_responder_tables.human_frame.resolver(relationship,action)
+							}
+							
+							if ( typeof g_responder_tables.human_frame_loaded_app.resolver === "function" ) {
+								g_responder_tables.human_frame.resolver(relationship,action)
+							}
+						}
+						//
+					} else if ( category === FRAME_WANTS_SESSION ) {
+						// Go this way twice... for the PWA 
+						switch ( action ) {
+							case FRAME_COMPONENT_MANAGE_ID: {
+								if ( mobj.data ) {
+									// some action has provided data
+									let id_state = mobj.data
+									// "has_identity" : has_identity,
+									// "identity_complete" : complete_identity
+									if ( id_state.has_identity === false ) {		// when installing identity
+										let pub_id = await load_public_identity()
+										let id_packet = {
+											"name" : pub_id.name,
+											"ccwid" : pub_id.ccwid,
+											"human_frame_url" : pub_id.human_frame_url,
+											"name_as_uri" : pub_id.name_as_uri,
+											"public_component" : pub_id
+										}
+										let message = {
+											"category" : FRAME_COMPONENT_MANAGE_ID,
+											"action" : FRAME_ACTION_INSTALL,
+											"data" : id_packet
+										}
+										tell_frame_page(message)
+									}
+								}
+								break;
+							}
+							case FRAME_ACTION_GET_LOGIN_URL: {
+								tell_human_page_auto_login(LOGIN_URL)
+								break;
+							}
+							case FRAME_ACTION_LOGIN: {
+								tell_human_page_new_source(APPLICATON_URL)
+								await human_page_has_app()
+								let session_key = await fetch_session_key(params)   // FETCH SESSION KEY (LOGIN)
+								if ( session_key ) {
+									let message = {
+										"category": SITE_TO_FRAME_SESSIONS,
+										"action" : FRAME_HAS_SESSION,
+										"data" : {
+											"name" : params.name,
+											"ccwid" : params.ccwid,
+											"session" : session_key
+										}
+									}
+									tell_frame_page(message)
+								}
+								break;
+							}
+						}
+						//
+					//			-- end FRAME_COMPONENT_SAY_ALIVE
+					} else {
+						let data = mobj.data
+						human_frame_page_application_handlers(category,action,data,relationship)
+					}
+				}
+
+
+            } catch (e) {
+            }    
+        }
+    })
+}
+
+
 
 function setup_iframe_readiness_response() {
 	let id="app-human-frame"
@@ -2802,6 +2878,7 @@ async function startup() {
 }
 
 install_new_user_response()
+install_frame_page_response()
 startup()
 
 
@@ -2873,6 +2950,164 @@ if (navigator.storage && navigator.storage.persist) {
 
 */
 
+
+
+
+// LOGIN ACTIONS THAT IN THE PWA CONTAINER WILL BE DONE BY THE OUTER COMPONENTS
+// LOGIN ACTIONS THAT IN THE PWA CONTAINER WILL BE DONE BY THE OUTER COMPONENTS
+
+
+function get_auth_endpoint(endpoint) {
+	let url = `${location.protocol}//${location.host}/captcha/${endpoint}`
+	return url
+}
+
+function get_secondary_auth_endpoint(endpoint) {
+	let url = `${location.protocol}//${location.host}/captcha/secondary/${endpoint}`
+	return url
+}
+
+
+
+
+async function request_login(data) {
+	try {
+		let endpoint = get_auth_endpoint("users/login")
+		let resp = await postData(endpoint, data,'include')
+		if ( resp.OK === "true" ) {
+			return resp.data
+		} else {
+			return false
+		}
+	} catch (e) {
+		return false
+	}
+}
+
+
+async function post_secondary_login_data(data) {
+	try {
+		let endpoint = get_secondary_auth_endpoint("users/login")
+		let resp = await postData(endpoint, data,'include')
+		if ( resp.OK === "true" ) {
+			return [resp.token, resp.elements]  // token is the session_token === server side junk
+		} else {
+			return false
+		}
+	} catch (e) {
+		return false
+	}
+}
+
+
+
+// Each business puts this in a frame and knows how to conduct its login.
+// The function must ask the frame to run private key related methods
+
+// If captchas are being used, that is also part of the business logic.
+// so, if this fetch is secondary to a captcha, then captcha handling is defined here. 
+//
+
+async function req_signature(dobj) {
+	let message = {
+		"category": FRAME_ACTION_FROM_APP,
+		"action" : FRAME_NEEDS_SIGNATURE,
+		"data" : dobj
+	}
+	let p = promise_decryption("signed")
+	if ( p !== false ) {
+		tell_frame_page(message)
+		let signed = await p
+		return signed
+	}
+	return false
+}
+
+
+async function fetch_session_key(public_info) {
+	// public_info.signer_public_key
+	// public_info.pk_key
+	try {
+		let login_params = {
+			"action" : "login",
+			"ucwid" : public_info.ccwid,
+			"strategy" : "igid"
+		}
+		let transition = await request_login(login_params)
+		if ( transition !== false ) {
+			//
+			let signed = await req_signature(transition)
+			if ( signed ) {
+				// after waiting
+				let secondary  = {
+					"token" : transition.token,
+					"signature" : signed
+				}
+				// elements === { "ucwid" : ccwid }  session_key === server side key === junk
+				let [session_key,elements] = await post_secondary_login_data(secondary) 
+				if ( session_key ) {
+					return session_key
+				}
+			}
+		}
+	} catch (e) {
+	}
+	return false
+}
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+//
+let application_specific_handlers = async (category,action,relationship,params) => {
+    try {
+		if ( category === FRAME_TO_APP_PUBLIC_COMPONENT ) {
+			switch ( action ) {
+				case FRAME_COMPONENT_RESPONDING: {
+					if ( params !== "fail" ) {
+						let session_key = await fetch_session_key(params.public_component)   // FETCH SESSION KEY (LOGIN)
+						if ( session_key ) {
+							let message = {
+								"category": FRAME_ACTION_FROM_APP,
+								"action" : FRAME_HAS_SESSION,
+								"data" : {
+									"name" : params.name,
+									"ccwid" : params.ccwid,
+									"session" : session_key
+								}
+							}
+							tell_frame_page(message)
+						}
+					}
+					break
+				}
+				case FRAME_SIGNED: {
+					let signed = params.signed
+					if ( signed ) {
+						g_responder_tables["signed"].resolver(signed)
+					} else {
+						g_responder_tables["signed"].rejector()
+					}
+					break
+				}
+			}
+		}
+    } catch (e) {
+		console.log(e)
+    }
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+async function session_startup_process() {
+    let message = {
+        "category": FRAME_ACTION_FROM_APP,
+        "action" : FRAME_START_SESSION,
+        "data" : false
+    }
+    tell_frame_page(message)
+}
 
 
 </script>

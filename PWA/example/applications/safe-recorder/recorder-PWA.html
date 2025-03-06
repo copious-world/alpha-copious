@@ -2236,7 +2236,7 @@ function reponding_alive() {
     let message = {
         "category": FRAME_COMPONENT_SAY_ALIVE,
         "action" : FRAME_COMPONENT_RESPONDING,
-        "data" : false
+        "data" : "recorder-app"         // can tell the frame page that this is the recording app
     }
     tell_frame_page(message)
 }
@@ -2403,8 +2403,8 @@ function worker_op_response(data) {
 async function wv_human_frame_app_initialization(sess_name) {
   try {
     let frame_message = {
-      "category" : HOSTED_APP_WORKER_OPERATION,
-      "action" : HOSTED_APP_INIT_WORKER
+      "category" : HOSTED_APP_WORKER_OPERATION,    // FRAME_ACTION_FROM_APP
+      "action" : HOSTED_APP_INIT_WORKER             // FRAME_START_SESSION
     }
     tell_frame_page(frame_message)
     //
@@ -5665,6 +5665,7 @@ async function application_initialization() {
   wv_getLocation()
   wv_init_recorder()
   wv_initialize_global_buttons()
+  reponding_alive()
   //
   g_audio_db = await wv_init_database()
   await wv_remove_unused_sessions('safe-record-session-')
