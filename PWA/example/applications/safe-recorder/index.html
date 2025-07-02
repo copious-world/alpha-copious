@@ -915,7 +915,7 @@ html {
 
 
 	const LOGIN_URL = `https://cloud.copious.world/login`
-	const APPLICATON_URL = `https://safe-recorder.copious.world/recorder/`
+	const APPLICATION_URL = `https://safe-recorder.copious.world/recorder/`
 
 	if ( !('serviceWorker' in navigator) ) {
 		let main_contaier = document.getElementById("app-sourcing")
@@ -2797,7 +2797,7 @@ function install_frame_page_response() {
 								break;
 							}
 							case FRAME_ACTION_LOGIN: {
-								tell_human_page_new_source(APPLICATON_URL)
+								tell_human_page_new_source(APPLICATION_URL)
 								await human_page_has_app()
 								let session_key = await fetch_session_key(params)   // FETCH SESSION KEY (LOGIN)
 								if ( session_key ) {
@@ -2841,8 +2841,8 @@ function setup_iframe_readiness_response() {
 
 		human_frame.addEventListener('load', (evnt) => {
 			if ( g_human_frame_url == evnt.target.src ) {
-				let app_url = APPLICATON_URL
-				tell_human_page_new_source(APPLICATON_URL)
+				let app_url = APPLICATION_URL
+				tell_human_page_new_source(APPLICATION_URL)
 			}
 		});
 		//
