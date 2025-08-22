@@ -1,0 +1,11 @@
+
+
+LanguageTool
+
+https://www.codeslikeaduck.com/posts/selfhostlanguagetool/
+
+
+
+
+https://github.com/hunspell/hunspell
+flyspell -- requires emacs
