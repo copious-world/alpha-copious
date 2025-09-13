@@ -4,6 +4,8 @@
   },
   "dependencies": {
     "byte-base64": "^1.1.0",
+    "diff": "^8.0.2",
+    "fast-levenshtein": "^3.0.0",
     "fs-extra": "^10.0.1",
     "handlebars": "^4.7.7",
     "js-calendar": "^1.2.3"
