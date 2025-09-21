@@ -27,7 +27,7 @@ let checks = {
     "websites_of-this-world-current" : "../../of-this-world/templates/humans/current.html",
     "websites_of-this-world" : "../../of-this-world/templates/humans/index.html",
     "websites_of-this-world-igid" : "../../of-this-world/igid-manager/public/index.html",
-    "control-test" : "/Users/richardalbertleddy/Documents/GitHub/alphas/of-this-world/igid-manager/template/index.html"
+    "control-test" : "../../of-this-world/igid-manager/template/index.html"
 }
 
 
