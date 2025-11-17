@@ -20,6 +20,29 @@ html {
     display: none !important;
 }
 
+
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+
+
+input, textarea, .select_OK {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -khtml-user-select: text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
+
+
 /**
  * Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
  * aspect ratio.

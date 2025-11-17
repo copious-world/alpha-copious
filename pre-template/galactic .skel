@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	$$files::header.html<<
+	
+	<link rel='icon' type='image/png' href='./favicon.png'>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+	<link rel='stylesheet' href='./global.css'>
+	<link rel='stylesheet' href='./build/bundle.css'>
+
+	<script defer src='./build/bundle.js'></script>
+</head>
+<style>
+$$files::html/styles1-galactic.css<<
+</style>
+<script>
+	var g_siteURL = window.location.host;
+	var g_finalizers = []
+	var g_loginStateViewHolders = {}
+</script>
+<body>
+	$$files::nav_bar_B.html<<
+	<main id='app-main'>
+	
+	</main>
+	<div style="visibility: hidden;">
+		<a id='identity-download-link' href = "" >identity download</a>
+		<input class="no-view-file-field" type="file" id="drop-click-file_loader" />
+	</div>
+	$$files::footer_A.html<<
+</body>
+</html>
+<script>
+
+// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
+
+$$script::pc_location.js<<
+
+$$script::common.js<<
+
+$$script::https_checks.js<<
+
+$$script::post_fetch.js<<
+
+// ---- ---- ---- ---- ---- 
+
+
+$$script::crypto-global.js<<
+
+$$script::base64.js<<
+
+$$script::base_string.js<<
+
+$$script::crypto-hash.js<<
+
+$$script::crypto-wraps.js<<
+
+$$script::cwid.js<<
+
+$$script::ucwid.js<<
+
+$$script::one_table_db.js<<
+
+$$script::file_ops.js<<
+
+$$script::app-dir/user_db.js<<
+
+$$script::for-humans/shared_constants.js<<
+
+$$script::for-humans/human_frame_client.js<<
+
+$$script::for-humans/id_builder_page_tab_com.js<<
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
+function set_user_title(u_name) {
+	let el = document.getElementById('active-user-title')
+	if ( el  && u_name && (typeof u_name === "string") ) {
+		el.innerHTML = u_name
+	}
+}
+
+$$script::app-dir/window_app.js<<
+
+// independent floating box..
+
+
+</script>

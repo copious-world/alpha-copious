@@ -1,0 +1,105 @@
+$${
+    defaults: {
+        top_dirs : {}
+    }
+}
+<!doctype html>
+<html>
+<head>
+$$files::header.skel<<
+</head>
+<style>
+$$files::html/styles1.css<<
+</style>
+<script>
+$$files::html/top_vars.js<<
+</script>
+<body>
+<!-- start static content -->
+$$files::nav_bar_A.skel<<{
+    $$files::left-right-div.skel<< {
+        $$files:logo.skel<<
+        $$files::spacer.skel<<
+        $$files::shroom.skel<<
+    }
+}
+
+$$files::flexy_items_A-main.skel<<
+
+$$files::footer_A.skel<<
+
+<!-- start dynamic content -->
+
+$$files::squashable_menu_A.skel<<
+
+$$files::name::contact_box<<
+
+$$files::name::about_box<<
+
+$$files::name::thankyou_box<<
+
+
+$$files::name::topicBox_<i,3><<
+
+
+$$files::name::register<<
+
+$$files::name::login<<
+
+$$files::intergalactic-explain.skel<<
+
+{{{advertPopups.content}}}
+</body>
+</html>
+<script>
+// global defs of some static topology
+$$script::script/flexy_items_A-top.js<<
+
+$$script::common.js<<
+
+$$script::field_checks.js<<
+
+$$script::https_checks.js<<
+
+$$script::post_fetch.js<<
+
+$$script::uploader_class.js<<
+
+$$script::validation_class.js<<
+
+$$script::captcha_service.js<<
+//
+$$script::login-logout.js<<
+
+$$script::one_table_db.js<<
+
+$$script::file_ops.js<<
+
+$$script::script/flexy_items_A-layout-and-menu.js<<
+
+$$script::script/flexy_items_A-animation.js<<
+
+// CAPTCHA PERFORMANT
+
+$$script::captcha_app.js<<
+
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
+// APPLICATIONS
+// -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+$$script::for-humans/shared_constants.js<<
+
+$$script::for-humans/external-id-intake.js<<
+
+$$script::for-humans/human_frame_client.js<<
+
+$$script::for-humans/frame_page_opener.js<<
+
+$$script::for-humans/site_page_tab_com.js<<
+
+$$script::app-dir/user_db.js<<
+
+$$script::app-dir/site_app.js<<
+
+$$script::script/flexy_items_A-app-finalize.js<<
+</script>

@@ -1,0 +1,60 @@
+
+<main>
+
+	<div class="items">
+		<div class="item">
+			{{{svgBannerFrame.content}}}
+		</div>
+		<div id="greet_and_meet_1" class="item">
+			<div id="desktopCenter" class="shortviz" ></div>
+			<p class="extra-i" style="color:navy">
+			<span style="font-weight:bold;">{{conversation}}</span> chat :: Join our conversations.
+			</p>
+			<br>
+			<a id="a4179" href="javascript:chat_opener()" style="cursor:pointer" >
+			<p class="extra-i" style="text-align:center" >
+			{{{chat.button.content}}}
+			</p>
+			</a>
+		</div>
+		<div class="item">
+			<div class="longviz"  >&nbsp;</div>
+			<p class="extra-i" style="color:darkred">
+			Browse the blog or check out some demonstrations.
+			</p>
+			<br>
+			<p class="extra-i" style="text-align:center">
+				{{{public_content_access.content}}}
+			</p>
+			<div id="desktopRight" class="shortviz" ></div>
+		</div>
+		<div id="greet_and_meet_2" class="item">
+			<p class="extra-i" style="color:darkgreen;font-weight:bold;">
+			For Your Personal Use > Login
+			</p>
+			<hr><br>
+			<a id="a4199" href="javascript:login_process()" style="cursor:pointer">
+			<p class="extra-i" >
+				{{{login_button.button.content}}}
+			</p>
+			</a>
+		</div>
+		<div id="audios_1" class="item" style="display:none;">
+			<p class="extra-i" style="color:darkgreen;font-weight:bold;">
+			Your session is going
+			</p>
+			<hr><br>
+			<a id="b5199" href="javascript:logout_process()" style="cursor:pointer">
+			<p class="extra-i" >
+				{{{logout_button.button.content}}}
+			</p>
+			</a>
+		</div>		
+		<div id="lowerFiller" class="fillLowerWrap">
+			<div class="fillLower">
+				alpha test
+			</div>
+		</div>
+	</div>
+</main>
+	
