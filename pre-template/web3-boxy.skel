@@ -1,6 +1,21 @@
 $${
-    defaults: {
-        top_dirs : {}
+    "defaults" : {
+        "path_abreviations" : {
+            "[alpha-copious]" : "[github]/alphas/alpha-copious",
+            "[github]" : "~/GitHub",
+            "[websites]" : "[alphas]/websites"
+        },
+        "ext_default_dir" : {
+            ".html" : "[alpha-copious]/html",
+            ".js" : "[alpha-copious]/client",
+            ".svg" : "[alpha-copious]/icons"
+        },
+        "top_dir_location" : {
+            "script" : "[alpha-copious]/script",
+            "for-humans" : "[alpha-copious]/for-humans",
+            "html" : "[alpha-copious]/html",
+            "app-dir" : "[app-local]/scripts"
+        }
     }
 }
 <!doctype html>
