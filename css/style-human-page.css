@@ -1,0 +1,79 @@
+
+
+/*csslint important:false*/
+.super-header {
+    border: solid 1px rgb(223, 89, 11);
+    padding: 2px;
+    font-size: smaller;
+    font-weight: 700;
+    background-color: rgb(255, 254, 248);
+    color: rgb(74, 83, 55);
+    max-height:32px;
+    width: 100%;
+}
+.content-container {
+    border: solid 1px rgb(0, 6, 85);
+    padding: 2px;
+    padding-left: 1px;
+    background-color: white;
+    position: absolute;
+    top: 34px;
+    bottom: 0;
+    width : calc(100vw - 4px);
+}
+.super-container {
+    width: calc(100% - 2px);
+    min-height: 100%;
+}
+.owner_name {
+    font-weight: bolder;
+    color: rgb(30, 20, 95);
+    font-style: normal;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 91%;
+}
+button {
+    cursor: pointer;
+    font-size: 85%;
+    font-weight: bold;
+    color:darkslateblue;
+}
+#content-frame {
+    border: 1px solid rgba(245, 245, 245, 0.897);
+}
+#outer {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+.selected-frame {
+    border-color: green;
+}
+#application_container {
+    display:block
+}
+#manager_container {
+    display:none
+}
+#db_container {
+    display:none;
+}
+
+.link-intake {
+    border: navy solid 1px;
+    padding-left: 4px;
+    padding-right: 4px
+}
+.link-intake-label {
+    font-weight: 800;
+}
+
+.media-dashboard-header {
+    color:rgb(30, 20, 95);
+    font-weight: bold;
+    background-color: antiquewhite;
+    border:solid 2px darkkhaki;
+    margin-top:0px;
+    margin-bottom:1px;
+}
+

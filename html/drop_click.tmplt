@@ -1,0 +1,5 @@
+
+<div style="visibility: hidden;">
+	<a id='identity-download-link' href = "" >identity download</a>
+	<input class="no-view-file-field" type="file" id="drop-click-file_loader" />
+</div>

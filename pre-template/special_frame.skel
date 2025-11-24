@@ -1,0 +1,7 @@
+
+<div id="$@{from_list}_container" class="content-container" {{$@{from_list}_styles}} >
+    <iframe id="id-$@{from_list}-frame" >>$@{SOURCE-LINK} ? src="$@{SOURCE-LINK}" : ""<<
+            class="super-container >>$@{FRAME-ACTIONS} ? $@{FRAME-ACTIONS} : <<"  style="height:100%" {{iframe_$@{from_list}_styles}} >
+        $@{from_list} frame
+    </iframe>
+</div>

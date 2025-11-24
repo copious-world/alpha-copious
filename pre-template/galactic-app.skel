@@ -1,92 +1,50 @@
-<!doctype html>
-<html>
-<head>
-$$files::header.html<<
-</head>
-<style>
+$$defs:{
+    "defaults" : {
+        "path_abreviations" : {
+            "[alpha-copious]" : "[github]/alphas/alpha-copious",
+            "[github]" : "~/GitHub",
+            "[websites]" : "[alphas]/websites"
+        },
+        "ext_default_dir" : {
+            "tmplt" : "[alpha-copious]/html",
+            "js" : "[alpha-copious]/client",
+            "svg" : "[alpha-copious]/icons",
+            "css" : "[alpha-copious]/css"
+        },
+        "top_dir_location" : {
+            "script" : "[alpha-copious]/script",
+            "for-humans" : "[alpha-copious]/for-humans",
+            "files" : "[alpha-copious]/html"
+        }
+    }
+}
+$$html:start_doc_head<<
+
+$$files::header.tmplt<<
+$$html:end_head<<
+
+$$html:start_style<<
 $$files::html/styles1.css<<
-</style>
+$$html:end_style<<
 
-<script>
-	//
-	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-	async function media_startup(tracking,protocol,media,counter_link,session) { // _x_link_counter > counter_link
-		if ( protocol === 'ipfs' ) {
-			let links = await crypto_ready_counted(counter_link,tracking,session,media)  // src is for checking...
-			return links
-		} else if ( protocol === 'local' ) {
-			let links = await clear_counted(counter_link,tracking,session,media)  // src is for checking...
-			return links
-		} else {		// default
-			counter_link = "localhost:7777"
-			let links = await clear_counted(counter_link,tracking,session,media)
-			return links
-		}
-	}
-
-	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-	// the counter link is complete, stored in the _x_link_counter field of the meta object
-
-	async function crypto_ready_counted(counter_link,tracking,session,src) {
-		//
-		let prot = "https:"
-		let sp = "//"
-		let url = `${prot}${sp}${counter_link}/key-media/${tracking}`
-		if ( (typeof session === 'string') && (session.length > 0) ) {
-			url += `/${session}`
-		}
-		//
-		try {
-			let result = await fetchUrl(url)
-			if ( result.status === "OK" ) {
-				return result.links
-			}
-		} catch(e) {
-		}
-		return false
-	}
+$$html:start_script<<
+$$files<js>::counter_interface<<
+$$html:end_script<<
 
 
-	async function clear_counted(counter_link,tracking,session,src) {
-		//
-		let prot = location.protocol
-		let sp = "//"
-		let url = `${prot}${sp}${counter_link}/clear-media/${tracking}`
-		if ( (typeof session === 'string') && session.length > 0 ) {
-			url += `/${session}`
-		}
-		//
-		try {
-			let result = await fetchUrl(url)
-			if ( result.status === "OK" ) {
-				return result.links
-			}
-		} catch(e) {
-		}
-		return false
-	}
+$$html:start_body<<
+$$files::nav_bar_C.tmplt<<
 
-	function retrieve_session() {
-		return ""
-	}
+$$verbatim::{
+<main id='app-main'>
+</main>
+}
 
-</script>
+$$files::footer_A.tmplt<<
 
-<body>
-$$files::nav_bar_C.html<<
-
-	<main id='app-main'>
-	
-	</main>
-
-$$files::footer_A.html<<
-
-
-</body>
-</html>
-<script>
+$$html:end_body_html<<
+//
+$$html:start_script<<
 
 $$script::pc_location.js<<
 
@@ -106,7 +64,6 @@ $$script::for-humans/frame_page_opener.js<<
 
 $$script::for-humans/hosted_page_tab_com.js<<
 
-$$script::app-dir/hosted_app.js<<
+$$script::app<scripts>/hosted_app.js<<
 
-
-</script>
+$$html:end_script<<

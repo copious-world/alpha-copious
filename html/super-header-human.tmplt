@@ -1,0 +1,15 @@
+
+<div id="super-header" class="super-header" style="white-space: nowrap;overflow-x: scroll;" >
+    <span class="owner_name">{{who_am_I}}</span>
+    <div id="open-controls" style="display:inline-block;">
+        <button onclick="show_controls()">&gt;&gt;</button>
+    </div>
+    <div id="user-controls" style="display:none;">
+        :: control page :: 
+        <button id="db_container-btn" onclick="show_local_data()">local data</button>&nbsp;
+        <button id="manager_container-btn" onclick="show_id_manager()">identity manager</button>&nbsp;
+        <button id="wallet_container-btn" onclick="show_wallet_manager()">wallet manager</button>&nbsp;
+        <button id="application_container-btn" onclick="show_application()" class="selected-frame">application</button>
+        <button onclick="hide_controls()">&lt;&lt;</button>
+    </div>
+</div>

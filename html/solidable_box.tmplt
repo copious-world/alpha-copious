@@ -1,0 +1,10 @@
+<div id="@{BOX_NAME}" class="solid_able" style="z-index:@{Z_INDEX}" >
+	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
+		<span class="closer_x" onmousedown="closesolid('@{BOX_NAME}')">x</span>
+	</div>
+	<div class="fade_able_content" >
+		<div style="min-width: 400px;min-height: 300px;">
+			{{{@{BOX_NAME}.content}}}
+		</div>
+	</div>
+</div>

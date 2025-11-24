@@ -1,0 +1,289 @@
+/*csslint important:false*/
+
+body {
+	height: 100%;
+}
+
+/**
+* Always hide an element when it has the `hidden` HTML attribute.
+*/
+
+.hidden,
+[hidden] {
+	display: none !important;
+}
+
+/**
+* Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+* aspect ratio.
+*/
+.pure-img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+
+.fitMenuLower {
+	width: 95%;
+	height: 50%;
+	margin-left:0px;
+	margin-right:0px;
+	padding: 8px;
+	margin-top:8px;
+	background: -webkit-linear-gradient(to right, white, #FAFAFF);
+	background: linear-gradient(to right, white, #FAFAFF );
+	margin-left: 10px;
+}
+
+#squashMenu:hover {
+	border: 1px solid rgb(230,230,240,0.4);
+	padding-top:4px;
+	background-color: #EFEFEF;
+}
+
+#squashMenuContainer {
+	position:absolute;
+	visibility:hidden;
+	top : 0; left : 0;
+	height:100%;
+	width: 55%;
+	z-index:100;
+	border: rgba(252, 190, 190, 0.4) 2px solid;
+	background-color: white;
+}
+
+#thankyou_box {
+	position:absolute;
+	visibility:hidden;
+	top : 25%; left : 25%;
+	height:50%;
+	width: 50%;
+	z-index:150;
+	border: rgba(100, 5, 5, 0.6) 2px solid;
+	background-color: lightgoldenrodyellow;
+	overflow: auto;
+}
+
+button {
+	cursor: pointer;
+	font-size: 101%;
+	font-weight: bold;
+	color: darkblue;
+	margin: 2px;
+	width:120px;
+}
+
+button:hover {
+	background-color : #CACAFF;
+	color: darkred;
+}
+
+
+body {
+	border: 1px solid black;
+	
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
+@media screen and (orientation: portrait) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+@media screen and (orientation: landscape) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+main {
+	border-left: solid 3px navy;
+	border-top: solid 1px #8833BB;
+	padding : 4px;
+}
+
+#mainNav {
+	font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	text-transform: uppercase;
+	background: blue;
+	border-left: solid 3px navy;
+	border-top: solid 3px navy;
+	border-bottom: solid 3px rgba(252,252,255,0.7);
+	min-height: 90px;
+	padding: 20px;
+	background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
+	background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
+	
+}
+
+#mainNav table {
+	padding-left: 3%;
+}
+
+#mainNav  table  a:focus { outline: none; }
+#mainNav  table  .navbar-brand {
+	font-size: 1.1rem;
+	color: white;
+}
+
+#mainNav  table  .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+	color: white;
+}
+
+#mainNav  table  .navbar-nav {
+	letter-spacing: 1px; }
+
+#mainNav  table  .navbar-nav li.nav-item {
+	display:inline;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link {
+	color: darkgreen;
+	text-decoration: none;
+	vertical-align: top;
+	padding-right: 10px;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:hover {
+	color: #18BC9C;
+	outline: none;
+	
+}
+
+#mainNav  table  .navbar-nav a.nav-text {
+	background-color : rgba(242,222,255,0.6);
+	border-radius: 25px;
+	margin-bottom: 9px;
+	margin-right: 6px;
+	white-space: nowrap;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: white; }
+
+.footer-list li {
+	list-style-type: none;
+}
+
+.footer-list li a:hover { color: gold; }
+
+footer {
+	padding:10px;
+	background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+	background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+	text-align: center;
+	font-size: 0.85em;
+}
+
+footer a {
+	text-decoration:none;
+	color:darkgreen;
+	font-weight:bold;
+	font-style: italic;
+}
+
+.copiouslink:hover {
+	fill:navy;
+}
+.copiouslink {
+	fill:black;
+}
+
+* {margin: 0; padding: 0; box-sizing: border-box}
+
+.PhIOtjDr_0 {
+	fill:none;
+	stroke:#1c1448;
+	stroke-width:4.59875107;
+	stroke-miterlimit:4;
+	stroke-dasharray: 2948 2950;
+	stroke-dashoffset: 2949;
+	animation: PhIOtjDr_draw 6666ms ease-in forwards;
+}
+
+@keyframes PhIOtjDr_draw {
+	100% {stroke-dashoffset: 0}
+}
+
+@keyframes PhIOtjDr_fade {
+	0% {stroke-opacity: 1}
+	97.1830985915493% {stroke-opacity: 1}
+	100% {stroke-opacity: 0}
+}
+
+label {
+	font-weight:bold;
+	color:darkgreen;
+	width:35%;
+}
+
+.error-message {
+	visibility:hidden;
+	width:75%;
+	font-weight:bolder;
+	color:red;
+	background-color:white;
+	border: solid 1px orange;
+	padding:2px;
+	margin:3px;
+}
+
+/* The Close Button */
+.close {
+	color: white;
+	float: right;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+	from {bottom: -300px; opacity: 0}
+	to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+	from {bottom: -300px; opacity: 0}
+	to {top: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+@keyframes fadeIn {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+.no-view-file-field {
+	display: none;
+	visibility: hidden;
+}
+
+h2 {
+	text-transform: capitalize;
+	color:#4ca85c;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+#active-user-title {
+	font-size: 95%;
+	font-style: oblique;
+	font-weight: bold;
+	margin: 2%;
+	color: goldenrod;
+}

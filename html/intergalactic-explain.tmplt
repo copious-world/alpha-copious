@@ -1,0 +1,83 @@
+<style>
+	.glactic-id-link {
+		margin: 6px;
+		padding: 2px;
+		cursor: pointer;
+		font-weight: bold;
+	}
+</style>
+<div id="intergalactic-explain" class="solid_able" style="z-index:1000" >
+	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
+		<span class="closer_x" onmousedown="closesolid('intergalactic-explain')">x</span>
+	</div>
+	<div class="fade_able_content" >
+		<div onmousedown="closesolid('intergalactic-explain')" style="min-width: 400px;min-height: 300px;">
+			<div style="padding-left:6px;padding-right:6px" >
+				<div style="margin-bottom: 3px;font-weight:bolder;font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
+					What is an intergalactic identity?
+				</div>
+				<blockquote style="padding-left:5%;background-color: rgb(255, 254, 245);color:rgb(2, 71, 2);">
+					It is a string with a special format derived from a secure hash of content that you make up about yourself.
+				</blockquote>
+				<div style="margin-bottom: 4px;">
+					You may use this identity anywhere that accepts it which means other website and concerns.
+				</div>
+				<div style="margin-bottom: 2px;font-weight:bolder;font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
+					How this site uses your intergalactic identity:
+				</div>
+				<div style="margin-top:3px;padding-left:3%;background-color: rgb(255, 255, 254);color:rgb(22, 48, 5);">
+					<div style="margin-top:3px;margin-bottom:3px;">
+						<ul style="list-style-type:disc;margin: 2px;">
+							<li> This website associates your intergalactic identity with responses to your messages (e.g contact). 
+								You may return to this site to retrieve responses to your messages.
+							</li>
+							<li> 
+								You may use your intergalactic identity to start a session with this site (i.e. login).
+							</li>
+						</ul>	
+					</div>
+				</div>
+				<div>
+					<div style="margin-top:3px;" >
+						<div style="padding:3px;color:darkslateblue;border: solid 1px rgba(65, 128, 148, 0.527)">
+							<div style="margin:2px">Your personal information will not be stored on our servers.</div>
+							<div style="margin:2px">Your personal information will not be tied to our domain within your browser storage.</div>
+							<div style="margin:2px"><b>Instead...</b> your personal information will be associated with a virtual URL tied to your identity.</div>
+						</div>
+						<div style="padding:3px;margin-top:4px;">
+							You will be given a personal <span style="font-weight: bolder;">URL framework page</span>
+						</div>
+						<div style="padding:4px;color:rgb(43, 71, 46)" >
+							<p style="padding:4px;color:rgb(43, 71, 46)">
+								The links here can help lead you to tools that help open pages within your URL framework page enabling you to
+								work with your personal preferences within those pages.
+							</p>
+							<p style="padding:4px;color:rgb(43, 71, 46)">
+								The pages you open may use personal data by asking your framework page to make requests on their behalf.
+								For example, an e-commerce page
+								will not ask you for your credit card number, but will ask your personal page to carry out a transaction its behalf.
+							</p>
+							<p style="padding:4px;color:rgb(43, 71, 46)">
+								You will have complete control over your personal URL framework page. But, you can maintain it in any way you see fit.
+							</p>
+						</div>
+					</div>
+				</div>
+				<div style="padding-left:5%;background-color: rgb(255, 254, 245);color:rgb(2, 71, 2);" >
+					Basically, your personal data will be stored in one place and never leave your browser unless you say so. You will not login to this site, but you may allow the 
+					site to log into you - by starting a sessions. The session merely knows you are there and does not ask to know too much about you.
+				</div>	
+			</div>
+		</div>
+		<div style="padding-left:2%;background-color: rgb(255, 254, 245);color:rgb(7, 104, 7);" >
+			<!-- link goes here -->
+			<span class="glactic-id-link" onclick="galactic_id_maker_opener()">Follow this link to create your intergalactic identity</span>
+		</div>
+		<br><br><br><br><br><br><br>&nbsp;
+	</div>
+</div>
+<script>
+
+	
+</script>
+	

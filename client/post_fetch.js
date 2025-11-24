@@ -117,11 +117,7 @@ async function postData(url = '', data = {}, creds = 'omit', do_stringify = true
 
 //$>>	post_submit
 function hide_interface_box() {
-	let display = document.getElementById('interface-box')
-	if ( display ) {
-		display.style.visibility = "hidden"
-		display.style.display = "none"
-	}
+	hide_box('interface-box')
 }
 
 function hide_box(bxname) {

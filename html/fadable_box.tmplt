@@ -1,0 +1,9 @@
+
+<div id="@{BOX_NAME}" class="fade_able" style="z-index:@{Z_INDEX}" @{INSERT} >
+	<div class="togglebar" onmouseenter="togglebar(this,1)" onmouseleave="togglebar(this,0)">
+		<span class="closer_x" onmousedown="closefader('$$BOX_NAME')">x</span>
+	</div>
+	<div class="fade_able_content" >
+		{{{@{BOX_NAME}.content }}}
+	</div>
+</div>

@@ -1,0 +1,85 @@
+{
+    "index.html" : {
+        "contact_box" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "about_box" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" :  "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "topicBox_1" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "topicBox_2" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "topicBox_3" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "thankyou_box" : {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}",
+                "INSERT" : "onclick='hide_thankyou_box(this)'"
+            }
+        },
+        "register" : {
+            "file" : "solidable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        },
+        "login" : {
+            "file" : "solidable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        }
+    },
+    "login.tmplt" : {
+        "contact_box" {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start}",
+                "BOX_NAME" : "@{name}"
+            }
+        }:,
+        "thankyou_box": {
+            "file" : "fadable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}",
+                "INSERT" : "onclick='hide_thankyou_box(this)'"
+            }
+        },
+        "login" : {
+            "file" : "solidable_box.tmplt",
+            "key_values" : {
+                "Z_INDEX" : "@{start-incr}",
+                "BOX_NAME" : "@{name}"
+            }
+        }
+    }
+}

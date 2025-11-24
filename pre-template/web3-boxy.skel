@@ -1,4 +1,4 @@
-$${
+$$defs:{
     "defaults" : {
         "path_abreviations" : {
             "[alpha-copious]" : "[github]/alphas/alpha-copious",
@@ -6,46 +6,55 @@ $${
             "[websites]" : "[alphas]/websites"
         },
         "ext_default_dir" : {
-            ".html" : "[alpha-copious]/html",
-            ".js" : "[alpha-copious]/client",
-            ".svg" : "[alpha-copious]/icons"
+            "tmplt" : "[alpha-copious]/html",
+            "js" : "[alpha-copious]/client",
+            "svg" : "[alpha-copious]/icons",
+            "css" : "[alpha-copious]/css"
         },
         "top_dir_location" : {
             "script" : "[alpha-copious]/script",
             "for-humans" : "[alpha-copious]/for-humans",
-            "html" : "[alpha-copious]/html",
-            "app-dir" : "[app-local]/scripts"
+            "files" : "[alpha-copious]/html"
         }
     }
 }
-<!doctype html>
-<html>
-<head>
-$$files::header.skel<<
-</head>
-<style>
-$$files::html/styles1.css<<
-</style>
-<script>
-$$files::html/top_vars.js<<
-</script>
-<body>
-<!-- start static content -->
-$$files::nav_bar_A.skel<<{
-    $$files::left-right-div.skel<< {
-        $$files:logo.skel<<
-        $$files::spacer.skel<<
-        $$files::shroom.skel<<
+//  
+$$html:start_doc_head<<
+$$files::header.tmplt<<
+$$html:end_head<<
+
+$$html:start_style<<
+$$files<css>::styles1<<
+$$html:end_style<<
+
+$$html:start_script<<
+$$files<js>::top_vars<<
+$$html:end_script<<
+
+$$html:start_body<<
+
+
+$$files::params::nav_bar_V.tmplt<< {
+    $@{lr_div}$files::left-right-div.tmplt<<    {
+        $@{logo}$files::logo.tmplt<<
+        $@{spacer}$files::spacer.tmplt<<
+        $@{menu}$files::shroom.tmplt<<{
+             $@{mushroom}$icons::mushroom-menu-icon.svg<<
+        }
     }
+    $@{logout}$files::logo.tmplt<<
 }
 
-$$files::flexy_items_A-main.skel<<
 
-$$files::footer_A.skel<<
+$$files::flexy_items_A-main.tmplt<<
 
+$$files::footer_A.tmplt<<
+
+$$verbatim::{
 <!-- start dynamic content -->
+}
 
-$$files::squashable_menu_A.skel<<
+$$files::squashable_menu_A.tmplt<<
 
 $$files::name::contact_box<<
 
@@ -54,19 +63,24 @@ $$files::name::about_box<<
 $$files::name::thankyou_box<<
 
 
-$$files::name::topicBox_<i,3><<
+$$files::name::topicBox_<1,3><<
 
 
 $$files::name::register<<
 
 $$files::name::login<<
 
-$$files::intergalactic-explain.skel<<
+$$files::intergalactic-explain.tmplt<<
 
+$$template::{
 {{{advertPopups.content}}}
-</body>
-</html>
-<script>
+}
+
+$$html:end_body_html<<
+//
+//
+$$html:start_script<<
+
 // global defs of some static topology
 $$script::script/flexy_items_A-top.js<<
 
@@ -94,14 +108,17 @@ $$script::script/flexy_items_A-layout-and-menu.js<<
 
 $$script::script/flexy_items_A-animation.js<<
 
+
 // CAPTCHA PERFORMANT
 
 $$script::captcha_app.js<<
 
-
+$$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
 // APPLICATIONS
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+}
+
 $$script::for-humans/shared_constants.js<<
 
 $$script::for-humans/external-id-intake.js<<
@@ -112,9 +129,10 @@ $$script::for-humans/frame_page_opener.js<<
 
 $$script::for-humans/site_page_tab_com.js<<
 
-$$script::app-dir/user_db.js<<
+$$script::app<scripts>/user_db.js<<
 
-$$script::app-dir/site_app.js<<
+$$script::app<scripts>/site_app.js<<
 
 $$script::script/flexy_items_A-app-finalize.js<<
-</script>
+
+$$html:end_script<<

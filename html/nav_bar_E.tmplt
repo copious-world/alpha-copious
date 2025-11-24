@@ -1,0 +1,17 @@
+<nav id="mainNav">
+	<table style="width:100%">
+		<tr>
+			<td style="width:62;height:63">
+				<a class="nav-link" href="/"  target="{{canonical}}-again" >
+				{{{svgLogo.content}}}
+				</a>
+			</td>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+</nav>
