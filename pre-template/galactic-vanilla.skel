@@ -23,7 +23,7 @@ $$files::header_app.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files<css>::styles1-galactic<<
+$$css::styles1-galactic.css<<
 $$html:end_style<<
 
 $$html:start_script<<

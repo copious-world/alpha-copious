@@ -25,7 +25,7 @@ $$html:end_head<<
 
 
 $$html:start_style<<
-$$files<css>::styles1-galactic<<
+$$css::styles1-galactic.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -89,7 +89,7 @@ function set_user_title(u_name) {
 
 }
 
-$$script::app<scripts>/user_db.js<<
+$$script::user_db.js<<
 
 $$script::app<scripts>/window_app.js<<
 

@@ -1,5 +1,5 @@
 {
-    "index.html" : {
+    "index.tmplt" : {
         "contact_box" : {
             "file" : "fadable_box.tmplt",
             "key_values" : {
@@ -14,21 +14,7 @@
                 "BOX_NAME" : "@{name}"
             }
         },
-        "topicBox_1" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "topicBox_2" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "topicBox_3" : {
+        "topicBox_<1,3>" : {
             "file" : "fadable_box.tmplt",
             "key_values" : {
                 "Z_INDEX" : "@{start-incr}",
@@ -59,13 +45,13 @@
         }
     },
     "login.tmplt" : {
-        "contact_box" {
+        "contact_box" : {
             "file" : "fadable_box.tmplt",
             "key_values" : {
                 "Z_INDEX" : "@{start}",
                 "BOX_NAME" : "@{name}"
             }
-        }:,
+        },
         "thankyou_box": {
             "file" : "fadable_box.tmplt",
             "key_values" : {

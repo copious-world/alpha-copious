@@ -25,7 +25,7 @@ $$files::header_app.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files<css>::styles1-galactic<<
+$$css::styles1-galactic.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -78,11 +78,11 @@ $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
-$$script::for-humans/shared_constants.js<<
+$$script::[for-humans]/shared_constants.js<<
 
-$$script::for-humans/human_frame_client.js<<
+$$script::[for-humans]/human_frame_client.js<<
 
-$$script::for-humans/id_builder_page_tab_com.js<<
+$$script::[for-humans]/id_builder_page_tab_com.js<<
 
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
@@ -96,7 +96,7 @@ function set_user_title(u_name) {
 
 }
 
-$$script::app<scripts>/user_db.js<<
+$$script::user_db.js<<
 
 $$script::app<scripts>/window_app.js<<
 

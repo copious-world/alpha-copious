@@ -24,7 +24,7 @@ $$files::header.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files<css>::styles1<<
+$$css::styles1.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -70,7 +70,7 @@ $$html:end_body_html<<
 $$html:start_script<<
 
 // global defs of some static topology
-$$script::script/flexy_items_A-top.js<<
+$$script::[script]/flexy_items_A-top.js<<
 
 $$script::common.js<<
 
@@ -92,9 +92,9 @@ $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
-$$script::script/flexy_items_A-layout-and-menu.js<<
+$$script::[script]/flexy_items_A-layout-and-menu.js<<
 
-$$script::script/flexy_items_A-animation.js<<
+$$script::[script]/flexy_items_A-animation.js<<
 
 
 // CAPTCHA PERFORMANT
@@ -107,9 +107,9 @@ $$verbatim::{
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 }
 
-$$script::for-humans/shared_constants.js<<
+$$script::[for-humans]/shared_constants.js<<
 
-$$script::for-humans/external-id-intake.js<<
+$$script::[for-humans]/external-id-intake.js<<
 
 
 $$verbatim::{

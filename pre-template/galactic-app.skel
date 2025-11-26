@@ -24,7 +24,7 @@ $$files::header.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files::html/styles1.css<<
+$$css::styles1.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -54,15 +54,15 @@ $$script::https_checks.js<<
 
 $$script::post_fetch.js<<
 
-$$script::for-humans/shared_constants.js<<
+$$script::[for-humans]/shared_constants.js<<
 
-$$script::for-humans/external-id-intake.js<<
+$$script::[for-humans]/external-id-intake.js<<
 
-$$script::for-humans/human_frame_client.js<<
+$$script::[for-humans]/human_frame_client.js<<
 
-$$script::for-humans/frame_page_opener.js<<
+$$script::[for-humans]/frame_page_opener.js<<
 
-$$script::for-humans/hosted_page_tab_com.js<<
+$$script::[for-humans]/hosted_page_tab_com.js<<
 
 $$script::app<scripts>/hosted_app.js<<
 

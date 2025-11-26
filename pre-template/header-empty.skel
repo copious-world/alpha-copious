@@ -24,7 +24,7 @@ $$files::header.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files<css>::styles1<<
+$$css::styles1.css<<
 $$html:end_style<<
 
 $$html:start_script<<

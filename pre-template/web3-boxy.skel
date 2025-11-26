@@ -24,7 +24,7 @@ $$files::header.tmplt<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$files<css>::styles1<<
+$$css::styles1.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -32,7 +32,6 @@ $$files<js>::top_vars<<
 $$html:end_script<<
 
 $$html:start_body<<
-
 
 $$files::params::nav_bar_V.tmplt<< {
     $@{lr_div}$files::left-right-div.tmplt<<    {
@@ -82,7 +81,7 @@ $$html:end_body_html<<
 $$html:start_script<<
 
 // global defs of some static topology
-$$script::script/flexy_items_A-top.js<<
+$$script::[script]/flexy_items_A-top.js<<
 
 $$script::common.js<<
 
@@ -104,9 +103,9 @@ $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
-$$script::script/flexy_items_A-layout-and-menu.js<<
+$$script::[script]/flexy_items_A-layout-and-menu.js<<
 
-$$script::script/flexy_items_A-animation.js<<
+$$script::[script]/flexy_items_A-animation.js<<
 
 
 // CAPTCHA PERFORMANT
@@ -119,20 +118,20 @@ $$verbatim::{
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 }
 
-$$script::for-humans/shared_constants.js<<
+$$script::[for-humans]/shared_constants.js<<
 
-$$script::for-humans/external-id-intake.js<<
+$$script::[for-humans]/external-id-intake.js<<
 
-$$script::for-humans/human_frame_client.js<<
+$$script::[for-humans]/human_frame_client.js<<
 
-$$script::for-humans/frame_page_opener.js<<
+$$script::[for-humans]/frame_page_opener.js<<
 
-$$script::for-humans/site_page_tab_com.js<<
+$$script::[for-humans]/site_page_tab_com.js<<
 
-$$script::app<scripts>/user_db.js<<
+$$script::user_db.js<<
 
 $$script::app<scripts>/site_app.js<<
 
-$$script::script/flexy_items_A-app-finalize.js<<
+$$script::[script]/flexy_items_A-app-finalize.js<<
 
 $$html:end_script<<
