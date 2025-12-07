@@ -1,1 +1,134 @@
 
+$$defs:{
+    "top_level" : true,
+    "path_abreviations" : {
+        "[alpha-copious]" : "[github]/alphas/alpha-copious",
+        "[github]" : "~/GitHub",
+        "[websites]" : "[alphas]/websites"
+    },
+    "ext_default_dir" : {
+        "tmplt" : "[alpha-copious]/html",
+        "js" : "[alpha-copious]/client",
+        "svg" : "[alpha-copious]/icons",
+        "css" : "[alpha-copious]/css"
+    },
+    "top_dir_location" : {
+        "script" : "[alpha-copious]/client",
+        "for-humans" : "[alpha-copious]/for-humans",
+        "files" : "[alpha-copious]/html"
+    }
+}
+//  
+$$html:start_doc_head<<
+$$files::header.tmplt<<
+$$html:end_head<<
+
+$$html:start_style<<
+$$css::styles1.css<<
+$$html:end_style<<
+
+$$html:start_script<<
+$$files<js>::top_vars<<
+$$html:end_script<<
+
+$$html:start_body<<
+
+$$files::params::nav_bar_V.smplt<< {
+    $@{lr_div}$files::params::left-right-div.smplt<<    {
+        $@{logo}$files::logo.tmplt<<
+        $@{spacer}$files::spacer.tmplt<<
+        $@{menu}$files::shroom.tmplt<<{
+             $@{mushroom}$icons::mushroom-menu-icon.svg<<
+        }
+    }
+    $@{logout}$files::logout.tmplt<<
+}
+
+$$files::flexy_items_A-main.tmplt<<
+
+$$files::footer_A.tmplt<<
+
+$$verbatim::{
+<!-- start dynamic content -->
+}
+
+$$files::squashable_menu_A.tmplt<<
+
+$$files::calc::contact_box<<${box_i=100}
+
+$$files::calc::about_box<<${box_i++}
+
+$$files::calc::thankyou_box<<${box_i++}
+
+$$files::loop::calc::topicBox_<1,3><<${box_i++}
+
+$$files::calc::register<<${box_i++}
+
+$$files::calc::login<<${box_i++}
+
+$$files::intergalactic-explain.tmplt<<
+
+$$template::{
+{{{advertPopups.content}}}
+}
+
+$$html:end_body_html<<
+//
+//
+$$html:start_script<<
+
+// global defs of some static topology
+$$script::[alt-script]/flexy_items_A-top.js<<
+
+$$script::common.js<<
+
+$$script::field_checks.js<<
+
+$$script::https_checks.js<<
+
+$$script::post_fetch.js<<
+
+$$script::uploader_class.js<<
+
+$$script::validation_class.js<<
+
+$$script::captcha_service.js<<
+//
+$$script::login-logout.js<<
+
+$$script::one_table_db.js<<
+
+$$script::file_ops.js<<
+
+$$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
+
+$$script::[alt-script]/flexy_items_A-animation.js<<
+
+
+// CAPTCHA PERFORMANT
+
+$$script::captcha_app.js<<
+
+$$verbatim::{
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
+// APPLICATIONS
+// -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+}
+
+$$script::[for-humans]/shared_constants.js<<
+
+$$script::[for-humans]/external-id-intake.js<<
+
+$$script::[for-humans]/human_frame_client.js<<
+
+$$script::[for-humans]/frame_page_opener.js<<
+
+$$script::[for-humans]/site_page_tab_com.js<<
+
+$$script::user_db.js<<
+
+$$script::[app<scripts>]/site_app.js<<
+
+$$script::[alt-script]/flexy_items_A-app-finalize.js<<
+
+$$html:end_script<<

@@ -1,21 +1,20 @@
 $$defs:{
-    "defaults" : {
-        "path_abreviations" : {
-            "[alpha-copious]" : "[github]/alphas/alpha-copious",
-            "[github]" : "~/GitHub",
-            "[websites]" : "[alphas]/websites"
-        },
-        "ext_default_dir" : {
-            "html" : "[alpha-copious]/html",
-            "js" : "[alpha-copious]/client",
-            "svg" : "[alpha-copious]/icons",
-            "css" : "[alpha-copious]/css"
-        },
-        "top_dir_location" : {
-            "script" : "[alpha-copious]/script",
-            "for-humans" : "[alpha-copious]/for-humans",
-            "files" : "[alpha-copious]/html"
-        }
+    "top_level" : true,
+    "path_abreviations" : {
+        "[alpha-copious]" : "[github]/alphas/alpha-copious",
+        "[github]" : "~/GitHub",
+        "[websites]" : "[alphas]/websites"
+    },
+    "ext_default_dir" : {
+        "html" : "[alpha-copious]/html",
+        "js" : "[alpha-copious]/client",
+        "svg" : "[alpha-copious]/icons",
+        "css" : "[alpha-copious]/css"
+    },
+    "top_dir_location" : {
+        "script" : "[alpha-copious]/script",
+        "for-humans" : "[alpha-copious]/for-humans",
+        "files" : "[alpha-copious]/html"
     }
 }
 $$html:start_doc_head<<
@@ -54,6 +53,6 @@ $$script::post_fetch.js<<
 
 $for-humans::hosted_page_tab_com.js<<
 
-$$script::app<scripts>/$$use_app.js<<
+$$script::[app<scripts>]/@{use_app}.js<<
 
 $$html:end_script<<

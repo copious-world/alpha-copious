@@ -1,0 +1,8 @@
+//
+@params<{lr_div : file, logout : file}>
+//
+<nav id="mainNav">
+	@{lr_div}
+	>>@{logout} ? <div class="very-short conditional-hide" {{custom-logout-styles}}>@{logout}</div> : @nothing <<
+</nav>
+//

@@ -1,5 +1,5 @@
 <li id="squashMenu"
     class="nav-item" style="visibility:hidden;cursor:pointer" 
     onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
-    >$>$@{mushroom} ? $@{mushroom} : $icons::mushroom-menu-icon.svg<<<<
+    >>@{mushroom} ? @{mushroom} : $$icons::mushroom-menu-icon.svg<<<<
 </li>

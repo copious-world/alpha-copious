@@ -1,0 +1,30 @@
+@params<{ logo : file, spacer : file, menu : file }>
+//
+<div style="width:100%;height:fit-content">
+<table style="width:100%">
+    <tr>
+        <td style="width:62;height:63">
+            <a class="nav-link" href="/"  target="{{canonical}}-again" >
+                // here a logo may be put in place very early on (sgv, png)
+                // otherwise the result is a final stage substitution
+                >>@{logo} ? @{logo} : {{{svgLogo.content}}}<<
+            </a>
+        </td>
+        <td>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    @{spacer}
+                </li>
+                >>@{menu} ? @{menu} : @nothing<<
+            </ul>
+        </td>
+        <td style="text-align: center;">
+            <h2>{{{intergalactic.content}}}</h2> 
+        </td>
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+</table>
+</div>
+//

@@ -14,7 +14,7 @@
 						</a>
 					</li>
 					<li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
-						$$file::mushroom-menu-icon.svg<<
+						$$icons::mushroom-menu-icon.svg<<
 					</li>
 				</ul>
 			</td>

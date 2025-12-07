@@ -1,71 +1,50 @@
 {
-    "index.tmplt" : {
-        "contact_box" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "about_box" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" :  "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "topicBox_<1,3>" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "thankyou_box" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}",
-                "INSERT" : "onclick='hide_thankyou_box(this)'"
-            }
-        },
-        "register" : {
-            "file" : "solidable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "login" : {
-            "file" : "solidable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
+    "contact_box" : {
+        "file" : "fadable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" : "f@init{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : ""
         }
     },
-    "login.tmplt" : {
-        "contact_box" : {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start}",
-                "BOX_NAME" : "@{name}"
-            }
-        },
-        "thankyou_box": {
-            "file" : "fadable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}",
-                "INSERT" : "onclick='hide_thankyou_box(this)'"
-            }
-        },
-        "login" : {
-            "file" : "solidable_box.tmplt",
-            "key_values" : {
-                "Z_INDEX" : "@{start-incr}",
-                "BOX_NAME" : "@{name}"
-            }
+    "about_box" : {
+        "file" : "fadable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" :  "f@incr{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : ""
+        }
+    },
+    "topicBox_" : {
+        "file" : "fadable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" : "f@incr{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : ""
+        }
+    },
+    "thankyou_box" : {
+        "file" : "fadable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" : "f@incr{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : "onclick='hide_thankyou_box(this)'"
+        }
+    },
+    "register" : {
+        "file" : "solidable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" : "f@incr{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : ""
+        }
+    },
+    "login" : {
+        "file" : "solidable_box.tmplt",
+        "key_values" : {
+            "Z_INDEX" : "f@incr{$}",
+            "BOX_NAME" : "f@name{parent}",
+            "INSERT" : ""
         }
     }
 }
