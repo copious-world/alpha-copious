@@ -8,7 +8,8 @@
     "fast-levenshtein": "^3.0.0",
     "fs-extra": "^10.0.1",
     "handlebars": "^4.7.7",
-    "js-calendar": "^1.2.3"
+    "js-calendar": "^1.2.3",
+    "node-source-walk": "^7.0.1"
   },
   "devDependencies": {
     "concurrently": "^6.2.0"

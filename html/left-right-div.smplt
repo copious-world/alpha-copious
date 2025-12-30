@@ -1,4 +1,4 @@
-@params<{ logo : file, spacer : file, menu : file }>
+@params<{ logo : %file%, spacer : %file%, menu : %file% }>
 //
 <div style="width:100%;height:fit-content">
 <table style="width:100%">

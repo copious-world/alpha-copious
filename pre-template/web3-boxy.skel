@@ -1,5 +1,6 @@
 $$defs:{
     "top_level" : true,
+    "uses_config_vars" : "shops",
     "path_abreviations" : {
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/GitHub",
@@ -50,7 +51,7 @@ $$files::calc::about_box<<${box_i++}
 
 $$files::calc::thankyou_box<<${box_i++}
 
-$$files::loop::calc::topicBox_<1,3><<${box_i++}
+$$files::loop::calc::topicBox_<1,@!{topic_count}><<${box_i++}
 
 $$files::calc::register<<${box_i++}
 

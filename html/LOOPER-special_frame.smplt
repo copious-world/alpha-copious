@@ -1,5 +1,5 @@
 
-@list<el><{ group_name <- el[1], SOURCE-LINK <- el[2], FRAME-ACTIONS <- el[3]}>
+@list<el><{ group_name <- @<el[1]>, SOURCE-LINK <- @<el[2]>, FRAME-ACTIONS <- @<el[3]>}>
 //
 <@el>
 <div id="@{group_name}_container" class="content-container" {{@{group_name}_styles}} >
