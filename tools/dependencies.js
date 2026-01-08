@@ -2,7 +2,7 @@ const Walker = require('node-source-walk');
 
 
 const fs = require('fs')
-
+const fos = require('extra-file-class')()
 
 let previous_types_analyzed = {
   ArrayExpression: 32,
@@ -52,23 +52,6 @@ let previous_types_analyzed = {
 
 
 
-function append_object_dots(the_obj,the_path) {
-    if ( !the_obj ) return ""
-    if ( the_path === undefined ) the_path = ""
-    let object_path = ""
-    if ( the_obj && the_obj.name === undefined ) {
-        if ( the_obj.property && the_obj.property.name ) {
-            the_path = "." + the_obj.property.name + the_path
-            return append_object_dots(the_obj.object,the_path)
-        }
-    } else {
-        object_path = the_obj.name + the_path
-    }
-    return object_path
-}
-
-
-
 class OneFileDependencies {
 
     constructor(target_file) {
@@ -103,6 +86,24 @@ class OneFileDependencies {
     set_noisy(tf) {
         this._noisy = tf ? true : false
     }
+
+
+    append_object_dots(the_obj,the_path) {
+        if ( !the_obj ) return ""
+        if ( the_path === undefined ) the_path = ""
+        let object_path = ""
+        if ( the_obj && the_obj.name === undefined ) {
+            if ( the_obj.property && the_obj.property.name ) {
+                the_path = "." + the_obj.property.name + the_path
+                return this.append_object_dots(the_obj.object,the_path)
+            }
+        } else {
+            object_path = the_obj.name + the_path
+        }
+        return object_path
+    }
+
+
 
     async analyze_target_file() {
         let src_lines = this.src.split("\n")
@@ -169,7 +170,7 @@ class OneFileDependencies {
                                         call_ky = node.callee.object.name
                                         this.noisy_output("CallExpression:", node.callee.object.name, node.callee.property.name)                        
                                     } else {
-                                        let object_path = append_object_dots(node.callee.object)
+                                        let object_path = this.append_object_dots(node.callee.object)
                                         call_ky = node.callee.property.name
                                         field_path = object_path
                                         this.noisy_output("CallExpression:", object_path, node.callee.property.name)                        
@@ -261,6 +262,9 @@ class OneFileDependencies {
         //
     }
 
+    /**
+     * 
+     */
     ascertain_file_ast_types() {
         //
         let all_types = Object.assign({},previous_types_analyzed)
@@ -307,7 +311,6 @@ let g_map_of_files = {}
 
 
 function find_file_defining(callky) {
-console.log(callky)
     for ( let [fname,file_def] of Object.entries(g_map_of_files) ) {
         let possible_calldefs = file_def.keys
         if ( possible_calldefs.includes(callky) ) return fname
@@ -329,20 +332,40 @@ async function main()  {
     let fa = false
 
     let flist = fs.readdirSync("client")
+    let f2_list = fs.readdirSync("script")
+    let f3_list = fs.readdirSync("for-humans")
+
+    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
     let files = flist.map((a_file) => {
         return `client/${a_file}`
     })
     console.log(files)
 
+    f2_list = f2_list.map((a_file) => {
+        return `script/${a_file}`
+    })
+    console.log(f2_list)
+
+    f3_list = f3_list.map((a_file) => {
+        return `for-humans/${a_file}`
+    })
+    console.log(f3_list)
+
+    files = files.concat(f2_list).concat(f3_list)
+
+    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+    // analysis
     for (let file of files ) {
         console.log(`analysizing:: ${file}`)
         let fa = new OneFileDependencies(file)
         file_analysis.push(fa)
         await fa.analyze_target_file()
-        g_map_of_files[file] = { "info" : fa, "keys" : Object.keys(fa.all_funcs) }
+        g_map_of_files[file] = { "info" : fa, "keys" : Object.keys(fa.all_funcs), "file_dependencies" : {} }
     }
 
+    // collect_dependencies
     for ( let i = 0; i < file_analysis.length; i++ ) {
         fa = file_analysis[i]
         fa.collect_dependencies()
@@ -352,36 +375,89 @@ async function main()  {
         // console.log("\n======\n")
     }
 
+    console.log("\n\n")
+    console.log("LIST FUNCTION DEPENDENCIES ---------------------------------------------------------------")
 
     for ( let i = 0; i < file_analysis.length; i++ ) {
         fa = file_analysis[i]
         console.log(`reporting on file: ${fa.target_file}--------------------------`)
         console.log(g_map_of_files[fa.target_file].keys)
-        g_map_of_files[fa.target_file].keys.forEach((fky) => {
-            console.log('\t',fky)
+        let the_file = fa.target_file
+        let file_data = g_map_of_files[the_file]
+        file_data.keys.forEach((fky) => {
+            console.log('---->>',fky)
             console.dir(fa.all_funcs[fky].depends_on)
             for ( let [callky,v] of Object.entries(fa.all_funcs[fky].depends_on) ) {
                 if ( v !== undefined ) {
                     let file_of_calldef = find_file_defining(callky)
                     if ( file_of_calldef ) {
-                        if ( file_of_calldef === fa.target_file ) {
+                        if ( file_of_calldef === the_file ) {
                             file_of_calldef = "@SELF"
                         }
                         fa.all_funcs[fky].depends_on[callky] = file_of_calldef
                     }
+                    if ( file_of_calldef ) {
+                        file_data.file_dependencies[file_of_calldef] = (file_data.file_dependencies[file_of_calldef] ? file_data.file_dependencies[file_of_calldef] + 1 : 1)
+                    }
                 }
             }
-            console.dir(fa.all_funcs[fky].depends_on)
+            //console.dir(fa.all_funcs[fky].depends_on)
         })
-        
-        // fa.print_results()
-        // console.log("\n======\n")
+
+    }
+
+    console.log("LIST FILE DEPENDENCIES ---------------------------------------------------------------")
+
+    for ( let file_data of Object.values(g_map_of_files) ) {
+        console.log(file_data.info.target_file)
+        if ( Object.keys(file_data.file_dependencies).length === 0 ) {
+            console.log("NO DEPENDENCIES")
+        } else {
+            if ( Object.keys(file_data.file_dependencies).length === 1 ) {
+                if ( Object.keys(file_data.file_dependencies)[0] === "@SELF" ) {
+                    console.log("SELF CONTAINED")
+                    continue
+                }
+            }
+            console.dir(file_data.file_dependencies)
+        }
+    }
+
+    let funcs_to_files = {}
+
+    for ( let [file,data] of Object.entries(g_map_of_files) ) {
+        for ( let ky of data.keys ) {
+            if ( ky === "constructor" ) continue
+            if ( data.info.all_funcs[ky].is_method ) {
+                if ( funcs_to_files[ky]  !== undefined ) {
+                    if ( Array.isArray(funcs_to_files[ky]) ) {
+                        funcs_to_files[ky].push(file)
+                    } else {
+                        console.log("redundant function def ", ky, file)
+                        funcs_to_files[ky] += ", REDUNDANT:" + file
+                    }
+                } else {
+                    funcs_to_files[ky] = [file]
+                }
+            } else {
+                if ( funcs_to_files[ky]  !== undefined ) {
+                    console.log("redundant function def ", ky, file)
+                    funcs_to_files[ky] += ", REDUNDANT:" + file
+                } else {
+                    funcs_to_files[ky] = file
+                }
+            }
+        }
     }
 
 
-    // for ( let file_data of Object.values(g_map_of_files) ) {
-    //     console.log(file_data.target_file)
-    // }
+    let file_info_tables = {
+        "map_of_files" : g_map_of_files,
+        "funcs_to_file" : funcs_to_files
+    }
+
+
+    await fos.write_out_pretty_json("./test/map_of_files.json",file_info_tables,4)
 
 }
 

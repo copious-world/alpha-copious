@@ -1,0 +1,7 @@
+{
+    "directories" : [ "client", "scripts",  "for-humans" ],
+    "look_in" : {},
+    "search" : {},
+    "path_translations" : {},
+    "min_inclusion_distance" : {}
+}

@@ -1,4 +1,3 @@
-
 // SHARED CONSTANTS
 
 
@@ -59,6 +58,7 @@ const NEW_USER_TO_FRAME = "new_user_to_frame"
 const FRAME_COMPONENT_RESPOND = "respond"
 const FRAME_COMPONENT_RESPONDING = "responding"
 const FRAME_ACTION_LOAD_APP = "load-app"
+const FRAME_PAGE_AUTO_LOGIN = "auto-login"
 const FRAME_ACTION_INSTALL = "install-id"
 const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
@@ -75,6 +75,9 @@ const FRAME_REQ_DATA = "send-request-respond"
 
 const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
 const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
+const FRAME_ACTION_REGISTER = "id-session-setup"
+const FRAME_ACTION_GET_LOGIN_URL = "id-session-setup-get-login"
+const FRAME_ACTION_LOGIN = "id-session-get"
 const FRAME_ACTION_REMOVE = "id-manager-remove-id"
 const FRAME_ACTION_UPLOAD = "id-manager-upload-id"
 const FRAME_ACTION_DOWNLOAD = "id-manager-download-id"
@@ -120,17 +123,21 @@ let g_current_user_id = false
 let g_current_user_name = false
 let g_current_pub_identity = false
 
+let g_hash_session_map = {}
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 var g_current_session = false
 
 
-const g_message_template =  {
-                                "category" : "",
-                                "direction" : "",
-                                "action" : "",
-                                "relationship" : ""
-                            }
+// window.g_message_template =
+
+const g_message_template = {
+    "category" : "",
+	"direction" : SITE_PAGE_TO_FRAME,
+	"action" : "any",
+	"relationship" : SITE_RELATES_TO_FRAME
+}
 
 /// END OF CONSTANTS  (ALPHA)
 
