@@ -211,10 +211,15 @@ class OneFileDependencies {
                         }
                         case "ClassMethod" : {
                             this.noisy_output("!! ClassMethod:",node.key.name)
+                            let start = node.loc.start.line - 1
+                            let end = node.loc.end.line
+                            let func_lines = src_lines.slice(start,end+1)
+                            let source = func_lines.join("\n")
                             this.all_funcs[node.key.name] = {
                                 "depends_on" : {},
                                 "file" : this.target_file,
-                                "is_method" : true
+                                "is_method" : true,
+                                "source" : source
                             }
                             this.last_func_def = node.key.name
                             this.last_func_def_type = "method"
@@ -222,10 +227,15 @@ class OneFileDependencies {
                         }
                         case "FunctionDeclaration" : {
                             this.noisy_output("!! FunctionDeclaration:",node.id.name)
+                            let start = node.loc.start.line - 1
+                            let end = node.loc.end.line
+                            let func_lines = src_lines.slice(start,end+1)
+                            let source = func_lines.join("\n")
                             this.all_funcs[node.id.name] = {
                                 "depends_on" : {},
                                 "file" : this.target_file,
-                                "is_method" : false
+                                "is_method" : false,
+                                "source" : source
                             }
                             this.last_func_def = node.id.name
                             this.last_func_def_type = "function"
@@ -424,6 +434,7 @@ async function main()  {
     }
 
     let funcs_to_files = {}
+    let funcs_to_src = {}
 
     for ( let [file,data] of Object.entries(g_map_of_files) ) {
         for ( let ky of data.keys ) {
@@ -450,17 +461,31 @@ async function main()  {
         }
     }
 
+    for ( let [file,data] of Object.entries(g_map_of_files) ) {
+        for ( let ky of data.keys ) {
+            if ( funcs_to_src[ky]  !== undefined ) {
+                funcs_to_src[ky][file] = data.info.all_funcs[ky].source
+            } else {
+                funcs_to_src[ky] = {}
+                funcs_to_src[ky][file] = data.info.all_funcs[ky].source
+            }
+        }
+    }
 
     let file_info_tables = {
         "map_of_files" : g_map_of_files,
-        "funcs_to_file" : funcs_to_files
+        "funcs_to_file" : funcs_to_files,
+        "funcs_to_source" : funcs_to_src
     }
 
 
     await fos.write_out_pretty_json("./test/map_of_files.json",file_info_tables,4)
 
+    let destination = "/home/richard/GitHub/alphas/copious-software-dev-manager/plugins/snippet_finder/data/map_of_files.json"
+    await fos.write_out_json(destination,file_info_tables)
+
 }
 
 
- main()
+main()
 

@@ -9,6 +9,10 @@ var g_current_pin = null;
 var g_fade_scheduled = null;
 var g_defade_scheduled = null;
 
+if ( window.all_windows === undefined ) {
+	window.all_windows = false
+}
+
 function togglebar(the_bar,state) {
 	// enter exit animation
 	if ( state == 1 ) {
@@ -72,8 +76,8 @@ function clear_pin_time() {
 }
 
 
-function unpin_current() {
-	if ( recent_pin(g_current_pin) ) {
+function unpin_current(timeless) {
+	if ( g_current_pin && !timeless && recent_pin(g_current_pin) ) {
 		return false
 	}
 	if ( g_CurContainer )  {
@@ -82,10 +86,12 @@ function unpin_current() {
 	}
 	if ( g_current_pin != null ) {
 		g_current_pin.style.visibility = "hidden";
+		g_current_pin.style.display = "none";
 		g_current_pin.style.zIndex = -10
 	}
 	return true
 }
+
 function fade_apparition(btn,evt) {
 	if ( g_apparition !== null ) {
 		var fader = g_apparition;
@@ -163,7 +169,16 @@ function pinBoxElem(thisPin) {
 	thisPin.style.opacity = "1.0"
 	pin_ItsAlive(g_current_pin);
 }
+
 function pinBox(selector) {
+	if ( all_windows ) {
+		if ( selector in all_windows ) {
+			let winbox = all_windows[selector]
+			winbox.show()
+			winbox.focus()
+			return
+		}
+	}
 	let thisPin = document.querySelector(selector);
 	pinBoxElem(thisPin)
 }
@@ -181,55 +196,61 @@ function resize() {
 			centerBox.style.visibility = "visible";
 			centerBox.style.display = "block";
 		}
-		rightBox.innerHTML = rightBoxText();
-		squashMenu.style.visibility = "hidden";
-		squashMenuContainer.style.visibility = "hidden";
-		rightBox.style.visibility = "visible";
-		rightBox.style.display = "block";
-		if ( g_LoggedIn ) {
-			logoutCtrl.style.visibility = "visible";
-			logoutCtrl.style.display = "block";
-		} else {
-			logoutCtrl.style.visibility = "hidden";
-			logoutCtrl.style.display = "none";
-		}
-		let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
-		if ( logoutCtrlInDropdown ) {
-			logoutCtrlInDropdown.style.visibility = "hidden";
-			logoutCtrlInDropdown.style.display = "none";
-		}
+		if ( rightBox ) rightBox.innerHTML = rightBoxText();
+		if ( squashMenu ) squashMenu.style.visibility = "hidden";
+		if ( squashMenuContainer ) squashMenuContainer.style.visibility = "hidden";
+		if ( rightBox ) rightBox.style.visibility = "visible";
+		if ( rightBox ) rightBox.style.display = "block";
+        if ( logoutCtrl ) {
+            if ( g_LoggedIn ) {
+                logoutCtrl.style.visibility = "visible";
+                logoutCtrl.style.display = "block";
+            } else {
+                logoutCtrl.style.visibility = "hidden";
+                logoutCtrl.style.display = "none";
+            }
+            let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
+            if ( logoutCtrlInDropdown ) {
+                logoutCtrlInDropdown.style.visibility = "hidden";
+                logoutCtrlInDropdown.style.display = "none";
+            }
+        }
 	} else {
 		if ( centerBox ) {
 			centerBox.textContent = "";
 			centerBox.style.visibility = "hidden";
 			centerBox.style.display = "none";
 		}
-		rightBox.textContent = "";
-		rightBox.style.visibility = "hidden";
-		rightBox.style.display = "none";
-		squashMenu.style.visibility = "visible";
+		if ( rightBox ) rightBox.textContent = "";
+		if ( rightBox ) rightBox.style.visibility = "hidden";
+		if ( rightBox ) rightBox.style.display = "none";
+		if ( squashMenu ) squashMenu.style.visibility = "visible";
 		//
-		logoutCtrl.style.visibility = "hidden";
-		logoutCtrl.style.display = "none";
-		if ( g_LoggedIn ) {
-			let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
-			if ( logoutCtrlInDropdown ) {
-				logoutCtrlInDropdown.style.visibility = "visible";
-				logoutCtrlInDropdown.style.display = "block";
-			}
-		} else {
-			let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
-			if ( logoutCtrlInDropdown ) {
-				logoutCtrlInDropdown.style.visibility = "hidden";
-				logoutCtrlInDropdown.style.display = "none";
-			}
-		}
-	}
-	if ( window.innerWidth >= 1100 ) {
-		lowerFiller.innerHTML = lowerFillerText();
-	} else {
-		lowerFiller.textContent = "";
-	}
+        if ( logoutCtrl ) {
+            logoutCtrl.style.visibility = "hidden";
+            logoutCtrl.style.display = "none";
+            if ( g_LoggedIn ) {
+                let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
+                if ( logoutCtrlInDropdown ) {
+                    logoutCtrlInDropdown.style.visibility = "visible";
+                    logoutCtrlInDropdown.style.display = "block";
+                }
+            } else {
+                let logoutCtrlInDropdown = document.getElementById('logout-control-dropdown')
+                if ( logoutCtrlInDropdown ) {
+                    logoutCtrlInDropdown.style.visibility = "hidden";
+                    logoutCtrlInDropdown.style.display = "none";
+                }
+            }
+        }
+    }
+    if ( lowerFiller ) {
+        if ( window.innerWidth >= 1100 ) {
+            lowerFiller.innerHTML = lowerFillerText();
+        } else {
+            lowerFiller.textContent = "";
+        }
+    }
 }
 
 

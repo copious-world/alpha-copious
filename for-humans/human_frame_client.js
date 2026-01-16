@@ -59,7 +59,7 @@ async function exists_galactic_identity() {
 
 async function add_galactic_identity(public_identity) {
     if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
-    g_human_user_storage.add_user(public_identity)
+    await g_human_user_storage.add_user(public_identity)
     return false
 }
 

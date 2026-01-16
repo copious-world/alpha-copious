@@ -5,6 +5,8 @@
   "dependencies": {
     "byte-base64": "^1.1.0",
     "diff": "^8.0.2",
+    "escodegen": "^2.1.0",
+    "extra-file-class": "^1.0.2",
     "fast-levenshtein": "^3.0.0",
     "fs-extra": "^10.0.1",
     "handlebars": "^4.7.7",

@@ -91,9 +91,7 @@ function install_frame_page_response() {
             let relationship = mobj.relationship
             let action = mobj.action
             let direction = mobj.direction
-            //
-
-            FRAME_PAGE_TO_BUILDER    
+            //    
             if ( direction === FRAME_PAGE_TO_BUILDER ) {
                 if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                     if ( action === FRAME_COMPONENT_RESPONDING ) {
