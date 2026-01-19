@@ -66,13 +66,21 @@ audios_1
 greet_and_meet_2
 */
 
+/**
+ * If the page has been loggged in, then the public identity will have been loaded into the context.
+ * First. the session of the public identity is discarded
+ * Then, the DB version of it is updated to keep the session from reloading.
+ * Finally, the appearance of the page is changed to the logged out state, and the reference to the public identity is discarded.
+ */
 async function logout_process() {
     if ( g_current_pub_identity ) {
         delete g_current_pub_identity.session
         await update_galactic_identity(g_current_pub_identity)
         visual_session_indicator(false)
+        g_current_pub_identity = false
     }
 }
+
 
 function hide_login() {
     let greeter = document.getElementById("greet_and_meet_2")
