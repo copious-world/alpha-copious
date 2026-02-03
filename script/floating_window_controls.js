@@ -152,3 +152,148 @@ function add_resizing() {
 add_resizing() 
 
 
+
+function init_app_resize() {
+    //
+    window.addEventListener('resize',(ev) => {
+        // container it
+        let it_container = document.getElementById('sections-container')
+        if ( it_container ) {
+            let footer = document.getElementsByTagName('footer')[0]
+            if ( footer ) {
+                let ic_rect = it_container.getBoundingClientRect()
+                let ft_rect = footer.getBoundingClientRect()
+                let h = ft_rect.top - ic_rect.top - 1;
+                it_container.style.height = `${h}px`
+                it_container.style.minHeight= `${h}px`
+                //
+                // let flw = document.getElementById("sections-flc")
+                // if ( flw ) {
+                //     flw.style.height = `${h}px`
+                //     flw.style.minHeight= `${h}px`
+                // }
+                //
+                for ( let i = 0; i < g_section_count; i++ ) {
+                    let sect = document.getElementById(`section_${i+1}`)
+                    if ( sect ) {
+                        sect.style.height = `${h - 2}px`
+                        sect.style.minHeight = `${h - 2}px`
+                    }
+                }
+            }
+        }
+        //
+        for ( let wbox_id in all_windows ) {
+            let wbox = all_windows[wbox_id]
+            if ( !wbox ) continue;
+            let w = window.innerWidth*0.8;
+            let x = window.innerWidth*0.3;
+            if ( wbox.x >= (window.innerWidth-20) ) {
+                wbox.move(x)
+            }
+            if ( wbox.y >= (window.innerHeight-20) ) {
+                wbox.move(wbox.y - 60)
+            }
+            let h = window.innerHeight*0.96
+            wbox.resize(w,h)
+        }
+        //
+        for ( let dinfo of Object.values(draggers) ) {
+            let dragged = dinfo.dragged
+            if ( dragged ) {
+                //
+                let drect = dragged.getBoundingClientRect()
+                //
+                let x = window.innerWidth*0.3;
+                let h = window.innerHeight*0.8
+                let w = window.innerWidth*0.9;
+                //
+                if ( drect.x >= (window.innerWidth-20) ) {
+                    dragged.style.left = `${x}px`
+                }
+                if ( drect.y >= (window.innerHeight-20) ) {
+                    dragged.style.top = `{drect.y - 60}px`
+                }
+                w = Math.min(450,w)
+                h = Math.min(450,h)
+                dragged.style.width = `${w}px`
+                dragged.style.height = `${h}px`
+            }
+        }
+    })
+    //
+}
+
+
+
+function init_app_windows() {
+
+    let left = "30%",
+        height = "96%",
+        width = "60%"
+    //
+    let ref_el = document.getElementById("sections-container")
+    if ( ref_el ) {
+        if ( window.innerWidth >= 1100 ) {
+            let rbox = ref_el.getBoundingClientRect()
+            let l = rbox.right + 6
+            left = `${rbox.right}px`
+            let r = window.innerWidth - 20;
+            let w = r - l
+            width = `${w}px`
+        } else {
+            let rbox = ref_el.getBoundingClientRect()
+            let l = rbox.left + 6
+            left = `${l}px`
+            width = `${window.innerWidth}px`
+        }
+    }
+    //
+    let winbox = new WinBox("extra-file-class",{
+        "url" : "http://localhost/doc/extra-file-class",
+        "x" : left,
+        "height" : height,
+        "width" : width,
+        "hidden" : true,
+        "onclose" : () => {
+            let winbox = all_windows["extra-file-class"]
+            winbox.hide(true)
+            return true
+        }
+    })
+    //
+    all_windows["extra-file-class"] = winbox
+    //
+    winbox = new WinBox("roll-right",{
+        "url" : "http://localhost/doc/index.html",
+        "x" : left,
+        "height" : height,
+        "width" : width,
+        "hidden" : true,
+        "onclose" : () => {
+            let winbox = all_windows["roll-right"]
+            winbox.hide(true)
+            return true
+        }
+    })
+    all_windows["roll-right"] = winbox
+    //
+    //
+    winbox = new WinBox("release-lite",{
+        "url" : "http://localhost/doc/index.html",
+        "x" : left,
+        "height" : height,
+        "width" : width,
+        "hidden" : true,
+        "onclose" : () => {
+            let winbox = all_windows["release-lite"]
+            winbox.hide(true)
+            return true
+        }
+    })
+    all_windows["release-lite"] = winbox
+    //
+    init_app_resize()
+
+}
+//

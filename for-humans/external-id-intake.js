@@ -25,12 +25,12 @@ window.addEventListener("message", (event) => {
 
 // ID UPLOAD .. depends on user_db.js
 async function public_intergalactic_id_upload() {
+	if ( check_https() ) return
 	try {
 		let json = await get_file_from_file_element("galactic-upload-id")
 		let public_id = JSON.parse(json)
 		await injest_identity_to_current_id(public_id)
 	} catch(e) {
-
 	}
 }
 

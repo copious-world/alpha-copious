@@ -2,14 +2,45 @@
 
 
 //$>>	ext_of_file
+/**
+ * Just in case the something like node.js path is not available
+ * 
+ * @param {string} file_name 
+ * @returns {string}
+ */
 function ext_of_file(file_name) {
 	let idx = file_name.lastIndexOf('.')
-	let ext = file_name.substr(idx+1)
+	let ext = file_name.substring(idx+1)
 	return ext
 }
 
+
+//$>>	fussy_url
+/**
+ * Some formulas involving url's need to have a slash at the end
+ * 
+ * @param {string} source 
+ * @returns {string}
+ */
+function fussy_url(source) {
+    let c = source[source.length - 1]
+    if ( c !== '/' ) {
+        source += '/'
+    }
+    return source
+}
+
 //$>>	clonify
-function clonify(obj) {
+/**
+ * Two versions are offered, just in case.
+ * The old way of cloning was to use JSON parsing.
+ * Structured clone is prefered.
+ * 
+ * @param {object} obj 
+ * @returns {object}
+ */
+var clonify = (typeof structuredClone !== "function" ) 
+? (obj) => {
 	if ( typeof obj === 'string' ) return(obj)
 	try {
 		let out = JSON.parse(JSON.stringify(obj))
@@ -18,11 +49,37 @@ function clonify(obj) {
 		return(null)
 	}
 }
+: structuredClone
+
+
+
+/**
+ * The parent window reference is only returned in if the window has been spawned from another window.
+ * If it is a frame, the reference will not be returned.
+ * 
+ * @returns {object} - boole for truth about being in a frame, the site it comes from if this is a child window.
+ */
+function check_frame_status() {
+	let in_frame = false
+	let from_site = false
+    if ( window.frameElement ) {
+        in_frame = true
+    } else {
+        if ( window.parent !== window ) {
+            in_frame = true
+            from_site = window.parent
+        }
+    }
+    return {in_frame, from_site}
+}
+
+
 
 //$>>	addscript
 // attach a script to a DOM element
 window._script_added_cout = 0
 const MAX_SCRIPTS_ADDED = 1
+
 
 function remove_last_appended_script_child(whereScipt) {
 	if ( whereScipt ) {

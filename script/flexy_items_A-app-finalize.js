@@ -66,6 +66,27 @@ audios_1
 greet_and_meet_2
 */
 
+
+async function handle_nav() {
+    //
+    let nav_type = window.performance.navigation.type
+    if ( (nav_type === window.performance.navigation.TYPE_RELOAD) || (nav_type === window.performance.navigation.TYPE_BACK_FORWARD) ) {
+        if ( check_https() ) {
+            logout_process()
+        } else {
+            let has_session = await intergalactic_session_going()
+            if ( has_session ) {
+                visual_session_indicator(true)
+                hide_login_process()
+            } else {
+                logout_process()
+            }
+        }
+    }
+    //
+    // window.performance.navigation.TYPE_NAVIGATE
+}
+
 /**
  * If the page has been loggged in, then the public identity will have been loaded into the context.
  * First. the session of the public identity is discarded

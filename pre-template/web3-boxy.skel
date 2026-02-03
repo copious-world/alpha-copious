@@ -106,7 +106,9 @@ $$verbatim::{
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 }
 
-$$script::[for-humans]/shared_constants.js<<
+$$script::[for-humans]/shared_constants_m.js<<
+
+$$script::[for-humans]/msg_vars.js<<
 
 $$script::[for-humans]/external-id-intake.js<<
 

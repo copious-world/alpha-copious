@@ -156,7 +156,7 @@ class HumanUserDB extends AppDBWrapper {
     }
 
     //
-    async add_file(file_name,description,svg,to_layer,file_data) {
+    async add_file(file_name,description,svg,to_layer,file_data = "") {
         if ( file_data === undefined ) file_data = ""
         if ( svg === undefined ) svg = ""
         if ( to_layer == undefined ) to_layer = 0

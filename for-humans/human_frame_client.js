@@ -1,6 +1,11 @@
 
 // FOR HUMANS  >> HUMAN FRAME CLIENT .JS
 
+
+if ( window.g_human_user_storage === undefined ) window.g_human_user_storage = false
+
+
+
 //  human client frame
 
 let g_my_current_session = false
@@ -65,7 +70,7 @@ async function add_galactic_identity(public_identity) {
 
 async function update_galactic_identity(public_identity) {
     if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
-    g_human_user_storage.update_user(public_identity)
+    await g_human_user_storage.update_user(public_identity)
     return false
 }
 

@@ -873,6 +873,8 @@ class AppDBWrapper {
 
     application_total_entry(sess_obj) {
         // implemented by derived method (override)
+        // this.identity_list.push(identity)
+        // this.user_list.push(identity.user_info)
     }
 
 }

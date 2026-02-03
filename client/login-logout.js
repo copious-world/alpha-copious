@@ -7,6 +7,7 @@
 //$>>	login_process
 var g_login_Handling = null
 function login_process() {
+	if ( check_https() ) return
 	let login = document.querySelector("#login")
 	if ( login ) {
 		login.style.visibility = "visible"
@@ -58,8 +59,8 @@ async function logout(originator = true) {
 	if ( !g_LoggedIn ) {
 		for ( let key in g_loginStateViewHolders ) {
 			let stateHolder = g_loginStateViewHolders[key]
-			if ( stateHolder ) {
-				let element = stateHolder.element
+			let element = stateHolder?.element
+			if ( element && stateHolder.authed ) {
 				element.innerHTML = stateHolder.unauthed
 				element.style.visibility = true
 				element.style.display = "block"
@@ -125,3 +126,4 @@ logout
 loginView
 setupLogoutRestoration
 */
+

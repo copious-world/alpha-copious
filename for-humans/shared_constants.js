@@ -5,7 +5,7 @@
 //
 const SITE_PAGE_TO_FRAME = "site_page_to_frame"
 const SITE_PAGE_TO_BUILDER = "site_page_to_builder"
-const SITE_PAGE_TO_ALL = "RELAY"
+const SITE_PAGE_TO_ALL = "RELAY_S"
 const SITE_RELATES_TO_BUILDER = "site_page_request_id"
 const SITE_RELATES_TO_FRAME = "site_page_request_action"
 const SITE_RELATES_TO_ALL = "site_frame_yields_news"
@@ -30,7 +30,7 @@ const FRAME_ACTION_FROM_PUBLISHER = "publisher_app_requests_action"
 // APP PAGE
 //
 const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
-const HOSTED_APP_TO_ALL = "RELAY"
+const HOSTED_APP_TO_ALL = "RELAY_A"
 const APP_RELATES_TO_FRAME = "app_in_human_context"
 const APP_RELATES_TO_ALL = "app_in_frame_yields_news"
 
@@ -57,6 +57,9 @@ const NEW_USER_TO_FRAME = "new_user_to_frame"
 // actions
 const FRAME_COMPONENT_RESPOND = "respond"
 const FRAME_COMPONENT_RESPONDING = "responding"
+const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
+//
+
 const FRAME_ACTION_LOAD_APP = "load-app"
 const FRAME_PAGE_AUTO_LOGIN = "auto-login"
 const FRAME_ACTION_INSTALL = "install-id"
@@ -85,18 +88,17 @@ const FRAME_ACTION_DOWNLOAD_PUBLIC = "id-manager-download-public-intro"
 const FRAME_MANAGE_PICTURE_ASSET = "manager-picture-asset"
 const FRAME_ACTION_ATTACH = "manager-asset-attach"
 
-const HOST_APP_WANTS_SESSION = "session-to-app"
+const HOSTED_APP_WANTS_SESSION = "session-to-app"
 
 // categories
-const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
 const FRAME_COMPONENT_MANAGE_ID = "m-igid"
 const HOST_APP_PERSONALIZATION = "personalization"
 const FRAME_TO_APP_PUBLIC_COMPONENT = "process-public-info"
-const SITE_TO_FRAME_SESSIONS = "transfer-session"
+const SITE_TO_FRAME_SESSIONS = "transfer-session-S"
 const FRAME_TO_SITE_MANAGE_SESSION = "site-manage-session"
 const WORKER_TO_FRAME_SESSIONS = "w-transfer-session"
-const FRAME_WORKER_TO_SESSIONS = "transfer-session"
-const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session"
+const FRAME_WORKER_TO_SESSIONS = "transfer-session-W"
+const FRAME_TO_HOSTED_APP_SESSIONS = "transfer-session-A"
 const FRAME_TO_APP_SIGNATURE = "signed-data"
 const FRAME_SIGNED = "yep-signed"
 const FRAME_POSTED_PRIMARY = "yep-primary-response"
@@ -117,27 +119,3 @@ const FRAME_RETURNS_DATA = "frame-provides-data-part"
 const FRAME_RETURNS_SESSION_CHECK = "frame-provides-session-check"
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-let g_user_current_session = false
-let g_current_user_id = false
-let g_current_user_name = false
-let g_current_pub_identity = false
-
-let g_hash_session_map = {}
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-var g_current_session = false
-
-
-// window.g_message_template =
-
-const g_message_template = {
-    "category" : "",
-	"direction" : SITE_PAGE_TO_FRAME,
-	"action" : "any",
-	"relationship" : SITE_RELATES_TO_FRAME
-}
-
-/// END OF CONSTANTS  (ALPHA)
-

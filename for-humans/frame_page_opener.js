@@ -39,3 +39,21 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
     }
     return [child,uri_of_launch]
 }
+
+async function open_intergalactic_session_window(frame_use,human_info,session) {
+    if ( human_info ) {
+        g_current_pub_identity = human_info
+        let human_frame_url = human_info.human_frame_url
+        let [frame_window,uri_of_launch] = await open_app_page_in_human_frame(human_frame_url,frame_use)
+        if ( frame_window && session ) {
+            let message = {
+                "category": SITE_TO_FRAME_SESSIONS,
+                "action" : FRAME_HAS_SESSION,
+                "data" : session
+            }
+
+            tell_frame_page(message)
+        }
+    }
+}
+

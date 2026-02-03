@@ -344,6 +344,8 @@ async function main()  {
     let flist = fs.readdirSync("client")
     let f2_list = fs.readdirSync("script")
     let f3_list = fs.readdirSync("for-humans")
+    let f4_list = fs.readdirSync("databases")
+    let f5_list = fs.readdirSync("messaging")
 
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -362,7 +364,18 @@ async function main()  {
     })
     console.log(f3_list)
 
-    files = files.concat(f2_list).concat(f3_list)
+    f4_list = f4_list.map((a_file) => {
+        return `databases/${a_file}`
+    })
+    console.log(f4_list)
+
+    f5_list = f5_list.map((a_file) => {
+        return `messaging/${a_file}`
+    })
+    console.log(f5_list)
+
+    files = files.concat(f2_list).concat(f3_list).concat(f4_list).concat(f5_list)
+
 
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
