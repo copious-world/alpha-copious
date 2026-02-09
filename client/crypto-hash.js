@@ -3,7 +3,7 @@
 // >> import
 //modularize>> import * as base64 from "../modules/base64.js";
 //<<
-base64 = window
+window.base64 = window
 
 //$>>	do_hash_buffer
 async function do_hash_buffer(text) {

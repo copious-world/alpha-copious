@@ -1,0 +1,557 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="author" content="{{who_am_I}}" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<meta id="theme-color" name="theme-color" content="{{user-theme-color}}">
+
+    <link rel="icon" type="image/svg+xml" href="./copiousLogo.svg" />
+
+	<link rel="canonical" href="{{canonical}}">
+
+	<title>{{who_am_I}}</title>
+	<meta name="description" content="{{pageDescription}}">
+	<style>
+
+
+        @media screen and (max-width: 390px) {
+            .super-header {
+                display:none;
+            }
+        }
+
+        @media screen and (min-width: 391px) {
+            .super-header {
+                border: solid 1px rgb(223, 89, 11);
+                padding: 2px;
+                font-size: smaller;
+                font-weight: 700;
+                background-color: rgb(255, 254, 248);
+                color: rgb(74, 83, 55);
+                max-height:32px;
+                width: 100%;
+            }
+        }
+
+        .content-container {
+            border: solid 1px rgb(0, 6, 85);
+            padding: 2px;
+            padding-left: 1px;
+            background-color: white;
+            position: absolute;
+            top: 34px;
+            bottom: 0;
+            width : calc(100vw - 4px);
+        }
+        .super-container {
+            width: calc(100% - 2px);
+            min-height: 100%;
+        }
+        .owner_name {
+            font-weight: bolder;
+            color: rgb(30, 20, 95);
+            font-style: normal;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 91%;
+        }
+        button {
+            cursor: pointer;
+            font-size: 85%;
+            font-weight: bold;
+            color:darkslateblue;
+        }
+        #content-frame {
+            border: 1px solid rgba(245, 245, 245, 0.897);
+        }
+        #outer {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+        }
+        .selected-frame {
+            border-color: green;
+        }
+        #application_container {
+            display:block
+        }
+        #manager_container {
+            display:none
+        }
+        #db_container {
+            display:none;
+        }
+
+        .link-intake {
+            border: navy solid 1px;
+            padding-left: 4px;
+            padding-right: 4px
+        }
+        .link-intake-label {
+            font-weight: 800;
+        }
+
+        .media-dashboard-header {
+            color:rgb(30, 20, 95);
+            font-weight: bold;
+            background-color: antiquewhite;
+            border:solid 2px darkkhaki;
+            margin-top:0px;
+            margin-bottom:1px;
+        }
+
+
+        /*  dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 200px;
+            height:max-content;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+            margin-top:0px;
+            top: 24px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: grid;
+            row-gap: 4px;
+            grid-template-columns: auto;
+            width: fit-content;
+            height: fit-content;
+        }
+
+
+        .button-tower {
+            margin:2px;
+            grid-row: 2 / 5;
+        }
+
+
+        .ui-controls-1 {
+            width: fit-content;
+            vertical-align: top;
+            display: inline-block;
+        }
+
+
+
+        @media screen and (max-width: 390px) {
+            .top-controls {
+                width:100%;
+                height: 60px;
+                text-align: left;
+                vertical-align: text-top;
+                border-bottom: 1px solid darkslateblue;
+            }
+        }
+
+        @media screen and (min-width: 391px) {
+            .top-controls {
+                display:none;
+            }
+        }
+
+
+        .admin-hover {
+            box-shadow: 2px 3px rgb(248, 230, 185);
+            font-weight: bolder;
+            box-shadow: gainsboro;
+            text-decoration-line: underline;
+            cursor: pointer;
+            margin:0px;
+        }
+
+        .admin-hover:hover {
+            cursor: pointer;
+            background-color: rgba(176, 166, 143,0.2);;
+            box-shadow: 3px 1px rgb(176, 166, 143);
+            text-shadow: 1px 2px 0px #12100b;
+            color: rgb(240, 208, 126);
+            margin:0px;
+        }
+
+        .selected-panel {
+            font-weight: bold;
+            text-decoration: solid underline;
+            color:rgb(37, 17, 111)
+        }
+
+        .bio-signerupper {
+            background-color: rgb(252, 251, 248);
+            border: solid 1px rgb(0, 0, 117);
+            padding:6px;
+        }
+    
+        @media (min-width : 751px) {
+            .bio-signerupper blockquote {
+                font: 14px/22px normal helvetica, sans-serif;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 50px;
+                padding-left: 15px;
+                border-left: 3px solid rgb(221, 219, 219);
+            }
+        }
+    
+        @media (max-width : 751px) {
+            .bio-signerupper blockquote {
+                font: 14px/22px normal helvetica, sans-serif;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 10px;
+                padding-left: 5px;
+                border-left: 3px solid rgb(221, 219, 219);
+            }
+        }
+    
+    
+        .bio-picture-drop {
+            width:99%;
+            min-height:90px;
+            border: 1px solid navy;
+            background-color:rgb(225, 230, 236);
+            display:block;
+            margin: 2px;
+            text-align:center;
+            cursor:pointer;
+            padding-top:5%;
+        }
+    
+        .bio-picture-drop:hover {
+            border: 2px dotted rgb(180, 8, 31);
+            background-color:rgb(151, 197, 114);
+        }
+
+
+    </style>
+</head>
+<body onload="finalize_info_to_containers()">
+    <script>
+
+        let resolvers = [false,false,false]
+
+        var p_readies = []
+        let p_index = 0;
+        p_readies.push(new Promise((resolve,reject) => {
+            resolvers[p_index] = () => { resolve( true ) }
+        }))
+        p_index++
+        p_readies.push(new Promise((resolve,reject) => {
+            resolvers[p_index] = () => { resolve( true ) }
+        }))
+        p_index++
+        p_readies.push(new Promise((resolve,reject) => {
+            resolvers[p_index] = () => { resolve( true ) }
+        }))
+
+        var reslover_entries = {
+            "manager" : resolvers[0],
+            "wallet" : resolvers[1],
+            "uploader" : resolvers[2]
+        }
+
+        function resolver_event(ev,key) {
+            if ( typeof resolver === 'function' ) {
+                let f = reslover_entries[key]
+                f()
+            }
+        }
+
+    </script>
+
+    <div id="top-controls" class="top-controls" >
+        <div class="ui-controls-1 dropdown">
+            <div class="admin-hover dropdown">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path class="heroicon-ui" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+                </svg>      
+            </div>
+            <div class="dropdown-content" >
+                <span id="put-sel-frame-here" class="selected-panel">
+                    starts with application
+                </span>
+                    <button id="db_container-btn-sml" onclick="show_local_data('sml','local data')">local data</button>
+                    <button id="manager_container-btn-sml" onclick="show_id_manager('sml','identity manager')">identity manager</button>
+                    <button id="wallet_container-btn-sml" onclick="show_wallet_manager('sml','wallet manager')">wallet manager</button>
+                    <button id="application_container-btn-sml" onclick="show_application('sml','application')" class="selected-frame">application</button>    
+            </div>
+        </div>
+    </div>
+
+    <div id="super-header" class="super-header" style="white-space: nowrap;overflow-x: scroll;" >
+        <span class="owner_name">{{who_am_I}}</span>
+        <div id="open-controls" style="display:inline-block;">
+            <button onclick="show_controls()">&gt;&gt;</button>
+        </div>
+        <div id="user-controls" style="display:none;">
+            :: control page :: 
+            <button id="db_container-btn" onclick="show_local_data()">local data</button>&nbsp;
+            <button id="manager_container-btn" onclick="show_id_manager()">identity manager</button>&nbsp;
+            <button id="wallet_container-btn" onclick="show_wallet_manager()">wallet manager</button>&nbsp;
+            <button id="application_container-btn" onclick="show_application()" class="selected-frame">application</button>
+            <button onclick="hide_controls()">&lt;&lt;</button>
+        </div>
+    </div>
+
+    <div id="application_container" class="content-container" >
+        <iframe id="content-frame" src="" class="super-container" allow="camera;microphone;geolocation">
+        Source will open here
+        </iframe>
+    </div>
+    <div id="manager_container" class="content-container" >
+        <iframe id="id-manager-frame" src="https://www.of-this.world/manager" class="super-container" onload="resolver_event(event,'manager')">
+        manager frame
+        </iframe>
+    </div>
+
+
+    <div id="wallet_container" class="content-container" >
+        <iframe id="id-wallet-frame" src="https://www.of-this.world/" class="super-container" onload="resolver_event(event,'wallet')">
+        wallet frame
+        </iframe>
+    </div>
+
+    <div id="db_container" class="content-container" style="background-color:rgb(241, 241, 241)">
+        <div class="media-dashboard-header" style="white-space: nowrap;height:24px">
+            Special Application Link  <button id="special-link-opener" onclick="show_special_link_entry()">&gt;&gt;</button>
+            <button id="special-link-hider" onclick="hide_special_link_entry()">&lt;&lt;</button>
+        </div>
+        <div id="special-app-link" class="link-intake" style="background-color:white;white-space: nowrap;width:99%;overflow-x: scroll;height:26px;">
+            <span class="link-intake-label">Enter link to an application:</span>
+            <input id="human-page-app-link" />    
+            <button onclick="surf_to_link('human-page-app-link')">open page</button>
+        </div>
+        <div id="dash_control" class="media-dashboard-header" style="white-space: nowrap;">
+            Website Application Media Dashboard <button id="special-dash-opener" onclick="show_special_dash_entry()">&gt;&gt;</button>  <button id="special-dash-hider" onclick="hide_special_dash_entry()">&lt;&lt;</button>
+        </div>
+        <div id="special-dash-link" class="link-intake" style="background-color:white;white-space: nowrap;width:99%;overflow-x: scroll;height:26px;">
+            Don't see your prefered dashboard below?
+            <span class="link-intake-label">Optional link to a host dashboard:</span>
+            <input id="human-page-dashboard-link" />    
+            <button onclick="surf_to_uploader('human-page-dashboard-link')">load dashboard</button>
+        </div>
+        <div id="dashboard-frame" style="visibility:hidden;background-color:white;position:absolute;bottom:0px;top:114px;width:98%" >
+            <iframe id="humans-uploader-frame" src="https://cloud.copious.world/uploader"  class="super-container" onload="resolver_event(event,'uploader')" style="height:100%">
+                data manager frame
+            </iframe>    
+        </div>
+
+        <div id="signer-upper-controller" class="bio-signerupper" style="display:block;background-color:white;position:absolute;bottom:0px;top:0px;width:98%;z-index:100;overflow: auto;" >
+            <div class="bio-picture-drop"  ondrop="drop_biometric(event)" ondragover="bio_dragover_picture(event)"  onclick="load_biometric(event)" >
+                Finish making your intergalatic identitity. (or... do you already have one? <button onclick="navigate_to_uploader()">use identity uploader</button>)
+                <br>
+                Drop your data here. Or, click for a file dialog<br>
+                (see below for an explanation)<br>
+                <span id="waiting-for-key-state">&nbsp;</span>
+            </div>
+            <blockquote>
+                What is this? In order to identify you later, you must store in your device's data record, binary data
+                that can be used to identify you. It is up to you, the user, to determine what you want for this. 
+                It can be a voice recording, a fingerprint, a retinal scan, etc. This should be data that can be public, but is unique.
+                A fingerprint or a face scan is something anyone can see or get as long they are in your proximity. But, 
+                no one else has your fingerprints or face. 
+            </blockquote>
+            <blockquote>            
+                As with other data taken in here, your file will never leave your device
+                by the operations of this page. The data will be stored with your private information under your personal URL out of reach 
+                from other URLs. The page code will only make a hash of the data. The hash will be available later for use
+                in verification processes that prove your ownership of data you make. It helps to keep your idenitifcation file in your 
+                private records so that it can be used later to reproduce the hash and to be used to match against biometric data produced at a later time.
+            </blockquote>
+            <blockquote>
+                This page does not examine the data. This data is treated only as some binary stuff. The code to process this file, in order 
+                to make a hash, is included within this interface. That is, the processing takes place on your device and not on a server.
+            </blockquote>
+            <blockquote style="border: 1px solid orangered;background-color: floralwhite;">
+                Your data is stored under your URL and you may use the identity manager tab to download and upload your data.
+                While you are not using your device, it is recommended that you download your data to external storage, such as a thumb drive for example.
+                You will be able to take any private data off your device and upload it later. When you upload your data, 
+                all of your applications that run in the <b>application</b> tab will become functional.
+            </blockquote>
+            <blockquote>
+                <b>note:</b> This page is not using the idenitfier from the device's web authorization. You, the user, may take data off
+                the current device and use it on another device by uploading to your URL using the <b>indentity manager</b> tab. Don't expect
+                any web authorization interface on another device to produce the same ID as your Intergalactic Identity.<br>
+                <b>note:</b> Application data that you make may be sent by this page to a server when you decide that is what you want to have happen. 
+                Your private data for identification will not be provided to any data mover outside the scope of your custom URL. Your custom URL 
+                page does not send your private idenification anywhere except to your file download. You may request public information to be provided
+                to applications. 
+            </blockquote>
+        </div>
+    </div>
+
+
+    <!--  ....  -->
+
+    <div style="visibility: hidden;display: none;">
+        <a id='identity-download-link' href = "" >identity download</a>
+        <input class="no-view-file-field" type="file" id="drop-click-file_loader" />
+    </div>
+
+</body>
+<!-- support table = g_supported_workers
+<script lang="JavaScript" src="./supported_workers" ></script>
+ -->
+<script>
+
+
+// OFFLOADED (shared_constants)
+// OFFLOADED (common)
+// OFFLOADED (crypto-global)
+// OFFLOADED (pc_location)
+// OFFLOADED (base_string)
+// OFFLOADED (base64)
+// OFFLOADED (crypto-hash)
+// OFFLOADED (crypto-wraps)
+// OFFLOADED (https_checks)
+// OFFLOADED (cwid)
+// OFFLOADED (ucwid)
+// OFFLOADED (post_fetch)
+// OFFLOADED (file_ops)
+// OFFLOADED (one_table_db)
+// OFFLOADED (user_db)
+
+
+// OFFLOADED (use_db)   -- not user_db
+// OFFLOADED (frame_page_id_manager_response)   -- not user_db
+// OFFLOADED (galactic_session)
+// OFFLOADED (IGID)
+
+
+// CHANGED --- explain: alive responses become generalized messages with appropriate values
+
+
+// OFFLOADED (frame_page_site_response)
+// OFFLOADED (frame_page_app_response)
+// OFFLOADED (frame_page_publisher_response)
+// OFFLOADED (frame_page_id_builder_response)
+
+// OFFLOADED (teller_messages)
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+function install_broadcast_channel() {
+    g_frame_broadcast_channel = new BroadcastChannel("human_frame_broadcast")
+    //
+    g_frame_broadcast_channel.onmessage = (event) => {
+        try {
+            let mobj = JSON.parse(event.data)
+            let category = mobj.category
+            let relationship = mobj.relationship
+            let action = mobj.action
+            let direction = mobj.direction
+            //
+            if ( direction === WORKER_TO_FRAME ) {
+                g_site_page = event.source
+                if ( relationship === WORKER_RELATES_TO_FRAME ) {
+                    let data = mobj.data
+                    switch ( category ) {
+                        case WORKER_TO_FRAME_SESSIONS: {
+                            let session = data
+                            switch ( action ) {
+                                case FRAME_STOP_SESSION: {
+                                    if (  g_current_session === session ) {
+                                        let msg = {
+                                            "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                            "action" : FRAME_STOP_SESSION,
+                                            "data" : {
+                                                "session" : session,
+                                                "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                            }
+                                        }
+                                        tell_hosted_app_page(msg)
+                                        g_current_session = false
+                                        if ( g_this_page_instance_is_session_owner ) {
+                                            msg.category = FRAME_TO_SITE_MANAGE_SESSION
+                                            tell_site_page(msg)
+                                        }
+                                    }
+                                    break;
+                                }
+                                case FRAME_WANTS_SESSION: 
+                                default: {
+                                    g_current_session = session
+                                    //
+                                    let msg = {
+                                        "category" : FRAME_TO_HOSTED_APP_SESSIONS,
+                                        "action" : FRAME_START_SESSION,
+                                        "data" : {
+                                            "session" : session,
+                                            "ccwid" : g_current_pub_identity ? g_current_pub_identity.ccwid : false
+                                        }
+                                    }
+                                    tell_hosted_app_page(msg)
+                                    update_preferences_frame(session)
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+        }
+    };
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// WORKER
+
+
+// //
+// function load_human_frame_worker() {
+//     g_frame_page_service_worker = new SharedWorker('./human_frame_worker.js');
+//     if ( g_frame_page_service_worker ) {
+//         try {
+//             g_frame_page_service_worker.port.start();
+// //            install_service_worker_response()        -- the frame page works inside a service worker container
+//         } catch (e) {
+//             console.log(e)
+//         }
+//     }
+// }
+
+
+
+
+
+/*
+{
+    "human_name":"Joe",
+    "public_identity":{
+        "name":"Joe",
+        "DOB":"10/10/1010",
+        "place_of_origin":"goofball",
+        "cool_public_info":"Other ball",
+        "business":false,
+        "public_key":"{\"alg\":\"RSA-OAEP-256\",\"e\":\"AQAB\",\"ext\":true,\"key_ops\":[\"wrapKey\"],\"kty\":\"RSA\",\"n\":\"tyz1N20gIiiLM10RW8n6OKqB5bPuiZ_trYKqSE8PIYse6DIa142z4FWY7mFcdU7E7EdFbvRQEIULmGdArg3ZGK8gmYrKO_BAIObj7u6k3kISvB6io2uhs7ZIpSgOpU1SrAKtH8PdrYMPZ50lQV6Q4EyM9x24_zm7H67WWwAQ1EdjDKNz5BzOpZ87eQbqBCZdyhzJEe4AkfjFg1YSsVTYq8yq9k6ARZNDM56yH2Ab29_EB0IN24phW0ItegtWunJZ0YlcjKQltEPXkEN8lgLJv95x-pGD-mBTGtA-dnz3Gv7h455ZXNlx1ei99b0e7hmv3NJoB-Njok8R-fhBkHYnbn-3vma8_Uq-sHqkAGGwLGL4RIKWw9WKp9iGnG3eOAoXSCAdQjj1Ek4pbT-aF04m7gUh_XHPMsbAqAPK5PFEiklfD129E56CklaxPDObH5Re_rXN_y5qS6JVraRKqEdxjThjH_VrV-xXNygdWz_a-FiKcjDuW95yja1kRdnQ9ou5IFgI2dqJJ6c6Eld4Xp-RmUPXdFilg8HpnnFKAdhmJyAZnw1YRN0q86fSyabx_fb5M4n4-aCoDYp5o8-Uq1AvgQ-4nh1vLUTtlZImVRXViNztzPH72gNHh9cV84obicn8rFQJYzLivAlmarn5pe6opazvYb714O2MF-nykHvxrkc\"}",
+        "signer_public_key":"{\"alg\":\"ES384\",\"crv\":\"P-384\",\"ext\":true,\"key_ops\":[\"verify\"],\"kty\":\"EC\",\"x\":\"ju-_A1EZaY5ZxbfViGRDqfI7oW40Qi2Tg01tSi57Kpmuju0WavnCallXT56NtoDf\",\"y\":\"s60C2jQnnnz5oj2F6j4hX34Bt9jqZIyckTx-gsA6zbSSN1RuI8qQDuPz0BH6Vumo\"}",
+        "axiom_public_key":"{\"crv\":\"P-384\",\"ext\":true,\"key_ops\":[],\"kty\":\"EC\",\"x\":\"dXc3DWWYXbd0x6d3il-vHTN-Ba7H0hERzr6w4kRjD2kIP3QIdiuqY7bwsImmvMXP\",\"y\":\"2PQ3sMEKGCdx73G4CYjPHrfoiuQT1LK9rwyaXKJ3b9XVPLUy_sNJPReKCs3wLvAx\"}",
+        "ccwid":"1!uAVUSIA!bK9JnJQiul1caMZU3zGAtFzPkNFrXqUXJpQkbhiol24"
+    }
+}
+*/
+
+
+// OFFLOADED (frame_page_id_manager_response)
+// OFFLOADED (for-human/human_frame_client_visuals.js)
+// OFFLOADED (for-humans/biometric_ui)
+// OFFLOADED (human_page_app)
+
+
+</script>

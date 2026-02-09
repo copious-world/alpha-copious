@@ -1,11 +1,24 @@
 
+
+function some_def(val) {
+	if ( val === undefined ) return ""
+	return val
+}
+
+function some_def_bool(val) {
+	if ( val === undefined ) return false
+	if ( typeof val === 'boolean' ) return val
+	return !!(val)
+}
+
+let g_app_auth_endpoint = "captcha"
 function get_auth_endpoint(endpoint) {
-	let url = `${location.protocol}//${location.host}/captcha/${endpoint}`
+	let url = `${location.protocol}//${location.host}/${g_app_auth_endpoint}/${endpoint}`
 	return url
 }
 
 function get_secondary_auth_endpoint(endpoint) {
-	let url = `${location.protocol}//${location.host}/captcha/secondary/${endpoint}`
+	let url = `${location.protocol}//${location.host}/${g_app_auth_endpoint}/secondary/${endpoint}`
 	return url
 }
 

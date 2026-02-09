@@ -78,6 +78,12 @@ const FRAME_REQ_DATA = "send-request-respond"
 
 const MANAGER_PAGE_TO_FRAME = "from-manager-to-frame"
 const ID_MANAGER_ACTION_TO_FRAME = "id-presence-manager"
+const WALLET_PAGE_TO_FRAME = "from-wallet-to-frame"
+const ID_WALLET_ACTION_TO_FRAME = "id-presence-wallet"
+const UCWID_PAGE_TO_FRAME = "from-ucwidui-to-frame"
+const ID_UCWID_ACTION_TO_FRAME = "id-presence-ucwidui"
+
+
 const FRAME_ACTION_REGISTER = "id-session-setup"
 const FRAME_ACTION_GET_LOGIN_URL = "id-session-setup-get-login"
 const FRAME_ACTION_LOGIN = "id-session-get"

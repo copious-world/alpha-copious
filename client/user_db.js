@@ -9,8 +9,8 @@
     id_packet = {
         "name": name,
         "DOB" : DOB,
-        "place_of_origin" : place_of_origin, 
-        "cool_public_info" : cool_public_info, 
+        "place_of_origin" : place_of_origin,
+        "public_information" : public_information, 
         "business" : (business === undefined) ? false : business, 
         "public_key" : public_key,
         "signer_public_key" : signer_public_key,
@@ -98,7 +98,10 @@ class HumanUserDB extends AppDBWrapper {
     }
 
     async add_user(user_object) {
-        this.current_session_name = user_object.name
+        this.current_session_name = (user_object.name !== undefined) ? user_object.name : user_object.human_name
+        if ( user_object.name === undefined ) {
+            user_object.name = this.current_session_name
+        }
         let part_id = "user-meta"
         //
         let blob_data = user_object
@@ -156,14 +159,15 @@ class HumanUserDB extends AppDBWrapper {
     }
 
     //
-    async add_file(file_name,description,svg,to_layer,file_data = "") {
+    async add_file(file_name,description,svg,to_layer,file_data) {
         if ( file_data === undefined ) file_data = ""
         if ( svg === undefined ) svg = ""
         if ( to_layer == undefined ) to_layer = 0
         let file_record = {
             "name" : file_name, 
             "description" : description,
-            "data" : file_data, "ouput" : "", "svg" : svg, "layer" : to_layer }
+            "data" : file_data, "ouput" : "", "svg" : svg, "layer" : to_layer
+        }
         //
         let data = JSON.stringify(file_record)
         await this.add_data(data,file_name)

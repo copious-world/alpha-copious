@@ -39,6 +39,27 @@ html {
 }
 */
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+
+input, textarea, .select_OK {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -khtml-user-select: text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
+
+
+
 	/**
 	* Always hide an element when it has the `hidden` HTML attribute.
 	*/
@@ -395,14 +416,15 @@ html {
 
 	#mainNav {
 		font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: 700;
+		font-weight: 600;
 		text-transform: uppercase;
+		font-size: 94%;
 		background: blue;
 		border-left: solid 3px navy;
 		border-top: solid 3px navy;
 		border-bottom: solid 3px rgba(252,252,255,0.7);
-		min-height: 90px;
-		padding: 20px;
+		min-height: 32px;
+		padding: 2px;
 		background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
 		background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
 		
@@ -466,7 +488,8 @@ html {
 
 	.fit-link {
 		color:rgb(5, 34, 5);
-		font-size: 0.85em;
+		font-weight: bold;
+		font-size: 0.75em;
 		text-align: center;
 		margin-left: 8px;
 	}
@@ -488,11 +511,12 @@ html {
 	@media (min-device-width: 480px) and (orientation: portrait) {
 
 		footer {
-			padding:10px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
-			text-align: center;
 			font-size: 0.85em;
+			vertical-align: top;
 		}
 	
 		footer a {
@@ -517,12 +541,12 @@ html {
 		and (-webkit-min-device-pixel-ratio: 2) {
 
 		footer {
-			padding:4px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
-			text-align: center;
 			font-size: 0.65em;
-			
+			vertical-align: top;
 		}
 
 		footer a {
@@ -537,7 +561,6 @@ html {
 			color:rgb(5, 34, 5);
 			font-size: 0.65em;
 			text-align: center;
-			margin-left: 8px;
 		}
 
 	}
@@ -552,12 +575,12 @@ html {
 		and (-webkit-device-pixel-ratio: 2) {
 
 		footer {
-			padding:4px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
-			text-align: center;
 			font-size: 0.65em;
-			
+			vertical-align: top;
 		}
 
 		footer a {
@@ -585,12 +608,13 @@ html {
 		and (-webkit-device-pixel-ratio: 2) {
 
 		footer {
-			padding:4px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
 			text-align: left;
 			font-size: 0.55em;
-			
+			vertical-align: top;			
 		}
 
 		footer a {
@@ -630,12 +654,13 @@ html {
 		and (-webkit-device-pixel-ratio: 3) {
 
 		footer {
-			padding:4px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2  );
 			text-align: center;
 			font-size: 0.62em;
-			
+			vertical-align: top;
 		}
 
 		footer a {
@@ -662,12 +687,14 @@ html {
 		and (-webkit-device-pixel-ratio: 3) {
 
 		footer {
-			padding:4px;
+			padding-bottom:4px;
+			padding-left:8px;
 			background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2 );
 			background: linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2  );
 			text-align: left;
 			font-size: 0.55em;
-			text-decoration:none;				
+			text-decoration:none;
+			vertical-align: top;
 		}
 
 		footer a {
@@ -696,7 +723,7 @@ html {
 	}
 
 	* {margin: 0; padding: 0; box-sizing: border-box}
-	
+
 	.PhIOtjDr_0 {
 		fill:none;
 		stroke:#1c1448;
@@ -867,7 +894,7 @@ html {
 	<nav id="mainNav">
 		<table style="width:100%">
 			<tr>
-				<td style="width:62;height:63">
+				<td style="width:32;height:32">
 					<a class="nav-link" href="/">
 						<svg version="1.0" width="36" height="36" viewBox="0 0 250 250" preserveAspectRatio="xMidYMid meet" id="logo" >
 							<defs id="defs10"/>
@@ -898,7 +925,7 @@ html {
 <footer>
 	<ul class="footer-list">
 		<li>
-			<a class="fit-link" href="http://www.copious.world" style="text-decoration: none;">copyright &copy; 2024 copious.world</a>
+			<a class="fit-link" href="http://www.copious.world" style="text-decoration: none;">copyright &copy; 2025 copious.world</a>
 		</li>
 	</ul>
 </footer>
