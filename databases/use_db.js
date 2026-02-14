@@ -102,6 +102,38 @@ async function ky_db_startup() {
 }
 
 
+
+
+//$>>	db_startup
+
+const TIMEDB_VERSION = 1
+const TIMEDATA_STORE = "timeslot-projects"
+const time_describe_data = "time slot records"
+const time_session_name = "copious-training-sessions"
+
+let g_human_time_slot_storage = false
+let g_human_time_slot_storage_ref = [false]
+
+async function timeline_db_startup() {
+    //
+    g_human_time_slot_storage = new TimeLineDB({
+        "DB_VERSION" : TIMEDB_VERSION,
+        "DATA_STORE" : TIMEDATA_STORE,
+        "describe_data" : time_describe_data,
+		"time_slot_sessions" : time_session_name
+    })
+
+    await g_human_time_slot_storage.init_database()
+    await g_human_time_slot_storage.load_name_list()
+
+    g_human_time_slot_storage_ref[0] = g_human_time_slot_storage
+    
+    return g_human_time_slot_storage
+}
+
+
+
+
 /**
  * 
  * @param {object} mobj 

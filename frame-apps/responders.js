@@ -169,6 +169,15 @@ class Messages {
     }
 
 
+    promise_resolution(key,response) {
+        if ( response !== false ) {
+            this.responder_tables[key].resolver(response)
+        } else {
+            this.responder_tables[key].rejector()
+        }   
+    }
+
+
     /**
      * Applications can manage their own list of responders for use in their code.
      * They can added responders to the table.

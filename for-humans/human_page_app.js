@@ -82,6 +82,9 @@ class HumanAppPageGlobals {
 
     }
 
+    set_current_session(session) {
+        this.current_session = session
+    }
 
 
     async get_file() {
@@ -564,6 +567,23 @@ frame_page_id_builder_responder.set_globals(G_human_page_app_globals)
 //
 frame_page_id_builder_responder.add_accepted_receiver("id-builder")
 frame_page_id_builder_responder.install_response()
+
+
+// FRAME PAGE ID BUILDER RESPONSE  -- handle messages from the hosted publisher
+// 
+let frame_page_broadcast_responder = new FrameBroadCastResponse({
+    "direction" : WORKER_TO_FRAME,
+    "category" : WORKER_TO_FRAME_SESSIONS,
+    "relationship" : WORKER_RELATES_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_broadcast_responder.set_globals(G_human_page_app_globals)
+//
+frame_page_broadcast_responder.add_accepted_receiver("broadcaster")
+frame_page_broadcast_responder.install_response()
 
 
 

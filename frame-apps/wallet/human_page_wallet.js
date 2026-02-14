@@ -8,55 +8,29 @@
 */
 
 
+if ( typeof window !== "undefined" ) {
+    if ( window.self === undefined ) {
+        window.self = window
+        self._x_counted_app_application_extension = true
+        // include human_page_media-grid.js // should not have to do this...
+    }
+}
+
+
 //
 /**
  * 
  */
-class WalletPageAPP extends HumanFrameHostedApp {
+class WalletPageAPP extends CountedPageAPP {
 
-    constructor() {
-        super()
-        //
-        this.ui_data = new DataFromUi()
-        this.proxy = new Proxy(this)
-
+    constructor(conf) {
+        super(conf)
         // initial validation application is contact
         this.CurContainer = null // will be initilialized within the finalizers
     }
 
-
-    /**
-     * 
-     * @param {*} category 
-     * @param {*} action 
-     * @param {*} relationship 
-     * @param {*} params 
-     */
-    async application_specific_handlers(category,action,relationship,params) {
-		if ( category === FRAME_TO_APP_PUBLIC_COMPONENT ) {
-			switch ( action ) {
-				case FRAME_HAS_SESSION: {
-					let response = params.response
-					if ( response ) {
-						this.responder_tables["session-req"].resolver(response)
-					} else {
-						this.responder_tables["session-req"].rejector()
-					}
-					break
-				}
-				case FRAME_TO_HOSTED_APP_DATA: {
-					let response = params.response
-					if ( response ) {
-						this.responder_tables["data-req"].resolver(response)
-					} else {
-						this.responder_tables["data-req"].rejector()
-					}
-					break
-				}
-			}
-		}
-    }
-
+    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+    //
 
     async upload_identity() {
         let identity_str = await this.get_file()
@@ -105,8 +79,6 @@ class WalletPageAPP extends HumanFrameHostedApp {
         return await get_blob_file_from_file_element(`drop-click-file_loader`)
     }
 
-
-
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     //
 
@@ -143,40 +115,6 @@ class WalletPageAPP extends HumanFrameHostedApp {
         let el = document.getElementById('active-user-title')
         if ( el  && u_name && (typeof u_name === "string") ) {
             el.innerHTML = u_name
-        }
-    }
-
-
-    hide_thankyou_box(theBox) {
-        theBox.style.visibility = "hidden"
-        theBox.style.display = "none";
-        theBox.style.zIndex = 0
-    }
-
-    show_thankyou_box(msg) {
-        let theBox = document.querySelector("#thankyou_box")
-        if ( theBox ) {
-            if ( msg ) {
-                let mbox = document.querySelector("#thankyou_box-message")
-                if ( mbox ) mbox.innerHTML = msg
-
-            }
-            theBox.style.display = "block";
-            theBox.style.visibility = "visible"
-            theBox.style.zIndex = 2000
-        }
-    }
-
-    // Get the <span> element that closes the modal
-    setupCaptchaClose() {
-        let closerList = document.getElementsByClassName("close");
-        let n = closerList.length
-        for ( let i = 0; i < n; i++ ) {
-            let span = closerList[i]
-            span.onclick = function() {
-                if ( this.CurContainer ) this.CurContainer.switchCaptchaDisplay(false)
-                if ( this.captaFinalResolution ) this.captaFinalResolution(3)
-            }
         }
     }
 

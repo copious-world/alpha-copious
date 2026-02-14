@@ -15,8 +15,8 @@ class HumanFrameHostedApp extends PageResponse {
     /**
      * 
      */
-    constructor() {
-        super()
+    constructor(conf) {
+        super(conf)
 
         this.frame_page = window.parent
         if ( this.frame_page.postMessage === undefined ) {
@@ -57,6 +57,28 @@ class HumanFrameHostedApp extends PageResponse {
 
 
 
+    /**
+     * 
+     * @param {string} category 
+     * @param {string} action 
+     * @param {string} relationship 
+     * @param {object} params 
+     */
+    common_promise_resolution(category,action,relationship,params) {
+		if ( category === FRAME_TO_APP_PUBLIC_COMPONENT ) {
+			switch ( action ) {
+				case FRAME_HAS_SESSION: {
+                    this.promise_resolution("session-req",params.response)
+					return true
+				}
+				case FRAME_TO_HOSTED_APP_DATA: {
+                    this.promise_resolution("data-req",params.response)
+					return true
+				}
+			}
+		}
+        return false
+    }
 
     /**
      * 

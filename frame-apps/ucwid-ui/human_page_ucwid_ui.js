@@ -23,8 +23,6 @@ class UCWID_UIPageAPP extends HumanFrameHostedApp {
         //
         this.site_page = false // HumanFrameHostedApp has the field frame_page, this has site_page, since it might not be embedded
         //
-        this.ui_data = new DataFromUi()
-        this.proxy = new Proxy(this)
         this.window_in_frame = false
 
         // initial validation application is coinstall_response()ntact
@@ -44,8 +42,6 @@ class UCWID_UIPageAPP extends HumanFrameHostedApp {
         }
         //
     }
-
-
 
     /**
      * 

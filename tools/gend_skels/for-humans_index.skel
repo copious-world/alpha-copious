@@ -1,3 +1,32 @@
+{
+    "top_level": true,
+    "path_abreviations": {
+        "[alpha-copious]": "[github]/alphas/alpha-copious",
+        "[github]": "~/GitHub",
+        "[websites]": "[alphas]/websites"
+    },
+    "ext_default_dir": {
+        "tmplt": "[alpha-copious]/html",
+        "js": "[alpha-copious]/client",
+        "svg": "[alpha-copious]/icons",
+        "css": "[alpha-copious]/css"
+    },
+    "top_dir_location": {
+        "script": "[alpha-copious]/script",
+        "for-humans": "[alpha-copious]/for-humans",
+        "messaging": "[alpha-copious]/for-humans/messaging",
+        "files": "[alpha-copious]/html",
+        "frame-apps": "[alpha-copious]/frame-apps",
+        "calendar-owner": "[alpha-copious]/frame-apps/calendar-owner",
+        "counted-media": "[alpha-copious]/frame-apps/counted-media",
+        "igid-manager": "[alpha-copious]/frame-apps/igid-manager",
+        "mail": "[alpha-copious]/frame-apps/mail",
+        "ucwid-ui": "[alpha-copious]/frame-apps/ucwid-ui",
+        "uploader": "[alpha-copious]/frame-apps/uploader",
+        "wallet": "[alpha-copious]/frame-apps/wallet",
+        "databases": "[alpha-copious]/databases"
+    }
+}
 <!doctype html>
 <html>
 <head>
@@ -369,41 +398,99 @@
 <script>
 
 
-// OFFLOADED (shared_constants)
-// OFFLOADED (common)
-// OFFLOADED (crypto-global)
-// OFFLOADED (pc_location)
-// OFFLOADED (base_string)
-// OFFLOADED (base64)
-// OFFLOADED (crypto-hash)
-// OFFLOADED (crypto-wraps)
-// OFFLOADED (https_checks)
-// OFFLOADED (cwid)
-// OFFLOADED (ucwid)
-// OFFLOADED (post_fetch)
-// OFFLOADED (file_ops)
-// OFFLOADED (one_table_db)
-// OFFLOADED (user_db)
 
-// OFFLOADED (use_db)   -- not user_db
-// OFFLOADED (frame_page_id_manager_response)   -- not user_db
-// OFFLOADED (galactic_session)
-// OFFLOADED (IGID)
+$$script::[for-humans]/shared_constants.js<<
+            
+
+$$script::[client]/common.js<<
+            
+
+$$script::[client]/crypto-global.js<<
+            
+
+$$script::[client]/pc_location.js<<
+            
+
+$$script::[client]/base_string.js<<
+            
+
+$$script::[client]/base64.js<<
+            
+
+$$script::[client]/crypto-hash.js<<
+            
+
+$$script::[client]/crypto-wraps.js<<
+            
+
+$$script::[client]/https_checks.js<<
+            
+
+$$script::[client]/cwid.js<<
+            
+
+$$script::[client]/ucwid.js<<
+            
+
+$$script::[client]/post_fetch.js<<
+            
+
+$$script::[client]/file_ops.js<<
+            
+
+$$script::[client]/one_table_db.js<<
+            
+
+$$script::[client]/user_db.js<<
+            
+
+
+$$script::[search-files]/use_db   -- not user_db.js<<
+            
+
+$$script::[search-files]/frame_page_id_manager_response   -- not user_db.js<<
+            
+
+$$script::[databases]/galactic_session.js<<
+            
+
+$$script::[for-humans]/IGID.js<<
+            
 
 // CHANGED --- explain: alive responses become generalized messages with appropriate values
 
-// OFFLOADED (frame_page_site_response)
-// OFFLOADED (frame_page_app_response)
-// OFFLOADED (frame_page_publisher_response)
-// OFFLOADED (frame_page_id_builder_response)
 
-// OFFLOADED (teller_messages)
-// OFFLOADED (fame_page_broad_cast)
+$$script::[for-humans/messaging]/frame_page_site_response.js<<
+            
 
-// OFFLOADED (frame_page_id_manager_response)
-// OFFLOADED (for-human/human_frame_client_visuals.js)
-// OFFLOADED (for-humans/biometric_ui)
-// OFFLOADED (human_page_app)
+$$script::[for-humans/messaging]/frame_page_app_response.js<<
+            
+
+$$script::[for-humans/messaging]/frame_page_publisher_response.js<<
+            
+
+$$script::[for-humans/messaging]/frame_page_id_builder_response.js<<
+            
+
+
+$$script::[for-humans/messaging]/teller_messages.js<<
+            
+
+$$script::[search-files]/fame_page_broad_cast.js<<
+            
+
+
+$$script::[for-humans/messaging]/frame_page_id_manager_response.js<<
+            
+
+$$script::[search-files]/human_frame_client_visuals.js.js<<
+            
+
+$$script::[for-humans]/biometric_ui.js<<
+            
+
+$$script::[for-humans]/human_page_app.js<<
+            
 
 
 

@@ -469,7 +469,7 @@ main {
 	border-top: solid 3px navy;
 	border-bottom: solid 3px rgba(252,252,255,0.7);
 	min-height: 90px;
-	padding: 20px
+	padding: 20px;
 	background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
 	background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
 	
@@ -619,7 +619,7 @@ label {
 }
 
 #contact_box {
-	background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE));
+	background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE);
 	background: linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE );
 }
 

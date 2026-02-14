@@ -1,3 +1,32 @@
+{
+    "top_level": true,
+    "path_abreviations": {
+        "[alpha-copious]": "[github]/alphas/alpha-copious",
+        "[github]": "~/GitHub",
+        "[websites]": "[alphas]/websites"
+    },
+    "ext_default_dir": {
+        "tmplt": "[alpha-copious]/html",
+        "js": "[alpha-copious]/client",
+        "svg": "[alpha-copious]/icons",
+        "css": "[alpha-copious]/css"
+    },
+    "top_dir_location": {
+        "script": "[alpha-copious]/script",
+        "for-humans": "[alpha-copious]/for-humans",
+        "messaging": "[alpha-copious]/for-humans/messaging",
+        "files": "[alpha-copious]/html",
+        "frame-apps": "[alpha-copious]/frame-apps",
+        "calendar-owner": "[alpha-copious]/frame-apps/calendar-owner",
+        "counted-media": "[alpha-copious]/frame-apps/counted-media",
+        "igid-manager": "[alpha-copious]/frame-apps/igid-manager",
+        "mail": "[alpha-copious]/frame-apps/mail",
+        "ucwid-ui": "[alpha-copious]/frame-apps/ucwid-ui",
+        "uploader": "[alpha-copious]/frame-apps/uploader",
+        "wallet": "[alpha-copious]/frame-apps/wallet",
+        "databases": "[alpha-copious]/databases"
+    }
+}
 <!doctype html>
 <html>
 <head>
@@ -435,23 +464,55 @@ h2 {
 </html>
 <script>
 
-// OFFLOADED (shared_constants)
-// OFFLOADED (crypto-global)
-// OFFLOADED (pc_location)
-// OFFLOADED (common)
-// OFFLOADED (https_checks)
-// OFFLOADED (post_fetch)
-// OFFLOADED (base64)
-// OFFLOADED (crypto-hash)
-// OFFLOADED (crypto-wraps)
 
-// OFFLOADED (cwid)
-// OFFLOADED (ucwid)
-// OFFLOADED (file_ops)
-// OFFLOADED (one_table_db)
-// OFFLOADED (user_db)
-// OFFLOADED (use_db)   -- not user_db
+$$script::[for-humans]/shared_constants.js<<
+            
 
-// OFFLOADED (human_page_wallet)
+$$script::[client]/crypto-global.js<<
+            
+
+$$script::[client]/pc_location.js<<
+            
+
+$$script::[client]/common.js<<
+            
+
+$$script::[client]/https_checks.js<<
+            
+
+$$script::[client]/post_fetch.js<<
+            
+
+$$script::[client]/base64.js<<
+            
+
+$$script::[client]/crypto-hash.js<<
+            
+
+$$script::[client]/crypto-wraps.js<<
+            
+
+
+$$script::[client]/cwid.js<<
+            
+
+$$script::[client]/ucwid.js<<
+            
+
+$$script::[client]/file_ops.js<<
+            
+
+$$script::[client]/one_table_db.js<<
+            
+
+$$script::[client]/user_db.js<<
+            
+
+$$script::[search-files]/use_db   -- not user_db.js<<
+            
+
+
+$$script::[frame-apps/wallet]/human_page_wallet.js<<
+            
 
 </script>

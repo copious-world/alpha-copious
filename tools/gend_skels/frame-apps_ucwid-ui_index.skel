@@ -1,3 +1,32 @@
+{
+    "top_level": true,
+    "path_abreviations": {
+        "[alpha-copious]": "[github]/alphas/alpha-copious",
+        "[github]": "~/GitHub",
+        "[websites]": "[alphas]/websites"
+    },
+    "ext_default_dir": {
+        "tmplt": "[alpha-copious]/html",
+        "js": "[alpha-copious]/client",
+        "svg": "[alpha-copious]/icons",
+        "css": "[alpha-copious]/css"
+    },
+    "top_dir_location": {
+        "script": "[alpha-copious]/script",
+        "for-humans": "[alpha-copious]/for-humans",
+        "messaging": "[alpha-copious]/for-humans/messaging",
+        "files": "[alpha-copious]/html",
+        "frame-apps": "[alpha-copious]/frame-apps",
+        "calendar-owner": "[alpha-copious]/frame-apps/calendar-owner",
+        "counted-media": "[alpha-copious]/frame-apps/counted-media",
+        "igid-manager": "[alpha-copious]/frame-apps/igid-manager",
+        "mail": "[alpha-copious]/frame-apps/mail",
+        "ucwid-ui": "[alpha-copious]/frame-apps/ucwid-ui",
+        "uploader": "[alpha-copious]/frame-apps/uploader",
+        "wallet": "[alpha-copious]/frame-apps/wallet",
+        "databases": "[alpha-copious]/databases"
+    }
+}
 <!doctype html>
 <html>
 <head>
@@ -13,11 +42,11 @@
     <title>Copious World</title>
     <meta name="description" content="An entry point into the our world of AI, IoT, and Communities built around songs, etc.">
 
-        <link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
-        <link rel='stylesheet' href='./global.css'>
-        <link rel='stylesheet' href='./build/bundle.css'>
+	<link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+	<link rel='stylesheet' href='./global.css'>
+	<link rel='stylesheet' href='./build/bundle.css'>
 
-        <script defer src='./build/bundle.js'></script>
+	<script defer src='./build/bundle.js'></script>
 </head>
 <style>
 
@@ -387,21 +416,21 @@ h2 {
                 </div>
 			</td>
 			<td>
-				<ul class="navbar-nav">
-					<li class="nav-item">
-                        <div class="show-git-hub">
-						<a class="nav-link" href="https://github.com/copious-world" target="GitGHub" >
-							<svg role="img" width="30" height="30"  preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<title>GitHub copious-world</title>
-<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-</svg>
-						</a>
-                        </div>
-					</li>
-					<li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
-						$file::mushroom-menu-icon.svg<<
-					</li>
-				</ul>
+                <ul class="navbar-nav">
+                <li class="nav-item">
+                    <div class="show-git-hub">
+                        <a class="nav-link" href="https://github.com/copious-world" target="GitGHub" >
+                            <svg role="img" width="30" height="30"  preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title>GitHub copious-world</title>
+                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                            </svg>
+                        </a>
+                    </div>
+                </li>
+                <li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
+                    $file::mushroom-menu-icon.svg<<
+                </li>
+                </ul>
 			</td>
 			<td style="text-align: center;">
 				<h2></h2> 
@@ -435,23 +464,67 @@ h2 {
 </html>
 <script>
 
-// OFFLOADED (shared_constants)
-// OFFLOADED (crypto-global)
-// OFFLOADED (pc_location)
-// OFFLOADED (common)
-// OFFLOADED (https_checks)
-// OFFLOADED (post_fetch)
-// OFFLOADED (base64)
-// OFFLOADED (crypto-hash)
-// OFFLOADED (crypto-wraps)
 
-// OFFLOADED (cwid)
-// OFFLOADED (ucwid)
-// OFFLOADED (file_ops)
-// OFFLOADED (one_table_db)
-// OFFLOADED (user_db)
-// OFFLOADED (use_db)   -- not user_db
+$$script::[client]/https_checks.js<<
+            
 
-// OFFLOADED (human_page_wallet)
+$$script::[for-humans]/shared_constants.js<<
+            
+
+$$script::[client]/crypto-global.js<<
+            
+
+$$script::[client]/pc_location.js<<
+            
+
+$$script::[client]/common.js<<
+            
+
+$$script::[client]/post_fetch.js<<
+            
+
+$$script::[client]/base_string.js<<
+            
+
+$$script::[client]/base64.js<<
+            
+
+$$script::[client]/crypto-hash.js<<
+            
+
+$$script::[client]/crypto-wraps.js<<
+            
+
+$$script::[client]/cwid.js<<
+            
+
+$$script::[client]/ucwid.js<<
+            
+
+$$script::[client]/one_table_db.js<<
+            
+
+$$script::[client]/user_db.js<<
+            
+
+$$script::[databases]/use_db.js<<
+            
+
+
+$$script::[client]/file_ops.js<<
+            
+
+$$script::[search-files]/galactic_sessions.js<<
+            
+
+
+$$script::[frame-apps/ucwid-ui]/human_page_ucwid_ui.js<<
+            
+
+
+// TWO CONTEXTS
+// SITE PAGE --- builder_app_site_command(category,action,data)
+// FRAME PAGE --- human_frame_page_application_handlers(category,action,data,relationship)
+
 
 </script>
