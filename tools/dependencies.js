@@ -3,6 +3,7 @@ const Walker = require('node-source-walk');
 
 const fs = require('fs')
 const fos = require('extra-file-class')()
+const path = require('path')
 
 let previous_types_analyzed = {
   ArrayExpression: 32,
@@ -345,8 +346,12 @@ async function main()  {
     let f2_list = fs.readdirSync("script")
     let f3_list = fs.readdirSync("for-humans")
     let f4_list = fs.readdirSync("databases")
-    let f5_list = fs.readdirSync("messaging")
+    let f5_list = fs.readdirSync("for-humans/messaging")
 
+    f3_list = f3_list.filter((file) => {
+        if ( file === "messaging" ) return false
+        return true
+    })
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
     let files = flist.map((a_file) => {
@@ -370,11 +375,16 @@ async function main()  {
     console.log(f4_list)
 
     f5_list = f5_list.map((a_file) => {
-        return `messaging/${a_file}`
+        return `for-humans/messaging/${a_file}`
     })
     console.log(f5_list)
 
     files = files.concat(f2_list).concat(f3_list).concat(f4_list).concat(f5_list)
+
+    files = files.filter((file) => { 
+        if ( path.extname(file) !== '.js' ) return false
+        return true
+    })
 
 
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----

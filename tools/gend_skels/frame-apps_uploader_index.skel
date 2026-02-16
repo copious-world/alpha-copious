@@ -27,95 +27,57 @@
         "databases": "[alpha-copious]/databases"
     }
 }
-<!doctype html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="author" content="Richard Leddy" />
-	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-	<meta id="theme-color" name="theme-color" content="#452770">
 
-	<title>cloud.copious.world uploader</title>
+$$html:start_doc_head<<
+$$files::header_app.tmplt<<
 
-	<link rel='icon' type='image/png' href='./favicon.png'>
-	<link rel='stylesheet' href='./global.css'>
-	<link rel='stylesheet' href='./build/bundle.css'>
+$$html:end_head<<
 
-	<script defer src='./build/bundle.js'></script>	
-	<link rel="canonical" href="https://www.copious.world">
+$$html:start_script<<
+$$files<js>::top_vars_time<<
+$$html:end_script<<
 
-	<meta name="description" content="Uploader component for use in a human page publisher frame.">
+$$html:start_body<<
 
-<script>
-	//
-	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-	// OFFLOAD (media_bridge_interface)
-
-	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-</script>
-
-
-</head>
-<script>
-	// OFFLOAD (human_frame_hosted_app)
-</script>
-<body>
-	<nav id="mainNav">
-	</nav>
-	<main id='app-main'>
-	
-	</main>
+$$verbatim::{
+<nav id="mainNav">
+</nav>
+<main id='app-main'>
+</main>
 <footer>
 </footer>
+}
 
+$$html:end_body_html<<
 
-</body>
-</html>
-<script>
-
+$$html:start_script<<
 
 $$script::[for-humans]/shared_constants.js<<
-            
 
 $$script::[client]/crypto-global.js<<
-            
 
 $$script::[client]/base64.js<<
-            
 
 $$script::[client]/crypto-hash.js<<
-            
 
 $$script::[client]/post_fetch.js<<
-            
-
-
-$$script::[search-files]/responder.js<<
-            
-
-$$script::[for-humans]/human_page_app.js<<
-            
-
-$$script::[frame-apps/uploader]/human_page_uploader.js<<
-            
-
 
 $$script::[client]/upload_media.js<<
-            
 
 $$script::[client]/punctuation.js<<
-            
 
-$$script::[search-files]/auth_endpoints.js<<
-            
+$$script::[client]/auth_endpoint.js<<
 
+$$script::[frame-apps]/media_bridge_interface.js<<
+
+$$script::[frame-apps]/responders.js<<
 
 $$script::[frame-apps/uploader]/ui_data.js<<
-            
 
 $$script::[frame-apps/uploader]/uploader_api_proxy.js<<
-            
 
-</script>
+$$script::[frame-apps]/human_frame_hosted_app.js<<
+
+$$script::[frame-apps/uploader]/human_page_uploader.js<<
+
+$$html:end_script<<

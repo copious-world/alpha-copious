@@ -6,7 +6,6 @@
 <meta id="theme-color" name="theme-color" content="{{user-theme-color}}">
 <meta name="description" content="{{pageDescription}}">
 
+<link rel="icon" type="image/svg+xml" href="./copiousLogo.svg" />
 <link rel="canonical" href="{{canonical}}">
 <title>{{who_am_I}}</title>
-
-

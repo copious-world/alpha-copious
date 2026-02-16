@@ -20,16 +20,16 @@ $$defs:{
 $$html:start_doc_head<<
 
 $$files::header.tmplt<<
-$$html:end_head<<
 
 $$html:start_style<<
 $$css::styles1.css<<
 $$html:end_style<<
 
+$$html:end_head<<
+
 $$html:start_script<<
 $$files<js>::counter_interface<<
 $$html:end_script<<
-
 
 $$html:start_body<<
 $$files::nav_bar_C.tmplt<<

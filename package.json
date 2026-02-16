@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "byte-base64": "^1.1.0",
+    "css": "^3.0.0",
     "diff": "^8.0.2",
     "escodegen": "^2.1.0",
     "extra-file-class": "^1.0.2",

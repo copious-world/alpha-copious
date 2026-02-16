@@ -1,0 +1,17 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="author" content="@{AUTHOR%config%}" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta id="theme-color" name="theme-color" content="#452770">
+
+<link rel="canonical" href="{{canonical}}">
+<link rel="icon" type="image/svg+xml" href="./copiousLogo.svg" />
+
+<title>{{pageTitle}}</title>
+<meta name="description" content="{{pageDescription}}">
+
+<link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+<link rel='stylesheet' href='./global.css'>
+<link rel='stylesheet' href='./build/bundle.css'>
+
+<script defer src='./build/bundle.js'></script>

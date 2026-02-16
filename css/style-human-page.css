@@ -1,16 +1,23 @@
 
-
-/*csslint important:false*/
-.super-header {
-    border: solid 1px rgb(223, 89, 11);
-    padding: 2px;
-    font-size: smaller;
-    font-weight: 700;
-    background-color: rgb(255, 254, 248);
-    color: rgb(74, 83, 55);
-    max-height:32px;
-    width: 100%;
+@media screen and (max-width: 390px) {
+    .super-header {
+        display:none;
+    }
 }
+
+@media screen and (min-width: 391px) {
+    .super-header {
+        border: solid 1px rgb(223, 89, 11);
+        padding: 2px;
+        font-size: smaller;
+        font-weight: 700;
+        background-color: rgb(255, 254, 248);
+        color: rgb(74, 83, 55);
+        max-height:32px;
+        width: 100%;
+    }
+}
+
 .content-container {
     border: solid 1px rgb(0, 6, 85);
     padding: 2px;
@@ -77,3 +84,139 @@ button {
     margin-bottom:1px;
 }
 
+
+/*  dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    height:max-content;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+    margin-top:0px;
+    top: 24px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: grid;
+    row-gap: 4px;
+    grid-template-columns: auto;
+    width: fit-content;
+    height: fit-content;
+}
+
+
+.button-tower {
+    margin:2px;
+    grid-row: 2 / 5;
+}
+
+
+.ui-controls-1 {
+    width: fit-content;
+    vertical-align: top;
+    display: inline-block;
+}
+
+
+
+@media screen and (max-width: 390px) {
+    .top-controls {
+        width:100%;
+        height: 60px;
+        text-align: left;
+        vertical-align: text-top;
+        border-bottom: 1px solid darkslateblue;
+    }
+}
+
+@media screen and (min-width: 391px) {
+    .top-controls {
+        display:none;
+    }
+}
+
+
+.admin-hover {
+    box-shadow: 2px 3px rgb(248, 230, 185);
+    font-weight: bolder;
+    box-shadow: gainsboro;
+    text-decoration-line: underline;
+    cursor: pointer;
+    margin:0px;
+}
+
+.admin-hover:hover {
+    cursor: pointer;
+    background-color: rgba(176, 166, 143,0.2);;
+    box-shadow: 3px 1px rgb(176, 166, 143);
+    text-shadow: 1px 2px 0px #12100b;
+    color: rgb(240, 208, 126);
+    margin:0px;
+}
+
+.selected-panel {
+    font-weight: bold;
+    text-decoration: solid underline;
+    color:rgb(37, 17, 111)
+}
+
+.bio-signerupper {
+    background-color:white;
+    border: solid 1px rgb(0, 0, 117);
+    padding:6px;
+    display:block;
+    position:absolute;
+    bottom:0px;
+    top:0px;
+    width:98%;
+    z-index:100;
+    overflow: auto;
+}
+
+@media (min-width : 751px) {
+    .bio-signerupper blockquote {
+        font: 14px/22px normal helvetica, sans-serif;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 50px;
+        padding-left: 15px;
+        border-left: 3px solid rgb(221, 219, 219);
+    }
+}
+
+@media (max-width : 751px) {
+    .bio-signerupper blockquote {
+        font: 14px/22px normal helvetica, sans-serif;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        padding-left: 5px;
+        border-left: 3px solid rgb(221, 219, 219);
+    }
+}
+
+
+.bio-picture-drop {
+    width:99%;
+    min-height:90px;
+    border: 1px solid navy;
+    background-color:rgb(225, 230, 236);
+    display:block;
+    margin: 2px;
+    text-align:center;
+    cursor:pointer;
+    padding-top:5%;
+}
+
+.bio-picture-drop:hover {
+    border: 2px dotted rgb(180, 8, 31);
+    background-color:rgb(151, 197, 114);
+}

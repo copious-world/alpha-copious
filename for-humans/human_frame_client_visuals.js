@@ -142,70 +142,6 @@ function show_div(did,n_btn,size) {
     }
 }
 
-
-
-// ---- show_local_data
-function show_local_data(size,title) {
-    hide_div("application_container",false,size)
-    hide_div("manager_container",false,size)
-    hide_div("wallet_container",false,size)
-    if ( size != undefined ) {
-        show_div("db_container",false,size)
-    } else {
-        show_div("db_container")
-    }
-    adjust_dashboard_frame_top(size,title)
-}
-
-function show_id_manager(size,title) {
-    hide_div("application_container",false,size)
-    hide_div("db_container",false,size)
-    hide_div("wallet_container",false,size)
-    if ( size != undefined ) {
-        show_div("manager_container",false,size)
-    } else {
-        show_div("manager_container")
-    }
-    update_selected_frame_title(title)
-}
-
-function navigate_to_uploader() {
-    show_id_manager()
-    show_id_manager('sml','identity manager')
-}
-
-function show_wallet_manager(size,title) {
-    hide_div("application_container",false,size)
-    hide_div("db_container",false,size)   
-    hide_div("manager_container",false,size)
-    if ( size != undefined ) {
-        show_div("wallet_container",false,size)
-    } else {
-        show_div("wallet_container")
-    }
-    update_selected_frame_title(title)
-}
-
-function show_application(size,title) {
-    hide_div("manager_container",false,size)
-    hide_div("db_container",false,size)
-    hide_div("wallet_container",false,size)
-    if ( size != undefined ) {
-        show_div("application_container",false,size)
-    } else {
-        show_div("application_container")
-    }
-    update_selected_frame_title(title)
-}
-
-function show_uploader() {
-    show_local_data()
-}
-
-// ---- ---- ---- ---- ---- ---- ----
-
-
-
 // left as functions to make it easier to render html click handlers
 //
 // ---- show_local_data
@@ -220,6 +156,7 @@ function show_local_data(size,title) {
     }
     adjust_dashboard_frame_top(size,title)
 }
+
 
 function show_id_manager(size,title) {
     hide_div("application_container",false,size)

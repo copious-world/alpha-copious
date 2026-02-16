@@ -566,25 +566,6 @@ footer a {
 
 * {margin: 0; padding: 0; box-sizing: border-box}
 
-.PhIOtjDr_0 {
-	fill:none;
-	stroke:#1c1448;
-	stroke-width:4.59875107;
-	stroke-miterlimit:4;
-	stroke-dasharray: 2948 2950;
-	stroke-dashoffset: 2949;
-	animation: PhIOtjDr_draw 6666ms ease-in forwards;
-}
-
-@keyframes PhIOtjDr_draw {
-	100% {stroke-dashoffset: 0}
-}
-
-@keyframes PhIOtjDr_fade {
-	0% {stroke-opacity: 1}
-	97.1830985915493% {stroke-opacity: 1}
-	100% {stroke-opacity: 0}
-}
 
 .form_el {
 	border:lightgray solid 1px;
