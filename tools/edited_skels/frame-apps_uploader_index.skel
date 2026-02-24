@@ -29,64 +29,45 @@
 }
 
 $$html:start_doc_head<<
-
 $$files::header_app.tmplt<<
-
-$$html:start_style<<
-$$css::styles1-galactic.css<<
-$$html:end_style<<
+$$bundle::bundle_13.js
 
 $$html:end_head<<
 
-$$files::nav_bar_fitted.tmplt<<
+$$html:start_script<<
+$$files<js>::top_vars_time<<
+$$html:end_script<<
+
+$$html:start_body<<
 
 $$verbatim::{
+<nav id="mainNav">
+</nav>
 <main id='app-main'>
 </main>
+<footer>
+</footer>
 }
-
-$$files::drop_click.tmplt<<
-
-$$files::footer_A.tmplt<<
 
 $$html:end_body_html<<
 
 $$html:start_script<<
+$$script::[client]/upload_media.js<<
 
-$$script::[client]/https_checks.js<<
+$$script::[client]/punctuation.js<<
 
-$$script::[for-humans]/shared_constants.js<<
+$$script::[client]/auth_endpoint.js<<
 
-$$script::[client]/crypto-global.js<<
+$$script::[frame-apps]/media_bridge_interface.js<<
 
-$$script::[client]/pc_location.js<<
+$$script::[frame-apps]/responders.js<<
 
-$$script::[client]/common.js<<
+$$script::[frame-apps/uploader]/ui_data.js<<
 
-$$script::[client]/post_fetch.js<<
+$$script::[frame-apps/uploader]/uploader_api_proxy.js<<
 
-$$script::[client]/base_string.js<<
+$$script::[frame-apps]/human_frame_hosted_app.js<<
 
-$$script::[client]/base64.js<<
-
-$$script::[client]/crypto-hash.js<<
-
-$$script::[client]/crypto-wraps.js<<
-
-$$script::[client]/cwid.js<<
-
-$$script::[client]/ucwid.js<<
-
-$$script::[client]/one_table_db.js<<
-
-$$script::[client]/user_db.js<<
-
-$$script::[databases]/use_db.js<<
-
-$$script::[client]/file_ops.js<<
-
-$$script::[databases]/galactic_session.js<<
-
-$$script::[frame-apps/ucwid-ui]/human_page_ucwid_ui.js<<
+$$script::[frame-apps/uploader]/human_page_uploader.js<<
 
 $$html:end_script<<

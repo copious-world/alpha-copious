@@ -35,6 +35,8 @@ $$files::header_human.tmplt<<
 $$html:start_style<<
 $$css::style-human-page.css<<
 $$html:end_style<<
+$$bundle::bundle_16.js
+$$bundle::for-humans_index_bundle.js
 
 $$html:end_head<<
 
@@ -66,7 +68,7 @@ $$template::{
     </div>
     <div id="special-app-link" class="link-intake {{special-app-link-style-class}}">
         <span class="link-intake-label">Enter link to an application:</span>
-        <input id="human-page-app-link" />    
+        <input id="human-page-app-link" />
         <button onclick="surf_to_link('human-page-app-link')">open page</button>
     </div>
     <div id="dash_control" class="media-dashboard-header {{dash_control-style-class}}">
@@ -77,13 +79,13 @@ $$template::{
     <div id="special-dash-link" class="link-intake {{special-dash-link-style-class}}">
         Don't see your prefered dashboard below?
         <span class="link-intake-label">Optional link to a host dashboard:</span>
-        <input id="human-page-dashboard-link" />    
+        <input id="human-page-dashboard-link" />
         <button onclick="surf_to_uploader('human-page-dashboard-link')">load dashboard</button>
     </div>
     <div id="dashboard-frame" class="{{dashboard-frame-style-class}}" >
         <iframe id="humans-uploader-frame" src="https://cloud.copious.world/uploader"  class="super-container" onload="resolver_event(event,'uploader')" style="height:100%">
             data manager frame
-        </iframe>    
+        </iframe>
     </div>
 
     <div id="signer-upper-controller" class="bio-signerupper" >
@@ -95,41 +97,9 @@ $$template::{
 $$files::drop_click.tmplt<<
 $$html:end_body_html<<
 $$html:start_script<<
-
-
-$$script::[for-humans]/shared_constants.js<<
-$$script::[client]/common.js<<
-$$script::[client]/crypto-global.js<<
-$$script::[client]/pc_location.js<<
-$$script::[client]/base_string.js<<
-$$script::[client]/base64.js<<
-$$script::[client]/crypto-hash.js<<
-$$script::[client]/crypto-wraps.js<<
-$$script::[client]/https_checks.js<<
-$$script::[client]/cwid.js<<
-$$script::[client]/ucwid.js<<
-$$script::[client]/post_fetch.js<<
-$$script::[client]/file_ops.js<<
-$$script::[client]/one_table_db.js<<
-$$script::[client]/user_db.js<<
-$$script::[databases]/use_db.js<<
-$$script::[databases]/galactic_session.js<<
-$$script::[for-humans]/IGID.js<<
-
-$$script::[for-humans/messaging]/frame_page_site_response.js<<
-$$script::[for-humans/messaging]/frame_page_app_response.js<<
-$$script::[for-humans/messaging]/frame_page_publisher_response.js<<
-$$script::[for-humans/messaging]/frame_page_id_builder_response.js<<
-$$script::[for-humans/messaging]/teller_messages.js<<
-$$script::[for-humans/messaging]/frame_page_id_manager_response.js<<
-
-$$script::[for-humans/messaging]/frame_page_broadcast.js<<
 $$script::[for-humans]/human_frame_client_visuals.js<<
 
-$$script::[for-humans]/biometric_ui.js<<
 $$script::[for-humans]/human_page_app.js<<
-
-
 // //
 // function load_human_frame_worker() {
 //     g_frame_page_service_worker = new SharedWorker('./human_frame_worker.js');
@@ -142,8 +112,6 @@ $$script::[for-humans]/human_page_app.js<<
 //         }
 //     }
 // }
-
-
 /*
 {
     "human_name":"Joe",
@@ -160,6 +128,4 @@ $$script::[for-humans]/human_page_app.js<<
     }
 }
 */
-
-
 $$html:end_script<<

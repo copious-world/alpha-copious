@@ -3,6 +3,12 @@
 //$>>	get_file_from_file_element
 // called in response to a file selection through the system file browser
 //
+/**
+ * the `file_el_id` dom element is expected to be a input element of the 'file' type.
+ * 
+ * @param {string} file_el_id - DOM element id 
+ * @returns {Promise}
+ */
 function get_file_from_file_element(file_el_id) {
 	let p = new Promise((resolve,reject) => {
 		let file_el = document.getElementById(file_el_id)
@@ -32,6 +38,13 @@ function get_file_from_file_element(file_el_id) {
 //$>>	get_blob_file_from_file_element
 // called in response to a file selection through the system file browser
 //
+/**
+ * 
+ * the `file_el_id` dom element is expected to be a input element of the 'file' type.
+ * 
+ * @param {string} file_el_id - DOM element id 
+ * @returns {Promise}
+ */
 function get_blob_file_from_file_element(file_el_id) {
 	let p = new Promise((resolve,reject) => {
 		let file_el = document.getElementById(file_el_id)
@@ -55,8 +68,22 @@ function get_blob_file_from_file_element(file_el_id) {
 
 
 //$>>	generic_downloader
-function generic_downloader(dataStr) {
-	let downloadlink = document.getElementById("identity-download-link")
+/**
+ * For downloading files stored in memory duriong browser operations
+ * Expects the string 'dataStr' to be a blob description with mime-type prefix.
+ * Uses the prefix to create a file extension.
+ * 
+ * Uses the download link (an ID of an anchor element) to make the browser present the file operations to the user
+ * with the blob as the data to be stored.
+ * 
+ * @param {string} dataStr 
+ * @returns {boolean}
+ */
+
+const DEFAULT_DOWNLOAD_LINK = "identity-download-link"
+
+function generic_downloader(dataStr,down_link_element = DEFAULT_DOWNLOAD_LINK) {
+	let downloadlink = document.getElementById(down_link_element)
 	if ( !(downloadlink) ) return false
 	try {
 		let mime_type = dataStr.substring(dataStr.indexOf(":")+1, dataStr.indexOf(";"))
@@ -67,10 +94,16 @@ function generic_downloader(dataStr) {
 		downloadlink.setAttribute("download", (`untitled.${ext}`) );
 		downloadlink.click();
 	} catch (e) {}
+	return true
 }
 
 
-
+/**
+ * 
+ * @param {Array} items 
+ * @param {Array} files 
+ * @returns {Promise} -- resolves to false or a pair file name/BLOB
+ */
 function drop(items,files) {
     //
     let p = new Promise((resolve,reject) => {

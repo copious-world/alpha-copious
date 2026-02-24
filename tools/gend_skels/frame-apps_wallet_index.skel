@@ -84,7 +84,7 @@ $$script::[client]/one_table_db.js<<
 
 $$script::[client]/user_db.js<<
 
-$$script::[search-files]/use_db   -- not user_db.js<<
+$$script::[databases]/use_db.js<<
 
 $$script::[frame-apps/wallet]/human_page_wallet.js<<
 

@@ -10,6 +10,10 @@ if ( window.g_human_user_storage === undefined ) window.g_human_user_storage = f
 
 let g_my_current_session = false
 
+/**
+ * 
+ * @returns {object|boolean}
+ */
 async function intergalactic_session_going() {
     try {
         let human_public_identity = await exists_galactic_identity()
@@ -29,6 +33,10 @@ async function intergalactic_session_going() {
 
 
 //
+/**
+ * 
+ * @param {object} public_id 
+ */
 function set_current_galactic_user(public_id) {
     g_current_user_id = public_id.ccwid
     g_current_user_name = public_id.name
@@ -36,6 +44,10 @@ function set_current_galactic_user(public_id) {
 }
 
 
+/**
+ * 
+ * @returns {object|boolean}
+ */
 async function exists_galactic_identity() {
     if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
     if ( g_current_pub_identity !== false ) {

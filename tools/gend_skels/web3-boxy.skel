@@ -1,5 +1,6 @@
 $$defs:{
     "top_level" : true,
+    "uses_config_vars" : "shops",
     "path_abreviations" : {
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/GitHub",
@@ -12,7 +13,7 @@ $$defs:{
         "css" : "[alpha-copious]/css"
     },
     "top_dir_location" : {
-        "script" : "[alpha-copious]/script",
+        "script" : "[alpha-copious]/client",
         "for-humans" : "[alpha-copious]/for-humans",
         "files" : "[alpha-copious]/html"
     }
@@ -38,55 +39,57 @@ $$files::flexy_items_A-main.tmplt<<
 
 $$files::footer_A.tmplt<<
 
+$$verbatim::{
+<!-- start dynamic content -->
+}
+
 $$files::squashable_menu_A.tmplt<<
 
-$$files::calc::contact_box<<${start=100}
+$$files::calc::contact_box<<${box_i=100}
 
-$$files::calc::about_box<<${start++}
+$$files::calc::about_box<<${box_i++}
 
-$$files::calc::thankyou_box<<${start++}
+$$files::calc::thankyou_box<<${box_i++}
 
-$$files::loop::calc::topicBox_<1,3><<${start++}
+$$files::loop::calc::topicBox_<1,@!{topic_count}><<${box_i++}
 
-$$files::calc::register<<${start++}
+$$files::calc::register<<${box_i++}
 
-$$files::calc::login<<${start++}
+$$files::calc::login<<${box_i++}
 
 $$files::intergalactic-explain.tmplt<<
 
-$$verbatim::{
+$$template::{
 {{{advertPopups.content}}}
-
-{{{yourProileLinks.content}}}
-{{{yourDashboardLinks.content}}}
 }
 
 $$html:end_body_html<<
+//
 //
 $$html:start_script<<
 
 // global defs of some static topology
 $$script::[alt-script]/flexy_items_A-top.js<<
 
-$$script::common.js<<
+$$script::[client]/common.js<<
 
-$$script::field_checks.js<<
+$$script::[client]/field_checks.js<<
 
-$$script::https_checks.js<<
+$$script::[client]/https_checks.js<<
 
-$$script::post_fetch.js<<
+$$script::[client]/post_fetch.js<<
 
-$$script::uploader_class.js<<
+$$script::[client]/uploader_class.js<<
 
-$$script::validation_class.js<<
+$$script::[client]/validation_class.js<<
 
-$$script::captcha_service.js<<
+$$script::[client]/captcha_service.js<<
 //
-$$script::login-logout.js<<
+$$script::[client]/login-logout.js<<
 
-$$script::one_table_db.js<<
+$$script::[client]/one_table_db.js<<
 
-$$script::file_ops.js<<
+$$script::[client]/file_ops.js<<
 
 $$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
 
@@ -95,7 +98,7 @@ $$script::[alt-script]/flexy_items_A-animation.js<<
 
 // CAPTCHA PERFORMANT
 
-$$script::captcha_app.js<<
+$$script::[client]/captcha_app.js<<
 
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
@@ -109,9 +112,16 @@ $$script::[for-humans]/msg_vars.js<<
 
 $$script::[for-humans]/external-id-intake.js<<
 
+$$script::[for-humans]/human_frame_client.js<<
 
-$$verbatim::{
-	setupLogoutRestoration()
-}
+$$script::[for-humans]/frame_page_opener.js<<
+
+$$script::[for-humans]/site_page_tab_com.js<<
+
+$$script::[client]/user_db.js<<
+
+$$script::[app<scripts>]/site_app.js<<
+
+$$script::[alt-script]/flexy_items_A-app-finalize.js<<
 
 $$html:end_script<<

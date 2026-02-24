@@ -147,7 +147,7 @@ class FramePageSiteResponse extends PageResponse {
     human_frame_application_load_uploader(data) {
         let source = data.publications
         if ( source ) {
-            let frame = document.getElementById(DEFAULT_APP_UPLOADER_FRAME_ID)
+            let frame = document.getElementById(this.DEFAULT_APP_UPLOADER_FRAME_ID)
             if ( frame ) {
                 source = fussy_url(source)
                 this._g.capture_app(source)
@@ -261,6 +261,10 @@ class FramePageSiteResponse extends PageResponse {
 
 
     // PERSONALIZATION MESSAGES
+    /**
+     * 
+     * @param {string} session 
+     */
     update_preferences_frame(session) {
         let msg = {
             "category" : HOST_APP_PERSONALIZATION,

@@ -1,12 +1,11 @@
 
+// BEFORE LOADING
 
-
-
-
-
-
-
-
+/**
+ * 
+ * @param {number} size 
+ * @param {string} title 
+ */
 function adjust_dashboard_frame_top(size,title) {
 //
     let dash_frame = document.getElementById("dashboard-frame")
@@ -38,6 +37,10 @@ function adjust_dashboard_frame_top(size,title) {
     update_selected_frame_title(title)
 }
 
+/**
+ * 
+ * @param {string} title 
+ */
 function update_selected_frame_title(title) {
     if ( title != undefined ) {
         let title_spot = document.getElementById('put-sel-frame-here')
@@ -47,6 +50,9 @@ function update_selected_frame_title(title) {
     }
 }
 
+/**
+ * 
+ */
 function show_special_link_entry() {
     hide_div("special-link-opener",true)
     show_div("special-app-link",true)
@@ -54,6 +60,9 @@ function show_special_link_entry() {
     adjust_dashboard_frame_top()
 }
 
+/**
+ * 
+ */
 function hide_special_link_entry() {
     show_div("special-link-opener",true)
     hide_div("special-app-link",true)
@@ -62,7 +71,9 @@ function hide_special_link_entry() {
 }
 
 
-
+/**
+ * 
+ */
 function show_special_dash_entry() {
     hide_div("special-dash-opener",true)
     show_div("special-dash-link",true)
@@ -70,6 +81,9 @@ function show_special_dash_entry() {
     adjust_dashboard_frame_top()
 }
 
+/**
+ * 
+ */
 function hide_special_dash_entry() {
     show_div("special-dash-opener",true)
     hide_div("special-dash-link",true)
@@ -82,6 +96,9 @@ function hide_special_dash_entry() {
 // --- startup
 
 
+/**
+ * 
+ */
 function show_controls() {
     hide_div("open-controls",true)
     show_div("user-controls",true)
@@ -92,22 +109,18 @@ function hide_controls() {
 }
 
 
-
-
-
-
 setTimeout(() => {
     hide_special_link_entry()
     hide_special_dash_entry()
 }, 40)
 
 
-
-
-
-
-
-
+/**
+ * 
+ * @param {string} did 
+ * @param {number} n_btn 
+ * @param {number} size 
+ */
 function hide_div(did,n_btn,size) {
     let dobj = document.getElementById(did)
     if ( dobj ) {
@@ -125,6 +138,12 @@ function hide_div(did,n_btn,size) {
     }
 }
 
+/**
+ * 
+ * @param {string} did 
+ * @param {number} n_btn 
+ * @param {number} size 
+ */
 function show_div(did,n_btn,size) {
     let dobj = document.getElementById(did)
     if ( dobj ) {
@@ -145,6 +164,11 @@ function show_div(did,n_btn,size) {
 // left as functions to make it easier to render html click handlers
 //
 // ---- show_local_data
+/**
+ * 
+ * @param {number} size 
+ * @param {string} title 
+ */
 function show_local_data(size,title) {
     hide_div("application_container",false,size)
     hide_div("manager_container",false,size)
@@ -158,6 +182,11 @@ function show_local_data(size,title) {
 }
 
 
+/**
+ * 
+ * @param {number} size 
+ * @param {string} title 
+ */
 function show_id_manager(size,title) {
     hide_div("application_container",false,size)
     hide_div("db_container",false,size)
@@ -170,11 +199,19 @@ function show_id_manager(size,title) {
     update_selected_frame_title(title)
 }
 
+/**
+ * 
+ */
 function navigate_to_uploader() {
     show_id_manager()
     show_id_manager('sml','identity manager')
 }
 
+/**
+ * 
+ * @param {number} size 
+ * @param {string} title 
+ */
 function show_wallet_manager(size,title) {
     hide_div("application_container",false,size)
     hide_div("db_container",false,size)   
@@ -187,6 +224,12 @@ function show_wallet_manager(size,title) {
     update_selected_frame_title(title)
 }
 
+
+/**
+ * 
+ * @param {number} size 
+ * @param {string} title 
+ */
 function show_application(size,title) {
     hide_div("manager_container",false,size)
     hide_div("db_container",false,size)
@@ -199,6 +242,10 @@ function show_application(size,title) {
     update_selected_frame_title(title)
 }
 
+
+/**
+ * 
+ */
 function show_uploader() {
     show_local_data()
 }

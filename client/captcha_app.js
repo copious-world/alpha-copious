@@ -96,6 +96,11 @@ async function doCaptcha(port,proxyPath) {
 //$>>	setupCaptchaClose
 //                                          <<var-depends>> g_CurContainer,g_captaFinalResolution
 // Get the <span> element that closes the modal
+/**
+ * This setup method is for pages using the captcha box. 
+ * This method expects that there will be close buttons with a "close" style class.
+ * This adds captcha display switching for those buttons. 
+ */
 function setupCaptchaClose() {
 	let closerList = document.getElementsByClassName("close");
 	let n = closerList.length

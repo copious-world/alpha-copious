@@ -5,6 +5,7 @@
 
 // ---- ---- ---- ---- ---- ---- ----
 
+// BEFORE FINAL LOADING
 
 // FUNTIONS REQUIRED :: dependency
 /*
@@ -18,8 +19,12 @@ const APLLICATION_HUMAN_PAGE_SERVER = "{{human_url}}" // 'https://{{namer}}.of-t
 const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
 const DEFAULT_APP_UPLOADER_FRAME_ID = 'humans-uploader-frame'
 
+const CUSTOMIZED_FOR_HUMAN_NAME = "{{who_am_I}}"
 
 
+/**
+ * 
+ */
 class HumanAppPageGlobals {
 
     constructor() {
@@ -114,7 +119,7 @@ class HumanAppPageGlobals {
             if ( this.human_user_storage == false ) {
             }
             if ( check ) {
-                let identity = await get_complete_user_identity("{{who_am_I}}")
+                let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
                 if ( identity !== false ) {
                     if ( identity.private && identity.private.axiom_priv_key) {
                         await this.update_UI_user_data_present()
@@ -154,6 +159,14 @@ class HumanAppPageGlobals {
 
 
     // called by the window app component of the builder app (see template/scripts)
+    /**
+     * 
+     * @param {string} temporary_ccwid 
+     * @param {string} new_ccwid 
+     * @param {string} name_as_uri 
+     * @param {object} user_info 
+     * @returns {boolean}
+     */
     async request_human_page_update(temporary_ccwid,new_ccwid,name_as_uri,user_info) {
         if ( name_as_uri ) {
             if ( name_as_uri.length ) {
@@ -189,7 +202,7 @@ class HumanAppPageGlobals {
      * 
      */
     async update_UI_user_data_present() {
-        let identity = await get_complete_user_identity("{{who_am_I}}")
+        let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
         if ( identity !== false ) {
             if ( identity.private && identity.private.axiom_priv_key) {
                 //
@@ -221,7 +234,9 @@ class HumanAppPageGlobals {
     }
 
 
-
+    /**
+     * 
+     */
     request_user_identity() {
         let msg = {
             "category" : HOST_APP_PERSONALIZATION,
@@ -231,8 +246,12 @@ class HumanAppPageGlobals {
     }
 
 
+    /**
+     * 
+     * @returns {object}
+     */
     async get_current_user() {
-        let userObj = await this.human_user_storage.get_user("{{who_am_I}}")
+        let userObj = await this.human_user_storage.get_user(CUSTOMIZED_FOR_HUMAN_NAME)
         if ( userObj && (userObj.public_component === undefined) ) {
             try {
                 let real_data = JSON.parse(userObj.data["user-meta"])
@@ -247,7 +266,9 @@ class HumanAppPageGlobals {
     }
 
 
-
+    /**
+     * 
+     */
     async finalize_info_to_containers() {
         //
         await this.info_to_manager_container()
@@ -258,6 +279,10 @@ class HumanAppPageGlobals {
 
 
     //
+    /**
+     * 
+     * @param {object} public_id 
+     */
     set_current_galactic_user(public_id) {
         this.current_user_id = public_id.ccwid
         this.current_user_name = public_id.name
@@ -265,6 +290,10 @@ class HumanAppPageGlobals {
     }
 
 
+    /**
+     * 
+     * @returns {object|boolean}
+     */
     async exists_galactic_identity() {
         if ( (typeof this.human_user_storage === "undefined") || !this.human_user_storage ) { return false }
         if ( this.current_pub_identity !== false ) {
@@ -376,6 +405,9 @@ class HumanAppPageGlobals {
 
 
     // initialize the frame status
+    /**
+     * 
+     */
     initialize_frame_status() {
         let fstats = check_frame_status()
         this.window_in_frame = fstats.in_frame
@@ -386,8 +418,13 @@ class HumanAppPageGlobals {
 
 
 
+    /**
+     * 
+     * @param {object} bio_data 
+     * @returns 
+     */
     async do_update_on_server(bio_data) {
-        let identity = await get_complete_user_identity("{{who_am_I}}")
+        let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
         if ( identity !== false ) {
             let temporary_ccwid = identity.public_component.ccwid
             if ( identity.private === undefined ) {
@@ -424,7 +461,7 @@ class HumanAppPageGlobals {
         //
         if ( this.window_in_frame ) {
             //
-            let identity = await get_complete_user_identity("{{who_am_I}}")
+            let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
             //
             let has_identity = identity == false ? false : true
             let complete_identity = true
@@ -474,7 +511,7 @@ let frame_page_site_responder = new FramePageSiteResponse({
 })
 
 frame_page_site_responder.set_globals(G_human_page_app_globals)
-frame_page_site_responder.set_template_subst_id("{{who_am_I}}")
+frame_page_site_responder.set_template_subst_id(CUSTOMIZED_FOR_HUMAN_NAME)
 //
 frame_page_site_responder.add_accepted_receiver("hosted-app")
 frame_page_site_responder.add_accepted_receiver("site-page")
@@ -584,14 +621,6 @@ frame_page_broadcast_responder.set_globals(G_human_page_app_globals)
 //
 frame_page_broadcast_responder.add_accepted_receiver("broadcaster")
 frame_page_broadcast_responder.install_response()
-
-
-
-
-
-
-
-
 
 //
 

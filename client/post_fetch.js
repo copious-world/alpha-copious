@@ -169,12 +169,19 @@ async function postData(url = '', data = {}, creds = 'omit', do_stringify = true
 
 
 //$>>	postDataWithRefer
-// //
-//  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
-//  default content type 'application/json'
-//  User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
-//  RETURNS: parsed JSON object or an empty object. ... Check for fields
-//
+
+/**
+ * call fetch with method POST try to help with parameters..  If data is FromData set do_stringify to false
+ * default content type 'application/json'
+ * User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
+ * 
+ * @param {string} url 
+ * @param {object} data 
+ * @param {string} creds 
+ * @param {boolean} do_stringify 
+ * @param {string} ctype 
+ * @returns {object} - parsed JSON object or an empty object. ... Check for fields
+ */
 async function postDataWithRefer(url = '', data = {}, creds = 'omit', do_stringify = true, ctype) {
 	let content_type = 'application/json'
 	if ( ctype !== undefined ) {
@@ -211,8 +218,14 @@ async function postDataWithRefer(url = '', data = {}, creds = 'omit', do_stringi
 //$>>	post_submit
 
 /**
- * Takes in a list of names of fields each having a "value" member.
+ * Takes in a list of names of form fields each having a "value" member.
  * The list is used to contsuct a JSON object which will be the body of the request.
+ * 
+ * This method then calls postData with the url found in the field with id "post_url"
+ * 
+ * If visusl indicators have been programmed with respect to this method.
+ * If the `hide_interface_box` has been defined, then it will be called.
+ * Similarly, `show_box` for ids 'success-box' and 'error-box'
  * 
  * @param {Array} fields 
  */
@@ -242,7 +255,17 @@ async function post_submit(fields) {
 
 
 
-//---- make host request ----
+//$>>	make_host_request
+
+/**
+ * 
+ * This method wraps postData for the one use case that object (JSON) returned 
+ * by the host has a field "OK", which may have string values "true"  or "false"
+ * 
+ * @param {string} endpoint 
+ * @param {object} data 
+ * @returns {object|boolean}
+ */
 async function make_host_request(endpoint,data) {
 	try {
 		let resp = await postData(endpoint, data ) //,'include')

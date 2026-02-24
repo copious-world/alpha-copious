@@ -39,31 +39,6 @@ class WalletPageAPP extends CountedPageAPP {
         return identity
     }
 
-
-    async download_identity(user_info,remove) {
-        //
-        let downloadlink = document.getElementById("identity-download-link")
-        if ( !(downloadlink) ) return false
-        try {
-            //
-            let identity = await identity_from_user(user_info)
-            let download_str = JSON.stringify(identity,null,4)
-
-            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(download_str);
-
-            let ext = ".json"
-            let fname = identity.name_key
-
-            downloadlink.setAttribute("href",     dataStr     );
-            downloadlink.setAttribute("download", (fname + ext) );
-            downloadlink.click();
-            //
-            if ( remove ) {
-                await unstore_user(identity)
-            }
-        } catch (e) {}
-    }
-
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     //
 
@@ -82,40 +57,12 @@ class WalletPageAPP extends CountedPageAPP {
     // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     //
 
-    // ---- parent_upload_identity
-    async parent_upload_identity() {
-        this.tell_frame_page(FRAME_COMPONENT_MANAGE_ID,FRAME_ACTION_UPLOAD,false) 
-    }
-
-    // ---- app_download_identity
-    async parent_download_identity() {
-        this.tell_frame_page(FRAME_COMPONENT_MANAGE_ID,FRAME_ACTION_DOWNLOAD,false) 
-    }
-
-
-    async parent_download_public_intro() {
-        this.tell_frame_page(FRAME_COMPONENT_MANAGE_ID,FRAME_ACTION_DOWNLOAD_PUBLIC,false) 
-    }
-
-
-    async tell_parent_to_remove_identity() {
-        this.tell_frame_page(FRAME_COMPONENT_MANAGE_ID,FRAME_ACTION_REMOVE,false) 
-    }
-
 
     tell_frame_profile_image(blob64) {
         let removal_msg = {
             "image_url" : blob64
         }
         this.tell_frame_page(FRAME_MANAGE_PICTURE_ASSET,FRAME_ACTION_ATTACH,removal_msg) 
-    }
-
-
-    set_user_title(u_name) {
-        let el = document.getElementById('active-user-title')
-        if ( el  && u_name && (typeof u_name === "string") ) {
-            el.innerHTML = u_name
-        }
     }
 
 }

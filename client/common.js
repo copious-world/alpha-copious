@@ -81,7 +81,15 @@ function check_frame_status() {
 window._script_added_cout = 0
 const MAX_SCRIPTS_ADDED = 1
 
-
+/**
+ * Assuming the last appended script was added as the last child of a DOM element,
+ * this will remove that script. 
+ * If it does not find a script type node at the last child position, this will do nothing.
+ * 
+ * The last child must be of type 'text/javascript'
+ * 
+ * @param {object} whereScipt -- a DOM object 
+ */
 function remove_last_appended_script_child(whereScipt) {
 	if ( whereScipt ) {
 		let n = whereScipt.childNodes.length
@@ -96,7 +104,14 @@ function remove_last_appended_script_child(whereScipt) {
 }
 
 // attach a script to a DOM element
-function addscript(script,whereScipt,remove_old) {
+/**
+ * 
+ * whereScipt starts as the id of a DOM element. A javascript child will be appended to the child list
+ * 
+ * @param {string} script 
+ * @param {string} whereScipt 
+ */
+function addscript(script,whereScipt) {
 	var scriptEl = document.createElement('script');
 	scriptEl.type = 'text/javascript';
 	scriptEl.text = script;
@@ -114,6 +129,11 @@ function addscript(script,whereScipt,remove_old) {
 
 
 //$>>	addstyle
+/**
+ * adds css to the end of the head element
+ * 
+ * @param {string} script 
+ */
 function addstyle(script) {
     var styleEl = document.createElement('style');
     styleEl.type = 'text/css';
@@ -127,7 +147,16 @@ function addstyle(script) {
 
 
 //$>>	launch_simple_link
-//
+
+/**
+ * Navigation .. when given a URL without a protocal prefix, this adds the prefix
+ * By default, the prefix is made to be "https"
+ * 
+ * If the protocal prefix is present, the url is returned as is.
+ * 
+ * @param {string} default_url 
+ * @returns 
+ */
 function normalized_launch_url(default_url) {
 	let uri_of_launch = ""
 	if ( default_url.indexOf('http://') === 0 ) {

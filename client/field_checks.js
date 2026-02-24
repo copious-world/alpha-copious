@@ -1,5 +1,9 @@
 // MODULE: FIELD CHECKS (windowized)
 
+// Methods called here will be used after the page is loaded
+//
+// AFTER LOADED
+
 //$>>	matches_url
 var g_url_match = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
 function matches_url(maybe_url) {

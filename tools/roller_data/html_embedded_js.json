@@ -1,0 +1,13 @@
+{
+  "[client]/captcha_app.js": 1,
+  "[client]/login-logout.js": 2,
+  "[for-humans]/human_frame_client_visuals.js": 12,
+  "[for-humans]/human_page_app.js": 8,
+  "[alt-script]/div_based_messages.js": 2,
+  "[alt-script]/flexy_items_A-top.js": 9,
+  "[alt-script]/flexy_items_A-layout-and-menu.js": 1,
+  "[alt-script]/flexy_items_A-animation.js": 3,
+  "[alt-script]/flexy_items_A-app-finalize.js": 6,
+  "[alt-script]/floating_window_controls.js": 7,
+  "[alt-script]/section_scrolling.js": 6
+}

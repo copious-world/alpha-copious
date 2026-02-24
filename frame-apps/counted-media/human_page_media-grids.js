@@ -56,19 +56,6 @@ class CountedPageAPP extends HumanFrameHostedApp {
         }
     }
 
-    // Get the <span> element that closes the modal
-    setupCaptchaClose() {
-        let closerList = document.getElementsByClassName("close");
-        let n = closerList.length
-        for ( let i = 0; i < n; i++ ) {
-            let span = closerList[i]
-            span.onclick = function() {
-                if ( this.CurContainer ) this.CurContainer.switchCaptchaDisplay(false)
-                if ( this.captaFinalResolution ) this.captaFinalResolution(3)
-            }
-        }
-    }
-
 }
 
 
