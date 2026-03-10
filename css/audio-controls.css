@@ -1,0 +1,212 @@
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor:default;
+}
+
+audio {
+  display: block;
+  margin: 5px;
+}
+
+dialog {
+  padding: 0;
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 6px;
+  box-shadow: 0 0 1em black;
+  background-color: rgb(221, 214, 221);
+}
+
+dialog::backdrop {
+  background: rgba(200, 200, 160, 0.25);
+}
+
+.like-button {
+  font-weight: 600;
+  font-size:68%;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(250, 244, 218);
+  margin-right: 4px;
+  margin-left: 2px;
+}
+
+.wv_button {
+  width: fit-content;
+  margin: 2px;
+}
+
+.wv_button_wordy {
+  width: fit-content;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 80%;
+  margin:2px;
+}
+
+.save-audio-messages-div {
+  max-height: 256px;
+  overflow-y: scroll;
+}
+
+.audio-checks {
+  float: left
+}
+
+.audio-playback {
+  display: inline;
+}
+
+.playback-div {
+  width:100%;
+  text-align:left;
+  vertical-align:bottom;
+  border-bottom: midnightblue solid 1px;
+  padding: 2px;
+}
+
+.pop-name-list {
+  visibility: hidden;
+  display: none;
+}
+
+.pop-name-list-popped {
+  visibility: visible;
+  display: block;
+}
+
+.wave-graph-container {
+  left: 10px;
+  top: 10px;
+  width: 80%;
+  height: 40%;
+  position:absolute;
+  display: none;
+  visibility: none;
+  z-index:500;
+  border: 2px orangered solid;
+  background-color: ivory;
+}
+
+.wave-graph-container button {
+  font-size: 0.8em;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: rgb(250, 244, 218);
+  border-radius: 6px;
+  border: 1px double #cccccc;
+  width:auto;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.drag-bar-control {
+  margin:0px;
+  width: 100%;
+  height: 20px;
+  background-color: slateblue;
+  color:goldenrod;
+  cursor:move;
+  text-align: right;
+}
+
+.wave-graph-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.wv-editor-close {
+  font-size: 120%;
+  height:10px;
+  width:10px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.wave_edit_controls_container {
+  display:inline-block;
+  width: calc(100% - 20px);
+  text-align: center;
+  height: 100%;
+}
+
+.wv-bq-dialog {
+  max-width: 600px;
+  border:rgb(250, 244, 218) solid 1px;
+  background-color: rgba(255, 245, 238, 0.603);
+  color:rgb(24, 57, 83);
+  font-weight:400;
+}
+
+.check_audio_element {
+  min-height: 50px;
+}
+
+.ghost-box {
+  position : absolute;
+  display : none;
+  visibility: hidden;
+  height : 0px;
+  width : 0px;
+  cursor : move;
+  border : 2px dotted greenyellow;
+  background-color: rgba(236, 236, 201, 0.445);
+}
+
+.component-container {
+  border: rgb(126, 79, 9) solid 2px;
+  padding: 4px;
+  display: block;
+  top: 0px;
+  height: calc(100vh - 50px);
+}
+
+.boxes {
+  position : absolute;
+  top:0px;
+  bottom:0px;
+  width: 100vw;
+  border: 1px solid rgb(41, 29, 120);
+}
+
+.mode-selection-div {
+  padding-top: 8px;
+  padding-left: 10%;
+  background-color: rgb(249, 247, 236);
+  height:28px;
+  border: 1px solid rgb(72, 3, 3);
+  width: calc(100vw - 10% - 2px);
+}
+
+.playReady {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  background: black;
+  border:solid 3px steelblue;
+  clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
+}
+
+.playDisabled {
+  cursor: none;
+  width: 24px;
+  height: 24px;
+  background: rgb(213, 220, 224);
+  border:solid 3px rgb(248, 244, 222);
+  clip-path: polygon(0% 0%, 0% 100%,  100% 50%);
+}
+
+.stop-button,  .manager-stop-button {
+  font-weight: bolder;
+  color:lime;
+  background-color: black;
+}
+
+.readiness-flag {
+  color: darkblue;
+  font-weight: bolder;
+  font-size: 88%;
+}

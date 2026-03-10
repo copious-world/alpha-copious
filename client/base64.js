@@ -40,6 +40,46 @@ function base64decode(str, decoder = new TextDecoder()) {
 
 
 
+
+const BASE64_MARKER = ';base64,';
+//
+/**
+ * converts the BLOB stored in a base64 URI string to an array of charcode bytes
+ * @param {string} dataURI 
+ * @returns {Array}
+ */
+function convertDataURIToBinary(dataURI) {
+  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+  var base64 = dataURI.substring(base64Index);
+  var raw = window.atob(base64);
+  var rawLength = raw.length;
+  var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+  for(i = 0; i < rawLength; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
+}
+
+
+/**
+ * The blob is a JavaScript's blob represetation.
+ * 
+ * @param {object} blob 
+ * @returns {Promise} -- resolve to a base64 URI
+ */
+function blobToBase64(blob) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+  });
+}
+
+
+
 //$$EXPORTABLE::
 /*
 //

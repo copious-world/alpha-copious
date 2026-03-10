@@ -1,0 +1,10 @@
+
+<!-- DIALOG WARNINGS-->
+<dialog id='warning-box'>
+  <h3 class="modal-header"><span id="warn-dialog-msg"></span></h3>
+  <footer class="modal-footer">
+    <button id="warn-OK" type="button">OK</button>
+  </footer>
+</dialog>
+<!-- end of dialog-->
+

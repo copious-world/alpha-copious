@@ -164,6 +164,27 @@ async function store_user(user_information) {
     return(true)
 }
 
+/**
+ * 
+ * @param {object} identity 
+ * @returns {boolean}
+ */
+async function unstore_user(identity) {
+    if ( !g_human_user_storage ) return(false)
+    try {
+        let name_key = identity.name
+        if ( g_human_user_storage.current_user_name !== name_key ) {
+            await g_human_user_storage.get_user(name_key)
+        }
+        await g_human_user_storage.remove_user()
+        return(true)
+    } catch (e) {
+    }
+    return false
+}
+
+
+
 
 /**
  * 
@@ -197,26 +218,26 @@ async function get_user_public_signer_key(name_key) {
 }
 
 
+//$>>	get_known_users
 /**
+ * When the DB is available, this method returns 
+ * the known users as a pair of lists.
  * 
- * @param {object} identity 
- * @returns {boolean}
+ * The first list, is the list of users.
+ * The second list, is the list of identity objects corresponding to the id's. (like an unzipped map)
+ * 
+ * @returns {pair}
  */
-async function unstore_user(identity) {
-    if ( !g_human_user_storage ) return(false)
-    try {
-        let name_key = identity.name
-        if ( g_human_user_storage.current_user_name !== name_key ) {
-            await g_human_user_storage.get_user(name_key)
-        }
-        await g_human_user_storage.remove_user()
-        return(true)
-    } catch (e) {
+async function get_known_users() {
+    if ( g_human_user_storage ) {
+        return await g_human_user_storage.get_known_users()
     }
-    return false
+    return [false,false]
 }
 
+
 /**
+ * Puts the identity back into the user storage.  (Idenity is public or private ID, depending on context)
  * 
  * @param {object} identity 
  */

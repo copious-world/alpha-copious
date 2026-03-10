@@ -30,7 +30,7 @@
 
 $$html:start_doc_head<<
 
-$$files::header.tmplt<<
+$$files::header_app.tmplt<<
 
 $$html:start_style<<
 $$css::styles1.css<<

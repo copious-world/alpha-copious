@@ -33,6 +33,11 @@ class HumanFrameHostedApp extends PageResponse {
         this.add_receiver(this.frame_page,"everyone",HOSTED_APP_TO_ALL,APP_RELATES_TO_ALL)
         this.add_accepted_receiver("human-page")
 
+        this.add_promise_handler("session-req")
+        this.add_promise_handler("data-req")
+        this.add_promise_handler("user-info")
+        
+        this.window_in_frame = check_frame_status()   // must be rolled in with this module\
     }
 
     /**
@@ -44,8 +49,42 @@ class HumanFrameHostedApp extends PageResponse {
     }
 
 
+    /**
+     * Add to the usual installation response, the awarness of the parent using an iframe or using a launch
+     */
+    install_response() {
+        super.install_response()
+        //
+        if ( this.window_in_frame ) {
+            this.site_page = window.parent
+            this.frame_page = this.site_page
+        } else {
+            this.site_page = window.parent
+            this.frame_page = false
+        }
+        //
+    }
+
+    /**
+     * 
+     * @param {string} category 
+     * @param {string} action 
+     * @param {string} data 
+     * @returns {boolean}
+     */
+    tell_site_page(category,action,data) {
+        let message = { category, action, data }
+        return this.tell_requesting_page(message,"site-page")
+    }
 
 
+
+    /**
+     * 
+     * @param {object} user_info 
+     * @param {boolean} remove 
+     * @returns {boolean}
+     */
     async download_identity(user_info,remove) {
         //
         let downloadlink = document.getElementById("identity-download-link")
@@ -68,6 +107,7 @@ class HumanFrameHostedApp extends PageResponse {
                 await unstore_user(identity)
             }
         } catch (e) {}
+        return true
     }
 
 
@@ -155,6 +195,12 @@ class HumanFrameHostedApp extends PageResponse {
                 }
                 break;
             }
+            case FRAME_TO_APP_PUBLIC_COMPONENT: {
+                if ( action === FRAME_COMPONENT_RESPONDING ) {
+                    this.promise_resolution("user-info",params)
+                }
+                break;
+            }
             case FRAME_TO_HOSTED_APP_SESSIONS : {          /// a hosted page that does not start a session.
                 if ( typeof injest_session === "function" ) {
                     await this.injest_session(action,params)
@@ -204,6 +250,19 @@ class HumanFrameHostedApp extends PageResponse {
         return false
     }
 
+    async app_fetch_user_info() {
+        if ( this.frame_page ) {
+            let sent = this.tell_frame_page(HOSTED_APP_WORKER_OPERATION,HOSTED_APP_INIT_WORKER,false)
+            if ( sent ) {
+                try {
+                    let session = await this.promise_handling("user-info")
+                    return session
+                } catch (e) {
+                }
+            }
+        }
+        return false
+    }
 
 
     async app_make_request(session,req_obj) {   // req_obj has url in it

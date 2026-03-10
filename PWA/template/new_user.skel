@@ -1,0 +1,207 @@
+$$defs:{
+    "top_level" : true,
+    "path_abreviations" : {
+        "[alpha-copious]" : "[github]/alphas/alpha-copious",
+        "[github]" : "~/GitHub",
+        "[websites]" : "[alphas]/websites"
+    },
+    "ext_default_dir" : {
+        "tmplt" : "[alpha-copious]/html",
+        "js" : "[alpha-copious]/client",
+        "svg" : "[alpha-copious]/icons",
+        "css" : "[alpha-copious]/css"
+    },
+    "top_dir_location" : {
+        "script" : "[alpha-copious]/script",
+        "for-humans" : "[alpha-copious]/for-humans",
+        "files" : "[alpha-copious]/html"
+    }
+}
+//  
+$$html:start_doc_head<<
+$$files::header-PWA-app.tmplt<<
+
+<style>
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+/**
+ * Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+ * aspect ratio.
+ */
+.pure-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+button {
+	cursor: pointer;
+	font-size: 101%;
+	font-weight: bold;
+	color: darkblue;
+	margin: 2px;
+	width:120px;
+}
+
+button:hover {
+	background-color : #CACAFF;
+	color: darkred;
+}
+
+
+body {
+	border: 1px solid black;
+	
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
+main {
+	border-left: solid 3px navy;
+	border-top: solid 1px #8833BB;
+	padding : 4px;
+}
+
+.footer-list li {
+	list-style-type: none;
+}
+
+.footer-list li a:hover { color: gold; }
+
+.hover_group {
+	cursor:pointer;
+}
+
+.hover_group rect {
+	fill:#e6e6e6;
+}
+
+.hover_group:hover rect {
+	fill: #F6F6e6;
+}
+
+footer {
+	padding:10px;
+	background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+	background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+	text-align: center;
+	font-size: 0.85em;
+}
+
+footer a {
+	text-decoration:none;
+	color:darkgreen;
+	font-weight:bold;
+	font-style: italic;
+}
+
+* {margin: 0; padding: 0; box-sizing: border-box}
+
+@media screen and (max-width: 600px) {
+	.new-user-message {
+		width: 100%;
+	}
+	.return-user-message {
+		width: 100%;
+		border: 1px solid darkgreen;
+		padding:2px;
+	}
+}
+
+@media screen and (min-width: 601px) {
+	.new-user-message {
+		width: 60%;
+	}
+	.return-user-message {
+		width: 60%;
+		border: 1px solid darkgreen;
+		padding:2px;
+	}
+}
+
+.human-user-query {
+	position: absolute;
+	top : 0px;
+	left: 60px;
+	bottom: 0px;
+	right: 220px;
+	background-color: #cae5ffb0;
+	border: solid 1px yellowgreen;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 10%;
+}
+
+</style>
+
+$$html:end_head<<
+
+$$html:start_script<<
+$$files<js>::top_vars_time<<
+$$html:end_script<<
+
+$$html:start_body<<
+
+$$template::{
+<main>
+	<div class="new-user-message">
+		<div>
+			{{{new_user_explain.content}}}
+		</div>
+		<div>
+			<button onclick="go_get_identity()" style="width: fit-content;">Create Intergalactic Identity</button>
+		</div>
+	</div>
+</main>
+}
+
+
+$$files::footer_A.tmplt<<
+
+$$html:end_body_html<<
+
+$$html:start_script<<
+
+$$verbatim::{
+function go_get_identity() {
+	tell_frame_page({
+		"data" : "https://www.of-this.world/igid-creator/"    // "https://have_a_nice.of-this.world/"
+	})
+}
+
+
+const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
+const NEW_USER_TO_FRAME = "new_user_to_frame"
+const HOST_APP_PERSONALIZATION = "personalization"
+const FRAME_HAS_PERSONALIZATION = "has-personalization"
+
+
+let g_frame_page = window.parent
+let g_message_template = null
+//
+g_message_template = {
+	"category" : HOST_APP_PERSONALIZATION,
+	"direction" : NEW_USER_TO_FRAME,
+	"action" : FRAME_HAS_PERSONALIZATION,
+	"relationship" : "phone-install"
+}
+
+
+function tell_frame_page(message) {
+	if ( !g_frame_page ) return(false)
+	let msg = Object.assign({},g_message_template)
+	msg.data = message.data
+	let message_str = JSON.stringify(msg)
+	g_frame_page.postMessage(message_str,'*')
+	return true
+}
+
+}
+
+$$html:end_script<<

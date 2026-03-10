@@ -40,6 +40,10 @@ class Messages {
             "session-check" : {
                 "resolver" : false,
                 "rejector" : false
+            },
+            "signed" : {
+                "resolver" : false,
+                "rejector" : false
             }
         }
         this.default_removal_timeout = 50
@@ -334,7 +338,7 @@ class PageResponse extends Messages {
      * @param {object} mobj -- The original event.data object, which is sometimed edited and sent back or forwarded
      */
     async message_handlers(category,action,relationship,params,mobj) {}
-    async default_category_message_handlers(category,action,relationship,params,mobj) {}
+    async default_category_message_handlers(action,relationship,params,mobj) {}
 
     /**
      * 

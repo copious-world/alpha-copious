@@ -1,4 +1,6 @@
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // SHARED CONSTANTS
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
 // SITE PAGE
@@ -25,7 +27,6 @@ const FRAME_ACTION_FROM_APP = "hosted_app_requests_action"
 const FRAME_PAGE_TO_PUBLISHER = "frame_page_to_publisher"
 const FRAME_PAGE_RELATES_TO_PUBLISHER= "frame_page_publications"
 const FRAME_ACTION_FROM_PUBLISHER = "publisher_app_requests_action"
-
 
 // APP PAGE
 //
@@ -62,6 +63,7 @@ const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
 
 const FRAME_ACTION_LOAD_APP = "load-app"
 const FRAME_PAGE_AUTO_LOGIN = "auto-login"
+
 const FRAME_ACTION_INSTALL = "install-id"
 const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"

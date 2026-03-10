@@ -16,6 +16,26 @@ function ext_of_file(file_name) {
 }
 
 
+
+/**
+ * given a mime type, return an extension (audio)
+ * @param {string} download_format 
+ * @returns {string}
+ */
+function ext_from_audio_download_format(download_format) {
+  if ( download_format === 'audio/wave' ) {
+    return("wav")
+  }
+  if ( download_format === 'audio/ogg' ) {
+    return("ogg")
+  }
+  if ( download_format === 'audio/mpeg' ) {
+    return("mp3")
+  }
+}
+
+
+
 //$>>	fussy_url
 /**
  * Some formulas involving url's need to have a slash at the end
@@ -230,6 +250,97 @@ function open_cors_window(default_url,window_name) {
     }
 	return [false,false]
 }
+
+
+
+/**
+ * just a function version of replaceAll, which is newer than the original subst
+ * @param {string} str 
+ * @param {string} c_seek 
+ * @param {string} c_repl 
+ * @returns {string}
+ */
+function subst(str,c_seek,c_repl) {
+	return str.replaceAll(c_seek,c_repl)
+}
+
+
+/**
+ * 
+ * @param {Array} list 
+ * @param {number} index 
+ */
+function lst_remove(list,index) {
+    list.splice(index,1)
+}
+
+
+/**
+ * 
+ * @param {Array} list 
+ * @param {number} index 
+ */
+function lst_insert_before(list,el,index) {
+  list.splice(index,0,el)
+}
+
+
+
+/**
+ * `list_of_sections` is an array of arrays
+ * 
+ * Concats all the arrays into one array.
+ * 
+ * @param {Array} list_of_sections 
+ * @returns {Array}
+ */
+function concat_all_to_array(list_of_sections) {
+  let start = list_of_sections.unshift()
+  while ( list_of_sections.length ) {
+    let next_sect = list_of_sections.unshift()
+    start = start.concat(next_sect)
+  }
+  return(start)
+}
+
+
+// https://stackoverflow.com/questions/33702838/how-to-append-bytes-multi-bytes-and-buffer-to-arraybuffer-in-javascript
+
+/**
+ * Takes in the two typed arrays and returns a new array consisting of their concatenation.
+ * @param {TypedArray} a 
+ * @param {TypedArray} b 
+ * @returns {TypedArray}
+ */
+function concatTypedArrays(a, b) { // a, b TypedArray of same type
+  var c = new (a.constructor)(a.length + b.length);
+  c.set(a, 0);
+  c.set(b, a.length);
+  return c;
+}
+
+
+
+/**
+ * 
+ * @returns {string}
+ */
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+
+/**
+ * This is a fairly common promised based fix for a sleep function in JavaScript
+ * @param {number} time 
+ * @returns {Promise}
+ */
+const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
+
 
 
 //$$EXPORTABLE::

@@ -1,0 +1,24 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<!-- MANIFEST... -->
+<link rel="manifest" href="./manifest.json" />
+<!-- ... -->
+
+<meta name="author" content="@{AUTHOR%config%}" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta id="theme-color" name="theme-color" content="#452770">
+
+<link rel="canonical" href="{{canonical}}">
+<link rel="icon" type="image/svg+xml" href="{{logo-ico-svg}}" />
+
+<!-- metas for PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="{{mobil-app-title}}">
+<meta name="msapplication-TileImage" content="{{mobile-title-image}}">
+<meta name="msapplication-TileColor" content="{{mobile-title-color}}">
+
+<title>{{pageTitle}}</title>
+<meta name="description" content="{{pageDescription}}">
+

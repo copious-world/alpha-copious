@@ -84,8 +84,6 @@ if  ( self._x_counted_app_application_extension === false ) {
 
     media_view_frame_responder.set_globals(media_view_frame_responder)
     //
-    media_view_frame_responder.add_promise_handler("session-req")
-    media_view_frame_responder.add_promise_handler("data-req")
     media_view_frame_responder.install_response()
     //
     media_view_frame_responder.set_human_frame_responder(media_view_frame_responder)

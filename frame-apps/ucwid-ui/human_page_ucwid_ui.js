@@ -18,43 +18,14 @@ const APLLICATION_HUMAN_PAGE_SERVER = 'https://of-this.world'
  */
 class UCWID_UIPageAPP extends HumanFrameHostedApp {
 
-    constructor() {
-        super()
+    constructor(conf) {
+        super(conf)
         //
         this.site_page = false // HumanFrameHostedApp has the field frame_page, this has site_page, since it might not be embedded
         //
-        this.window_in_frame = false
-
         // initial validation application is coinstall_response()ntact
         this.CurContainer = null // will be initilialized within the finalizers
     }
-
-    install_response() {
-        super.install_response()
-        this.window_in_frame = check_frame_status()
-        //
-        if ( this.window_in_frame ) {
-            this.site_page = window.parent
-            this.frame_page = this.site_page
-        } else {
-            this.site_page = window.parent
-            this.frame_page = false
-        }
-        //
-    }
-
-    /**
-     * 
-     * @param {string} category 
-     * @param {string} action 
-     * @param {string} data 
-     * @returns {boolean}
-     */
-    tell_site_page(category,action,data) {
-        let message = { category, action, data }
-        return this.tell_requesting_page(message,"site-page")
-    }
-
 
     /**
      * 
@@ -162,8 +133,6 @@ let ucwuid_frame_responder = new UCWID_UIPageAPP({
 ucwuid_frame_responder.set_globals(ucwuid_frame_responder)
 ucwuid_frame_responder.add_receiver(ucwuid_frame_responder.site_page,"site-page",BUILDER_PAGE_TO_SITE,BUILDER_RELATES_TO_SITE)
 //
-ucwuid_frame_responder.add_promise_handler("session-req")
-ucwuid_frame_responder.add_promise_handler("data-req")
 ucwuid_frame_responder.install_response()
 //
 ucwuid_frame_responder.set_human_frame_responder(ucwuid_frame_responder)

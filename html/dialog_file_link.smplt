@@ -1,0 +1,15 @@
+@params<{name : %string%, dialog_title : %string%, dialog_main : %string%}>
+//
+<dialog id='@{name}-box'>
+  <h3 class="modal-header">@{dialog_title}</h3>
+  <div class="modal-body">
+    <blockquote class="wv-bq-dialog">
+		@{dialog_main}
+    </blockquote>
+  </div>
+  <footer class="modal-footer">
+    <button id="rename-OK" type="button">OK</button>
+    <button id="rename-cancel" type="button">Cancel</button>
+  </footer>
+  <a id='@{name}-link' style="display:none" href = "" >no file</a>
+</dialog>

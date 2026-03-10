@@ -278,6 +278,98 @@ async function galactic_user_starter_keys(selector) {
 
 
 
+
+async function encrypt_hash(hashAsBytes) {
+    // do nothing for now...
+}
+
+
+
+
+//>--
+// digestByteArray
+//  Xor a nonce onto the data bytes take from the Blob.
+//  Then use SHA-256 to hash the result. 
+//  Return the SHA hash as a hex string.
+//  -- 
+async function digestByteArray(byteArray,secret) {
+    if ( secret ) {  // the secret has to match the Uint8Array type
+        byteArray = new Uint8Array(byteArray)  // copy the array
+        byteArray = xor_byte_arrays(byteArray,secret)
+    }
+    const hashBuffer = await g_crypto.digest('SHA-256', byteArray);          // hash the message
+    const hashAsBytes = new Uint8Array(hashBuffer)
+    // await encrypt_hash(hashAsBytes)
+    const hashArray = Array.from(hashAsBytes);                // convert buffer to byte array
+    const hashHex = hex_fromArrayOfBytes(hashArray); // convert bytes to hex string
+    return hashHex;
+}
+//--<
+
+
+
+//>--
+// hash_of_chunk
+//
+//  Get the array of bytes from a blob (audio blob, e.g.)
+//  -- 
+async function hash_of_chunk(a_chunk,secret) {
+    let chunkArray = await a_chunk.arrayBuffer();   // a_chunk is a blob
+    let hexHash = await digestByteArray(chunkArray,secret)
+    return(hexHash)
+}
+//--<
+
+
+
+//>--
+// nowrap_decrypted_local_priv_key
+// --
+async function nowrap_decrypted_local_priv_key(key_bytes,unwrapped_aes,iv_buffer) {
+    //
+    let clear_key = await g_crypto.decrypt({
+                                                name: "AES-CBC",
+                                                iv : iv_buffer
+                                            },unwrapped_aes,key_bytes)
+    //
+    let dec = new TextDecoder()
+    let txt = dec.decode(clear_key)
+    let clear_jwk = JSON.parse(txt)
+    //
+    let key = await g_crypto.importKey('jwk',clear_jwk,{
+            'name': "ECDSA",
+            'namedCurve': "P-384"
+        },
+        true,
+        ["sign"]
+    )
+    return key
+}
+//--<
+
+
+
+//>--
+// sign_hash
+// --
+// sign with the private key of the user on the device...
+async function sign_hash(text,signing_key) {
+    //
+    let enc = new TextEncoder();   // one each time or one for app ???
+    let encoded =  enc.encode(text);
+    let signature = await g_crypto.sign({
+                                            name: "ECDSA",
+                                            hash: {name: "SHA-256"},
+                                        },
+                                        signing_key,
+                                        encoded
+                                    );
+    return(signature)
+}
+//--<
+
+
+
 //$>>	protect_hash
 /*
 // protect_hash
