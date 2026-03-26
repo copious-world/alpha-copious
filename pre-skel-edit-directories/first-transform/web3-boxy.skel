@@ -21,10 +21,11 @@ $$defs:{
 //  
 $$html:start_doc_head<<
 $$files::header.tmplt<<
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -33,18 +34,7 @@ $$html:end_script<<
 
 $$html:start_body<<
 
-$$files::params::nav_bar_V.smplt<< {
-    $@{lr_div}$files::params::left-right-div.smplt<<    {
-        $@{logo}$files::logo.tmplt<<
-        $@{spacer}$files::spacer.tmplt<<
-        $@{menu}$files::shroom.tmplt<<{
-             $@{mushroom}$icons::mushroom-menu-icon.svg<<
-        }
-    }
-    $@{logout}$files::logout.tmplt<<
-}
-
-$$files::list::MAP-special_frame.smplt<el><<@!{groups}
+$$files::nav_bar_A.tmplt<<
 
 $$files::flexy_items_A-main.tmplt<<
 
@@ -54,30 +44,28 @@ $$verbatim::{
 <!-- start dynamic content -->
 }
 
-
 $$files::squashable_menu_A.tmplt<<
 
+$$files::calc::contact_box<<${box_i=100}
 
-$$files::calc::contact_box<<${start=100}
+$$files::calc::about_box<<${box_i++}
 
-$$files::calc::about_box<<${start++}
+$$files::calc::thankyou_box<<${box_i++}
 
-$$files::calc::thankyou_box<<${start++}
+$$files::loop::calc::topicBox_<1,@!{topic_count}><<${box_i++}
 
-$$files::loop::calc::topicBox_<1,@!{topic_count}><<${start++}
+$$files::calc::register<<${box_i++}
 
-$$files::calc::register<<${start++}
-
-$$files::calc::login<<${start++}
-
+$$files::calc::login<<${box_i++}
 
 $$files::intergalactic-explain.tmplt<<
 
 $$template::{
-    {{{advertPopups.content}}}
+{{{advertPopups.content}}}
 }
 
 $$html:end_body_html<<
+//
 //
 $$html:start_script<<
 

@@ -1,4 +1,18 @@
 
+// This script generates skeletons given directory sources for file names
+// and HTML files that have been marked with analysis codes.
+
+// This script takes in files that have been analyzed,
+// with file names (basic names, not paths) have been indicated after 
+// syntax `// OFFLOADED`. 
+// This script makes a map of all directories that contain the files mentioned.
+// Then, it reads the analyzed HTML and outputs skeleton structures.
+// The skeletons (prior to editing and bundling) will be written to a 
+// `gend_skels` directory. 
+
+// Directory offsets for files that are found will be written into the brackets, e.g. '[a/b]'
+// A tool downstream, will clean up those directories for path name calculations used during
+// template generation.
 
 let defs = {
     "top_level" : true,

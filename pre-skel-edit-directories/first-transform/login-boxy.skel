@@ -1,6 +1,5 @@
 $$defs:{
     "top_level" : true,
-    "uses_config_vars" : "shops",
     "path_abreviations" : {
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/GitHub",
@@ -13,7 +12,7 @@ $$defs:{
         "css" : "[alpha-copious]/css"
     },
     "top_dir_location" : {
-        "script" : "[alpha-copious]/client",
+        "script" : "[alpha-copious]/script",
         "for-humans" : "[alpha-copious]/for-humans",
         "files" : "[alpha-copious]/html"
     }
@@ -21,10 +20,11 @@ $$defs:{
 //  
 $$html:start_doc_head<<
 $$files::header.tmplt<<
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -33,30 +33,13 @@ $$html:end_script<<
 
 $$html:start_body<<
 
-$$files::params::nav_bar_V.smplt<< {
-    $@{lr_div}$files::params::left-right-div.smplt<<    {
-        $@{logo}$files::logo.tmplt<<
-        $@{spacer}$files::spacer.tmplt<<
-        $@{menu}$files::shroom.tmplt<<{
-             $@{mushroom}$icons::mushroom-menu-icon.svg<<
-        }
-    }
-    $@{logout}$files::logout.tmplt<<
-}
-
-$$files::list::MAP-special_frame.smplt<el><<@!{groups}
+$$files::nav_bar_A.tmplt<<
 
 $$files::flexy_items_A-main.tmplt<<
 
 $$files::footer_A.tmplt<<
 
-$$verbatim::{
-<!-- start dynamic content -->
-}
-
-
 $$files::squashable_menu_A.tmplt<<
-
 
 $$files::calc::contact_box<<${start=100}
 
@@ -64,17 +47,19 @@ $$files::calc::about_box<<${start++}
 
 $$files::calc::thankyou_box<<${start++}
 
-$$files::loop::calc::topicBox_<1,@!{topic_count}><<${start++}
+$$files::loop::calc::topicBox_<1,3><<${start++}
 
 $$files::calc::register<<${start++}
 
 $$files::calc::login<<${start++}
 
-
 $$files::intergalactic-explain.tmplt<<
 
-$$template::{
-    {{{advertPopups.content}}}
+$$verbatim::{
+{{{advertPopups.content}}}
+
+{{{yourProileLinks.content}}}
+{{{yourDashboardLinks.content}}}
 }
 
 $$html:end_body_html<<
@@ -125,16 +110,9 @@ $$script::[for-humans]/msg_vars.js<<
 
 $$script::[for-humans]/external-id-intake.js<<
 
-$$script::[for-humans]/human_frame_client.js<<
 
-$$script::[for-humans]/frame_page_opener.js<<
-
-$$script::[for-humans]/site_page_tab_com.js<<
-
-$$script::user_db.js<<
-
-$$script::[app<scripts>]/site_app.js<<
-
-$$script::[alt-script]/flexy_items_A-app-finalize.js<<
+$$verbatim::{
+	setupLogoutRestoration()
+}
 
 $$html:end_script<<

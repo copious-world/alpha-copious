@@ -19,49 +19,37 @@ $$defs:{
 }
 //  
 $$html:start_doc_head<<
-$$files::header-PWA.tmplt<<
-
-$$html:start_style<<
-$$css::style-PWA.css<<
-$$html:end_style<<
-
+$$files::header.tmplt<<
 $$html:end_head<<
 
+$$html:start_style<<
+$$css::styles1.css<<
+$$html:end_style<<
+
 $$html:start_script<<
-$$files<js>::top_vars_time<<
+$$files<js>::top_vars<<
 $$html:end_script<<
 
 $$html:start_body<<
 
-$$files::nav_bar_F.tmplt<<
-
-$$verbatim::{
-<main id="app-sourcing">
-<iframe src="./new_user.html" id="app-human-frame">
-
-</iframe>
-</main>
+$$files::nav_bar_E.tmplt<<
+$$template::{
+	<main>
+	<div class="items">
+		<div class="item">
+			$$BODY_INSERT
+		</div>
+	</div>
+	</main>
 }
 
-$$files::footer_A.tmplt<<
+$$files::drop_click.tmplt<<
 
+$$files::footer_A.tmplt<<
 $$html:end_body_html<<
-//
+
 $$html:start_script<<
 
-$$script::[for-humans]/PWA/service-worker.js<<
-
-$$script::[for-humans]/shared_constants.js<<
-$$script::[client]/common.js<<
-$$script::[client]/auth_endpoint.js<<
-$$script::[client]/post_fetch.js<<
-$$script::[client]/one_table_db.js<<
-
-$$script::[for-humans]/messaging/thread-requests.js<<
-
-$$script::[client]/user_db.js<<
-$$script::[databases]/use_db.js<<
-
-$$script::[for-humans]/PWA/PWA-frame.js<<
+$$script::post_fetch.js<<
 
 $$html:end_script<<

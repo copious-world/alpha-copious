@@ -1,0 +1,122 @@
+$$defs:{
+    "top_level" : true,
+    "path_abreviations" : {
+        "[alpha-copious]" : "[github]/alphas/alpha-copious",
+        "[github]" : "~/GitHub",
+        "[websites]" : "[alphas]/websites"
+    },
+    "ext_default_dir" : {
+        "tmplt" : "[alpha-copious]/html",
+        "js" : "[alpha-copious]/client",
+        "svg" : "[alpha-copious]/icons",
+        "css" : "[alpha-copious]/css"
+    },
+    "top_dir_location" : {
+        "script" : "[alpha-copious]/script",
+        "for-humans" : "[alpha-copious]/for-humans",
+        "files" : "[alpha-copious]/html"
+    }
+}
+
+$$html:start_doc_head<<
+
+$$files::header_human.tmplt<<
+
+$$html:start_style<<
+$$css::style-human-page.css<<
+$$html:end_style<<
+
+$$html:end_head<<
+
+
+$$html:start_body<<
+
+
+$$files::super-header-human.tmplt<<
+
+
+$$files::special_frame<in-set=[application,manager,wallet]><<{
+    $@application::{
+        $$SOURCE-LINK=nothing
+        $$FRAME-ACTIONS=nothing
+    }
+    $@manager::{
+        $$SOURCE-LINK= "https://www.of-this.world/manager"
+        $$FRAME-ACTIONS= onload="info_to_manager_container()"
+    }
+    $@wallet::{
+        $$SOURCE-LINK= "https://www.of-this.world/"
+        $$FRAME-ACTIONS= onload="info_to_wallet_container()"
+    }
+}
+
+$$template::{
+<div id="db_container" class="content-container {{db-container-style-class}}" >
+    <div class="media-dashboard-header"  {{media-dashboard-style-class}}>
+        Special Application Link  <button id="special-link-opener" onclick="show_special_link_entry()">&gt;&gt;</button>
+        <button id="special-link-hider" onclick="hide_special_link_entry()">&lt;&lt;</button>
+    </div>
+    <div id="special-app-link" class="link-intake {{special-app-link-style-class}}">
+        <span class="link-intake-label">Enter link to an application:</span>
+        <input id="human-page-app-link" />    
+        <button onclick="surf_to_link('human-page-app-link')">open page</button>
+    </div>
+    <div id="dash_control" class="media-dashboard-header {{dash_control-style-class}}">
+        Website Application Media Dashboard
+        <button id="special-dash-opener" onclick="show_special_dash_entry()">&gt;&gt;</button>
+        <button id="special-dash-hider" onclick="hide_special_dash_entry()">&lt;&lt;</button>
+    </div>
+    <div id="special-dash-link" class="link-intake {{special-dash-link-style-class}}">
+        Don't see your prefered dashboard below?
+        <span class="link-intake-label">Optional link to a host dashboard:</span>
+        <input id="human-page-dashboard-link" />    
+        <button onclick="surf_to_uploader('human-page-dashboard-link')">load dashboard</button>
+    </div>
+    <div id="dashboard-frame" class="{{dashboard-frame-style-class}}" >
+        <iframe id="dashboard-frame" src="" class="super-container" style="height:100%" >
+            data manager frame
+        </iframe>    
+    </div>
+</div>
+}
+
+
+$$files::drop_click.tmplt<<
+
+$$html:end_body_html<<
+$$html:start_script<<
+
+$$script::pc_location.js<<
+
+$$script::crypto-global.js<<
+
+$$script::base64.js<<
+
+$$script::crypto-hash.js<<
+
+$$script::crypto-wraps.js<<
+
+$$script::common.js<<
+
+$$script::https_checks.js<<
+
+$$script::post_fetch.js<<
+
+$$script::file_ops.js<<
+
+$$script::one_table_db.js<<
+
+$$script::[for-humans]/shared_constants.js<<
+
+$$script::[for-humans]/msg_vars.js<<
+
+$$script::[for-humans]/human_frame_client.js<<
+
+$$script::[for-humans]/frame_page_tab_com.js<<
+
+$$script::user_db.js<<
+
+$$script::[app<scripts>]/window_app.js<<
+
+$$html:end_script<<
+

@@ -1,5 +1,8 @@
 
-
+let g_section_count = 0 // but a variable
+let g_current_section_select = null
+let lastKnownScrollPosition = 0
+let elementsToCheck = []
 
 
 function scroll_pin(view_center) {

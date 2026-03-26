@@ -1,0 +1,57 @@
+{
+    "top_level": true,
+    "path_abreviations": {
+        "[alpha-copious]": "[github]/alphas/alpha-copious",
+        "[github]": "~/GitHub",
+        "[websites]": "[alphas]/websites"
+    },
+    "ext_default_dir": {
+        "tmplt": "[alpha-copious]/html",
+        "js": "[alpha-copious]/client",
+        "svg": "[alpha-copious]/icons",
+        "css": "[alpha-copious]/css"
+    },
+    "top_dir_location": {
+        "script": "[alpha-copious]/script",
+        "for-humans": "[alpha-copious]/for-humans",
+        "messaging": "[alpha-copious]/for-humans/messaging",
+        "files": "[alpha-copious]/html",
+        "frame-apps": "[alpha-copious]/frame-apps",
+        "calendar-owner": "[alpha-copious]/frame-apps/calendar-owner",
+        "counted-media": "[alpha-copious]/frame-apps/counted-media",
+        "igid-manager": "[alpha-copious]/frame-apps/igid-manager",
+        "mail": "[alpha-copious]/frame-apps/mail",
+        "ucwid-ui": "[alpha-copious]/frame-apps/ucwid-ui",
+        "uploader": "[alpha-copious]/frame-apps/uploader",
+        "wallet": "[alpha-copious]/frame-apps/wallet",
+        "databases": "[alpha-copious]/databases"
+    }
+}
+
+$$html:start_doc_head<<
+$$files::header_app.tmplt<<
+$$bundle::bundle_13.js
+$$bundle::frame-apps_uploader_index_bundle.js
+
+$$html:end_head<<
+
+$$html:start_script<<
+$$files<js>::top_vars_time<<
+$$html:end_script<<
+
+$$html:start_body<<
+
+$$verbatim::{
+<nav id="mainNav">
+</nav>
+<main id='app-main'>
+</main>
+<footer>
+</footer>
+}
+
+$$html:end_body_html<<
+
+$$html:start_script<<
+
+$$html:end_script<<

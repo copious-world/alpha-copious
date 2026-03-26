@@ -1,0 +1,141 @@
+{
+    "top_level": true,
+    "path_abreviations": {
+        "[alpha-copious]": "[github]/alphas/alpha-copious",
+        "[github]": "~/GitHub",
+        "[websites]": "[alphas]/websites"
+    },
+    "ext_default_dir": {
+        "tmplt": "[alpha-copious]/html",
+        "js": "[alpha-copious]/client",
+        "svg": "[alpha-copious]/icons",
+        "css": "[alpha-copious]/css"
+    },
+    "top_dir_location": {
+        "script": "[alpha-copious]/script",
+        "for-humans": "[alpha-copious]/for-humans",
+        "messaging": "[alpha-copious]/for-humans/messaging",
+        "files": "[alpha-copious]/html",
+        "frame-apps": "[alpha-copious]/frame-apps",
+        "calendar-owner": "[alpha-copious]/frame-apps/calendar-owner",
+        "counted-media": "[alpha-copious]/frame-apps/counted-media",
+        "igid-manager": "[alpha-copious]/frame-apps/igid-manager",
+        "mail": "[alpha-copious]/frame-apps/mail",
+        "ucwid-ui": "[alpha-copious]/frame-apps/ucwid-ui",
+        "uploader": "[alpha-copious]/frame-apps/uploader",
+        "wallet": "[alpha-copious]/frame-apps/wallet",
+        "databases": "[alpha-copious]/databases"
+    }
+}
+
+$$html:start_doc_head<<
+
+$$files::header_human.tmplt<<
+
+$$html:start_style<<
+$$css::style-human-page.css<<
+$$html:end_style<<
+$$bundle::bundle_16.js
+
+$$html:end_head<<
+
+$$html:start_body<<
+
+$$files::top-controls-human.tmplt<<
+$$files::super-header-human.tmplt<<
+
+$$files::special_frame<in-set=[application,manager,wallet]><<{
+    $@application::{
+        $$SOURCE-LINK=nothing
+        $$FRAME-ACTIONS=nothing
+    }
+    $@manager::{
+        $$SOURCE-LINK= "https://www.of-this.world/manager"
+        $$FRAME-ACTIONS= onload="info_to_manager_container()"
+    }
+    $@wallet::{
+        $$SOURCE-LINK= "https://www.of-this.world/"
+        $$FRAME-ACTIONS= onload="info_to_wallet_container()"
+    }
+}
+
+$$template::{
+<div id="db_container" class="content-container {{db-container-style-class}}" >
+    <div class="media-dashboard-header {{media-dashboard-style-class}}" >
+        Special Application Link  <button id="special-link-opener" onclick="show_special_link_entry()">&gt;&gt;</button>
+        <button id="special-link-hider" onclick="hide_special_link_entry()">&lt;&lt;</button>
+    </div>
+    <div id="special-app-link" class="link-intake {{special-app-link-style-class}}">
+        <span class="link-intake-label">Enter link to an application:</span>
+        <input id="human-page-app-link" />
+        <button onclick="surf_to_link('human-page-app-link')">open page</button>
+    </div>
+    <div id="dash_control" class="media-dashboard-header {{dash_control-style-class}}">
+        Website Application Media Dashboard
+        <button id="special-dash-opener" onclick="show_special_dash_entry()">&gt;&gt;</button>
+        <button id="special-dash-hider" onclick="hide_special_dash_entry()">&lt;&lt;</button>
+    </div>
+    <div id="special-dash-link" class="link-intake {{special-dash-link-style-class}}">
+        Don't see your prefered dashboard below?
+        <span class="link-intake-label">Optional link to a host dashboard:</span>
+        <input id="human-page-dashboard-link" />
+        <button onclick="surf_to_uploader('human-page-dashboard-link')">load dashboard</button>
+    </div>
+    <div id="dashboard-frame" class="{{dashboard-frame-style-class}}" >
+        <iframe id="humans-uploader-frame" src="https://cloud.copious.world/uploader"  class="super-container" onload="resolver_event(event,'uploader')" style="height:100%">
+            data manager frame
+        </iframe>
+    </div>
+
+    <div id="signer-upper-controller" class="bio-signerupper" >
+        {{{human_page_bio_drop_instructions}}}
+    </div>
+</div>
+}
+
+$$files::drop_click.tmplt<<
+$$html:end_body_html<<
+$$html:start_script<<
+$$script::[for-humans]/IGID.js<<
+
+$$script::[for-humans/messaging]/frame_page_site_response.js<<
+$$script::[for-humans/messaging]/frame_page_app_response.js<<
+$$script::[for-humans/messaging]/frame_page_publisher_response.js<<
+$$script::[for-humans/messaging]/frame_page_id_builder_response.js<<
+$$script::[for-humans/messaging]/teller_messages.js<<
+$$script::[for-humans/messaging]/frame_page_id_manager_response.js<<
+
+$$script::[for-humans/messaging]/frame_page_broadcast.js<<
+$$script::[for-humans]/human_frame_client_visuals.js<<
+
+$$script::[for-humans]/biometric_ui.js<<
+$$script::[for-humans]/human_page_app.js<<
+// //
+// function load_human_frame_worker() {
+//     g_frame_page_service_worker = new SharedWorker('./human_frame_worker.js');
+//     if ( g_frame_page_service_worker ) {
+//         try {
+//             g_frame_page_service_worker.port.start();
+// //            install_service_worker_response()        -- the frame page works inside a service worker container
+//         } catch (e) {
+//             console.log(e)
+//         }
+//     }
+// }
+/*
+{
+    "human_name":"Joe",
+    "public_identity":{
+        "name":"Joe",
+        "DOB":"10/10/1010",
+        "place_of_origin":"goofball",
+        "cool_public_info":"Other ball",
+        "business":false,
+        "public_key":"{\"alg\":\"RSA-OAEP-256\",\"e\":\"AQAB\",\"ext\":true,\"key_ops\":[\"wrapKey\"],\"kty\":\"RSA\",\"n\":\"tyz1N20gIiiLM10RW8n6OKqB5bPuiZ_trYKqSE8PIYse6DIa142z4FWY7mFcdU7E7EdFbvRQEIULmGdArg3ZGK8gmYrKO_BAIObj7u6k3kISvB6io2uhs7ZIpSgOpU1SrAKtH8PdrYMPZ50lQV6Q4EyM9x24_zm7H67WWwAQ1EdjDKNz5BzOpZ87eQbqBCZdyhzJEe4AkfjFg1YSsVTYq8yq9k6ARZNDM56yH2Ab29_EB0IN24phW0ItegtWunJZ0YlcjKQltEPXkEN8lgLJv95x-pGD-mBTGtA-dnz3Gv7h455ZXNlx1ei99b0e7hmv3NJoB-Njok8R-fhBkHYnbn-3vma8_Uq-sHqkAGGwLGL4RIKWw9WKp9iGnG3eOAoXSCAdQjj1Ek4pbT-aF04m7gUh_XHPMsbAqAPK5PFEiklfD129E56CklaxPDObH5Re_rXN_y5qS6JVraRKqEdxjThjH_VrV-xXNygdWz_a-FiKcjDuW95yja1kRdnQ9ou5IFgI2dqJJ6c6Eld4Xp-RmUPXdFilg8HpnnFKAdhmJyAZnw1YRN0q86fSyabx_fb5M4n4-aCoDYp5o8-Uq1AvgQ-4nh1vLUTtlZImVRXViNztzPH72gNHh9cV84obicn8rFQJYzLivAlmarn5pe6opazvYb714O2MF-nykHvxrkc\"}",
+        "signer_public_key":"{\"alg\":\"ES384\",\"crv\":\"P-384\",\"ext\":true,\"key_ops\":[\"verify\"],\"kty\":\"EC\",\"x\":\"ju-_A1EZaY5ZxbfViGRDqfI7oW40Qi2Tg01tSi57Kpmuju0WavnCallXT56NtoDf\",\"y\":\"s60C2jQnnnz5oj2F6j4hX34Bt9jqZIyckTx-gsA6zbSSN1RuI8qQDuPz0BH6Vumo\"}",
+        "axiom_public_key":"{\"crv\":\"P-384\",\"ext\":true,\"key_ops\":[],\"kty\":\"EC\",\"x\":\"dXc3DWWYXbd0x6d3il-vHTN-Ba7H0hERzr6w4kRjD2kIP3QIdiuqY7bwsImmvMXP\",\"y\":\"2PQ3sMEKGCdx73G4CYjPHrfoiuQT1LK9rwyaXKJ3b9XVPLUy_sNJPReKCs3wLvAx\"}",
+        "ccwid":"1!uAVUSIA!bK9JnJQiul1caMZU3zGAtFzPkNFrXqUXJpQkbhiol24"
+    }
+}
+*/
+$$html:end_script<<

@@ -21,10 +21,11 @@ $$defs:{
 //  
 $$html:start_doc_head<<
 $$files::header.tmplt<<
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<

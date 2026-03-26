@@ -1,0 +1,22 @@
+{
+    "source_dir" : "./pre-pre-template",
+    "destination_dir" : "./pre-skel-edit-directories/first-transform",
+    "substitutions" : {
+        "shared_constants.js" : "shared_constants_m.js",
+        "styles1.css" : "quick_view.css",
+        "style-PWA.css" : "app-PWA.css"
+    },
+    "insertions" : {
+        "$$link<css>::shared_styles.css<<" : {
+            "after" : "\\$\\$files::header.*\\.tmplt<<",
+            "cond" : "styles1.css"
+        },
+        "$$link<css>::common-PWA.css<<" : {
+            "after" : "\\$\\$files::header.*\\.tmplt<<",
+            "cond" : "style-PWA.css"
+        }
+    },
+    "actions" : [
+        "./tools/cpress_message_cs.js ./for-humans/shared_constants.js ./for-humans/shared_constants_m.js"
+    ]
+} 
