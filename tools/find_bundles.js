@@ -195,10 +195,11 @@ function best_fit_bundle(file_edit_map,bundle_cliques) {
 
 
 
-
-console.dir(bundle_cliques,{depth : 6})
-
-
+/**
+ * 
+ * @param {object} file_edit_map 
+ * @param {object} bundle_cliques 
+ */
 function edit_file_with_matched_bundle(file_edit_map,bundle_cliques) {
     //
     for ( let file in file_edit_map ) {
@@ -240,7 +241,11 @@ function edit_file_with_matched_bundle(file_edit_map,bundle_cliques) {
 }
 
 
-
+/**
+ * 
+ * @param {object} file_edit_map 
+ * @param {string} out_dir 
+ */
 function output_edited_skeletons(file_edit_map,out_dir) { 
     //
     try {

@@ -1,8 +1,6 @@
 
 
-// Reads in a directory of '.skel' files 
-// outputs files with the extension set to '.tmplt'
-// outputs these files to the sames directory supplied in the first script argument
+
 
 const fs = require('fs')
 const path = require('path')
@@ -12,7 +10,7 @@ if ( typeof dir === "string" ) {
     let files = fs.readdirSync(dir)
     files = files.filter((fl) => {
         //console.log(fl,path.extname(fl))
-        if ( path.extname(fl)  === ".skel" ) {
+        if ( path.extname(fl)  === ".html" ) {
             return true
         }
         return false
@@ -21,7 +19,7 @@ if ( typeof dir === "string" ) {
     console.log(files)
     for ( let fl of files ) {
         let  a_file = `${dir}/${fl}`
-        let new_file = a_file.replace(".skel",".tmplt")
+        let new_file = a_file.replace(".html",".skel")
         fs.renameSync(a_file,new_file)
     }
 }
