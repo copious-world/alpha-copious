@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <header>
+
+<style>
+:root {
+    --cl_nav_border : rgb(79, 94, 79);
+
+	--el_mainNavbackground_c0 : rgba(242, 242, 210, 0.3);
+	--el_mainNavbackground_c1 : white;
+	--el_mainNavbackground_wk_c0 : rgba(242, 242, 210, 0.3);
+	--el_mainNavbackground_wk_c1 : white;
+	--el_mainNavbackground : linear-gradient(to left, var(--el_mainNavbackground_c0), var(--el_mainNavbackground_c1) );
+	--el_mainNavbackground_wk : -webkit-linear-gradient(to left, var(--el_mainNavbackground_wk_c0), var(--el_mainNavbackground_wk_c1));
+	--el_mainNavborder_bottom : rgba(252,252,255,0.7);
+
+    --cl_main_background : rgba(237, 237, 243, 0.5);
+    --cl_main_border : rgb(237, 238, 221);
+    --cl_main_border_top : #8833BB;
+
+    --el_nav_height : 30px;
+    --el_footer-height : 25px;
+    --cl_footer_border : purple;
+    --el_footerbackground_wk_c0 : rgba(252,252,255,0.5);
+	--el_footerbackground_wk_c1 : #fffbe2;
+	--el_footerbackground_c0 : rgba(252,252,255,0.5);
+	--el_footerbackground_c1 : #fffbe2;
+	--el_footerbackground_wk : -webkit-linear-gradient(to left, var(--el_footerbackground_wk_c0), var(--el_footerbackground_wk_c1) );
+	--el_footerbackground : linear-gradient(to left, var(--el_footerbackground_c0), var(--el_footerbackground_c1) );
+
+
+	--id_mainNavbackground_c0 : rgba(242, 242, 210, 0.3);
+	--id_mainNavbackground_c1 : white;
+	--id_mainNavbackground_wk_c0 : rgba(242, 242, 210, 0.3);
+	--id_mainNavbackground_wk_c1 : white;
+
+	--id_mainNavbackground : linear-gradient(to left, var(--id_mainNavbackground_c0), var(--id_mainNavbackground_c1) );
+	--id_mainNavborder_bottom : rgba(252,252,255,0.7);
+	--id_mainNavbackground_wk : -webkit-linear-gradient(to left, var(--id_mainNavbackground_wk_c0), var(--id_mainNavbackground_wk_c1));
+	--id_mainNav_table_navbarcolor : white;
+	--id_mainNav_table_navbarbackground_color : rgba(242,222,255,0.6);
+
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100dvh;
+}
+
+body {
+    border: 1px solid black; -moz-box-sizing: border-box; box-sizing: border-box;
+}
+
+nav {
+    background: var(--el_mainNavbackground_wk); 
+    background: var(--el_mainNavbackground);
+    border-bottom: var(--el_mainNavborder_bottom);
+	border-left: solid 3px var(--cl_nav_border);
+	border-top: solid 3px var(--cl_nav_border);
+    height: var(--el_nav_height);
+}
+
+main {
+    border: 1px var( --cl_main_border) solid;
+    bottom: 0;
+    min-height: calc(100dvh - var(--el_nav_height) - var(--el_footer-height));
+
+	border-left: solid 3px var(--cl_nav_border);
+	border-top: solid 1px var(--cl_main_border_top);
+    background-color: var( --cl_main_background);
+	padding : 4px;
+}
+
+footer {
+    /* */
+    width: 100%;
+    height: var(--el_footer-height);
+    bottom: 0;
+    position: fixed;
+    padding-left: 10px; padding-right: 10px; 
+    background: var(--el_footerbackground_wk); 
+    background: var(--el_footerbackground); 
+    border: 1px var( --cl_footer_border) solid;
+    text-align: center; 
+    font-size: 0.85em;
+    padding:4px;
+}
+
+
+#mainNav table .navbar-brand { font-size: 1.1rem; color: var(--id_mainNav_table_navbarcolor);}
+#mainNav table .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover { color: var(--id_mainNav_table_navbarcolor);}
+#mainNav table .navbar-nav a.nav-text { background-color: var(--id_mainNav_table_navbarbackground_color); border-radius: 25px; margin-bottom: 9px; margin-right: 6px; white-space: nowrap;}
+#mainNav table .navbar-nav li.nav-item a.nav-link { color: var(--id_mainNav_table_navbarcolor); text-decoration: none; vertical-align: top; padding-right: 10px;}
+#mainNav table .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: var(--id_mainNav_table_navbarcolor);}
+#mainNav table .navbar-nav li.nav-item a.nav-link:hover { color: var(--id_mainNav_table_navbarcolor); outline: none;}
+#mainNav table .navbar-nav li.nav-item { display:inline;}
+#mainNav table .navbar-nav { letter-spacing: 1px;}
+#mainNav table a:focus { outline: none;}
+#mainNav table { padding-left: 3%;}
+#mainNav { font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700; text-transform: uppercase; background: var(--id_mainNavbackground); border-left: solid 3px navy; border-top: solid 3px navy; border-bottom: solid 3px var(--id_mainNavborder_bottom); min-height: 90px; padding: 20px; background: var(--id_mainNavbackground_wk); background: var(--id_mainNavbackground);}
+
+
+</style>
+<style>
+
+:root {
+    --cl_open_btn: #333;
+    --cl_open_btn_bk: rgba(204, 252, 204, 0.699);
+    --cl_close_btn: #333;
+    --cl_close_btn_bk: white;
+    --el_drawer_background_cl: white;
+    --el_drawer_border_cl: navy;
+    --el_drawer_box_shadow_cl: rgba(0,0,0,0.2)
+}
+
+/* DRAWER */
+.drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: var(--el_drawer_background_cl);
+    border: 1px solid var(--el_drawer_border_cl);
+    box-shadow: 0 -2px 10px var(--el_drawer_box_shadow_cl);
+    /* Hide drawer off-screen */
+    transform: translateY(100%);
+    /* Smooth slide transition */
+    transition: transform 0.4s ease-in-out;
+    z-index: 1000;
+}
+
+/* Trigger animation when the URL hash matches #drawer */
+#drawer:target {
+    transform: translateY(0);
+}
+
+.drawer-content {
+    padding: 20px;
+}
+
+.open-btn {
+    font-weight: bolder;
+    text-decoration: none;
+    color: var(--cl_open_btn);
+    background-color: var(--cl_open_btn_bk);
+}
+
+.close-btn {
+    float: right;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bolder;
+    color: var(--cl_close_btn);
+    background-color: var(--cl_close_btn_bk);
+}
+
+</style>
+</header>
+<body>
+    <nav>
+
+    </nav>
+    <main>
+
+    </main>
+    <footer>
+<a href="#drawer" class="open-btn">&lt;&lt;&lt;</a>
+    </footer>
+
+<!-- Bottom Drawer -->
+<div id="drawer" class="drawer">
+  <div class="drawer-content">
+    <a href="#" class="close-btn">&times;</a>
+    <h2>Bottom Drawer</h2>
+    <p>This content slides up from the bottom.</p>
+  </div>
+</div>
+
+</body>
+</html>
