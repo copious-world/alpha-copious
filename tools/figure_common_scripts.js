@@ -89,7 +89,13 @@ function load_training_set(dir) {
         the_lines.shift()
         the_lines = the_lines.map((line) => { return line.trim() })
         the_lines = the_lines.filter((line) => {
-            return (line.length > 0) && line.startsWith("$$script::")
+            if ( (line.length > 0) && line.startsWith("$$script::") ) {
+                if ( has_script_alteration(line) ) {
+                    return false
+                }
+                return true
+            }
+            return false
         })
         //
         let stem_map = {}
@@ -105,6 +111,10 @@ function load_training_set(dir) {
     return file_stem_table
 }
 
+
+function has_script_alteration(line) {
+    return false
+}
 
 /**
  * 

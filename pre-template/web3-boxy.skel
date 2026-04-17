@@ -18,13 +18,16 @@ $$defs:{
         "files" : "[alpha-copious]/html"
     }
 }
-//  
+//
 $$html:start_doc_head<<
 $$files::header.tmplt<<
+$$bundle::bundle_13.js
+$$bundle::web3-boxy_bundle.js
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -71,55 +74,17 @@ $$html:start_script<<
 // global defs of some static topology
 $$script::[alt-script]/flexy_items_A-top.js<<
 
-$$script::common.js<<
-
-$$script::field_checks.js<<
-
-$$script::https_checks.js<<
-
-$$script::post_fetch.js<<
-
-$$script::uploader_class.js<<
-
-$$script::validation_class.js<<
-
-$$script::captcha_service.js<<
 //
-$$script::login-logout.js<<
-
-$$script::one_table_db.js<<
-
-$$script::file_ops.js<<
 
 $$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
 
 $$script::[alt-script]/flexy_items_A-animation.js<<
-
-
 // CAPTCHA PERFORMANT
-
-$$script::captcha_app.js<<
-
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
 // APPLICATIONS
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 }
-
-$$script::[for-humans]/shared_constants_m.js<<
-
-$$script::[for-humans]/msg_vars.js<<
-
-$$script::[for-humans]/external-id-intake.js<<
-
-$$script::[for-humans]/human_frame_client.js<<
-
-$$script::[for-humans]/frame_page_opener.js<<
-
-$$script::[for-humans]/site_page_tab_com.js<<
-
-$$script::user_db.js<<
-
 $$script::[app<scripts>]/site_app.js<<
 
 $$script::[alt-script]/flexy_items_A-app-finalize.js<<

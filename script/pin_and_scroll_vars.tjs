@@ -1,0 +1,4 @@
+
+@params<{scroll_section_count : %number%}>
+
+window.scroll_section_count = @{scroll_section_count}

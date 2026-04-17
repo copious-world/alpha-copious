@@ -20,13 +20,14 @@ $$defs:{
 }
 //
 $$html:start_doc_head<<
-$$bundle::bundle_14.js
-$$bundle::web3-boxy_bundle.js
 $$files::header.tmplt<<
+$$bundle::bundle_13.js
+$$bundle::web3-boxy_bundle.js
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -74,15 +75,11 @@ $$html:start_script<<
 $$script::[alt-script]/flexy_items_A-top.js<<
 
 //
-$$script::[client]/login-logout.js<<
 
 $$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
 
 $$script::[alt-script]/flexy_items_A-animation.js<<
 // CAPTCHA PERFORMANT
-
-$$script::[client]/captcha_app.js<<
-
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
 // APPLICATIONS

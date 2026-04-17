@@ -50,11 +50,29 @@ let config = {
         "wallet": "[alpha-copious]/frame-apps/wallet",
         "databases": "[alpha-copious]/databases"
     },
-
-
-    "skel_output_dir" : "./tools/edited_skels",
-    "skel_input_dir" : "./tools/gend_skels"
+    //
+    "skel_input_dir" : "./pre-skel-edit-directories/first-transform",
+    "skel_output_dir" : "./pre-skel-edit-directories/edited_skels"
 }
+
+
+let clique_list = [
+    "/home/richard/GitHub/alphas/websites/template-configs/bundle_src/bundle_13",
+    "/home/richard/GitHub/alphas/websites/template-configs/bundle_src/bundle_14",
+    "/home/richard/GitHub/alphas/websites/template-configs/bundle_src/bundle_16"
+]
+
+
+async function load_cliques(clique_list) {
+    let bundle_cliques = {}
+    for ( let clique of clique_list ) {
+        let file_list = fs.readdirSync(clique)
+        let cky = clique.substring(clique.lastIndexOf('/')+1)
+        bundle_cliques[cky] = file_list
+    }
+    return bundle_cliques
+}
+
 
 
 
@@ -83,6 +101,8 @@ function get_list_of_files(dir) {
  */
 function build_file_edit_map(file_list,dir) {
 
+    let file_edit_map = {}
+    //
     for ( let file of file_list ) {
         //
         let data = fs.readFileSync(`${dir}/${file}`).toString()  // READ FILE
@@ -206,7 +226,11 @@ function edit_file_with_matched_bundle(file_edit_map,bundle_cliques) {
         //
         let oskel = file_edit_map[file].original
         let bundle_name = file_edit_map[file].bundle
+        //
         let clique = bundle_cliques[bundle_name]
+
+        if ( clique === undefined ) continue;
+        //
         let oskel_lines = oskel.split('\n')
         //
         oskel_lines = oskel_lines.map((line) => {
@@ -256,16 +280,25 @@ function output_edited_skeletons(file_edit_map,out_dir) {
     //
     for ( let file in file_edit_map ) {
         let outfile = `${out_dir}/${file}`
-        fs.writeFileSync(outfile,file_edit_map[file].edited)
+        let output = file_edit_map[file]?.edited
+        if ( output ) {
+            fs.writeFileSync(outfile,file_edit_map[file]?.edited)
+        }
     }
 }
 
 
 
-let file_list = get_list_of_files(config.skel_input_dir)
-let file_edit_map = build_file_edit_map(file_list,config.skel_input_dir)
+async function main() {
+    let bundle_cliques = await load_cliques(clique_list)
+    //
+    let file_list = get_list_of_files(config.skel_input_dir)
+    let file_edit_map = build_file_edit_map(file_list,config.skel_input_dir)
+    //
+    best_fit_bundle(file_edit_map,bundle_cliques)
+    edit_file_with_matched_bundle(file_edit_map,bundle_cliques)
+    output_edited_skeletons(file_edit_map,config.skel_output_dir)
+}
 
 
-best_fit_bundle(file_edit_map,bundle_cliques)
-edit_file_with_matched_bundle(file_edit_map,bundle_cliques)
-output_edited_skeletons(file_edit_map,config.skel_output_dir)
+main()

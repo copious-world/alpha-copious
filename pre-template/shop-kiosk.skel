@@ -18,13 +18,16 @@ $$defs:{
         "files" : "[alpha-copious]/html"
     }
 }
-//  
+//
 $$html:start_doc_head<<
 $$files::header.tmplt<<
+$$bundle::bundle_13.js
+$$bundle::shop-kiosk_bundle.js
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
@@ -44,7 +47,7 @@ $$files::params::nav_bar_V.smplt<< {
     $@{logout}$files::logout.tmplt<<
 }
 
-$$files::list::MAP-special_frame.smplt<el><<@!{groups}
+$$files::list::MAP-sections_frame.smplt<el><<@!{groups}
 
 $$files::flexy_items_A-main.tmplt<<
 
@@ -53,11 +56,7 @@ $$files::footer_A.tmplt<<
 $$verbatim::{
 <!-- start dynamic content -->
 }
-
-
 $$files::squashable_menu_A.tmplt<<
-
-
 $$files::calc::contact_box<<${start=100}
 
 $$files::calc::about_box<<${start++}
@@ -69,8 +68,6 @@ $$files::loop::calc::topicBox_<1,@!{topic_count}><<${start++}
 $$files::calc::register<<${start++}
 
 $$files::calc::login<<${start++}
-
-
 $$files::intergalactic-explain.tmplt<<
 
 $$template::{
@@ -81,37 +78,7 @@ $$html:end_body_html<<
 //
 $$html:start_script<<
 
-// global defs of some static topology
-$$script::[alt-script]/flexy_items_A-top.js<<
-
-$$script::common.js<<
-
-$$script::field_checks.js<<
-
-$$script::https_checks.js<<
-
-$$script::post_fetch.js<<
-
-$$script::uploader_class.js<<
-
-$$script::validation_class.js<<
-
-$$script::captcha_service.js<<
 //
-$$script::login-logout.js<<
-
-$$script::one_table_db.js<<
-
-$$script::file_ops.js<<
-
-$$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
-
-$$script::[alt-script]/flexy_items_A-animation.js<<
-
-
-// CAPTCHA PERFORMANT
-
-$$script::captcha_app.js<<
 
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
@@ -119,22 +86,11 @@ $$verbatim::{
 // -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 }
 
-$$script::[for-humans]/shared_constants_m.js<<
-
-$$script::[for-humans]/msg_vars.js<<
-
-$$script::[for-humans]/external-id-intake.js<<
-
-$$script::[for-humans]/human_frame_client.js<<
-
-$$script::[for-humans]/frame_page_opener.js<<
-
-$$script::[for-humans]/site_page_tab_com.js<<
-
-$$script::user_db.js<<
-
-$$script::[app<scripts>]/site_app.js<<
-
-$$script::[alt-script]/flexy_items_A-app-finalize.js<<
+// global defs of some static topology
+$$script::[alt-script]/floating_window_controls.js<<
+$$script::params::[alt-script]/pin_and_scroll_vars.tjs<<{
+    $@{scroll_section_count}$<<@#{groups}
+}
+$$script::[alt-script]/section_scrolling.js<<
 
 $$html:end_script<<

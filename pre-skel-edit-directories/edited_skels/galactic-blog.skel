@@ -18,54 +18,50 @@ $$defs:{
     }
 }
 $$html:start_doc_head<<
-
+$$files::header.tmplt<<
 $$bundle::bundle_13.js
-$$bundle::galactic-modules_bundle.js
-$$files::header_app.tmplt<<
+$$link<css>::shared_styles.css<<
 $$html:end_head<<
+
 $$html:start_style<<
-$$css::styles1-galactic.css<<
+$$css::quick_view.css<<
 $$html:end_style<<
 
 $$html:start_script<<
-$$files<js>::top_vars<<
+$$files<js>::counter_interface<<
 $$html:end_script<<
 
 $$html:start_body<<
-
-$$files::nav_bar_B.tmplt<<
+$$files::nav_bar_C.tmplt<<
 
 $$verbatim::{
 <main id='app-main'>
 </main>
 }
 
-$$files::drop_click.tmplt<<
-
 $$files::footer_A.tmplt<<
+
 $$html:end_body_html<<
-//
 //
 $$html:start_script<<
 
-// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
+$$script::pc_location.js<<
 
-// ---- ---- ---- ---- ----
-$$for-humans::human_frame_client.js<<
+$$script::common.js<<
 
-$$verbatim::{
-//  === ---------------------------------------  === ---------------------------------------  === ---------------------------------------
+$$script::https_checks.js<<
+$$script::[for-humans]/shared_constants_m.js<<
 
-function set_user_title(u_name) {
-	let el = document.getElementById('active-user-title')
-	if ( el  && u_name && (typeof u_name === "string") ) {
-		el.innerHTML = u_name
-	}
-}
+$$script::[for-humans]/msg_vars.js<<
 
-}
-$$script::[app<scripts>]/window_app.js<<
+$$script::[for-humans]/human_frame_client.js<<
 
-// independent floating box..
+$$script::[for-humans]/hosted_page_tab_com.js<<
+
+$$script::[for-humans]/frame_page_opener.js<<
+
+$$script::[for-humans]/hosted_page_tab_com.js<<
+
+$$script::[app<scripts>]/hosted_app.js<<
 
 $$html:end_script<<

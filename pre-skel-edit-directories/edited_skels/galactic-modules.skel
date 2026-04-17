@@ -20,7 +20,6 @@ $$defs:{
 $$html:start_doc_head<<
 
 $$bundle::bundle_13.js
-$$bundle::galactic-modules_bundle.js
 $$files::header_app.tmplt<<
 $$html:end_head<<
 $$html:start_style<<
@@ -50,7 +49,23 @@ $$html:start_script<<
 
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
+$$script::pc_location.js<<
+
+$$script::common.js<<
+
+$$script::https_checks.js<<
 // ---- ---- ---- ---- ----
+
+$$script::crypto-wraps.js<<
+
+$$script::cwid.js<<
+
+$$script::ucwid.js<<
+
+$$script::one_table_db.js<<
+
+$$script::file_ops.js<<
+
 $$for-humans::human_frame_client.js<<
 
 $$verbatim::{
@@ -64,6 +79,9 @@ function set_user_title(u_name) {
 }
 
 }
+
+$$script::user_db.js<<
+
 $$script::[app<scripts>]/window_app.js<<
 
 // independent floating box..

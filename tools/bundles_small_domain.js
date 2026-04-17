@@ -12,15 +12,19 @@
 const fs = require('fs')
 let { PathManager } = require("extra-file-class")
 
-let dir = "./tools/edited_skels"
+const dir = "./pre-skel-edit-directories/edited_skels"
+const bundle_output_dir = "/home/richard/GitHub/alphas/websites/template-configs/bundle_src"
+const bundle_excluded_file = "./pre-skel-edit-directories/roller_data/html_embedded_js.json"
+const out_dir = "./pre-skel-edit-directories/final_edit_skels"   // the OUTPUT DIRECTORY
+
 
 // ---- 
 let file_list = fs.readdirSync(dir)
 console.log(file_list)
 
 
+
 // files that can't be bundled, and identified in previous processing
-let bundle_excluded_file = "./tools/roller_data/html_embedded_js.json"
 let bundle_excluded = fs.readFileSync(bundle_excluded_file).toString()
 bundle_excluded = JSON.parse(bundle_excluded)
 
@@ -152,6 +156,8 @@ for (let file in file_edit_map) {
     let bundled = lines.filter((line) => {  // filter out the files that can't be bundled
         if (line.startsWith("$$script::[app<scripts>]")) return false
         let stem = line.substring(line.lastIndexOf('/') + 1, line.lastIndexOf("<<"))
+
+        if ( paths.extname(stem) !== '.js' ) return false
         if (stems_excluded.indexOf(stem) >= 0) {
             return false
         }
@@ -235,7 +241,6 @@ for (let file in file_edit_map) {
 // WHERE THEY WILL BE USED IN generating templates....
 //
 
-let out_dir = "./tools/final_edit_skels"   // the OUTPUT DIRECTORY
 //
 try {
     fs.mkdirSync(out_dir)
@@ -263,7 +268,6 @@ for (let bundle in bundle_to_file_list) {
 
 
 
-const bundle_output_dir = "/home/richard/GitHub/alphas/websites/template-configs/bundle_src"
 
 
 //console.dir(bundle_to_file_list)
@@ -280,8 +284,13 @@ for (let [bundle, file_list] of Object.entries(bundle_to_file_list)) {
     for (let file of file_list) {
         //
         let fpath = file.substring("$$script::".length, file.indexOf("<<"))
+        if ( fpath[0] !== '[' ) {
+            fpath = `[client]/${fpath}`
+        }
+       //
         try {
             fpath = paths.compile_one_path(fpath)
+console.log(fpath)
             let stem = paths.basename(fpath)
             let fname = `${out_dir}/${stem}`
             console.log(fpath, fname)

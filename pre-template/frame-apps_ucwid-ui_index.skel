@@ -30,37 +30,29 @@
 
 $$html:start_doc_head<<
 
-$$files::header.tmplt<<
+$$files::header_app.tmplt<<
 
 $$html:start_style<<
-$$css::styles1.css<<
+$$css::styles1-galactic.css<<
 $$html:end_style<<
 $$bundle::bundle_16.js
-$$bundle::frame-apps_calendar-owner_index_bundle.js
+$$bundle::frame-apps_ucwid-ui_index_bundle.js
 
 $$html:end_head<<
 
-$$html:start_body<<
-$$files::nav_bar_C.tmplt<<
+$$files::nav_bar_fitted.tmplt<<
 
 $$verbatim::{
 <main id='app-main'>
 </main>
 }
 
+$$files::drop_click.tmplt<<
+
 $$files::footer_A.tmplt<<
 
 $$html:end_body_html<<
-//
+
 $$html:start_script<<
 
-$$verbatim::{
-	async function retrieve_slots() {
-		return []
-	}
-
-	setup_window_crypto()
-
-	db_startup()
-}
 $$html:end_script<<

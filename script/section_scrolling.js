@@ -1,5 +1,5 @@
 
-let g_section_count = 0 // but a variable
+let g_section_count = (window.scroll_section_count && !(isNaN(window.scroll_section_count))) ? window.scroll_section_count : 0;
 let g_current_section_select = null
 let lastKnownScrollPosition = 0
 let elementsToCheck = []

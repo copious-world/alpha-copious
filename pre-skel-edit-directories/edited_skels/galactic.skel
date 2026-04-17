@@ -19,10 +19,11 @@ $$defs:{
 }
 $$html:start_doc_head<<
 
-$$bundle::bundle_13.js
-$$bundle::galactic-modules_bundle.js
 $$files::header_app.tmplt<<
+$$bundle::bundle_13.js
+
 $$html:end_head<<
+
 $$html:start_style<<
 $$css::styles1-galactic.css<<
 $$html:end_style<<
@@ -34,7 +35,6 @@ $$html:end_script<<
 $$html:start_body<<
 
 $$files::nav_bar_B.tmplt<<
-
 $$verbatim::{
 <main id='app-main'>
 </main>
@@ -50,8 +50,31 @@ $$html:start_script<<
 
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
+$$script::pc_location.js<<
+
+$$script::common.js<<
+
+$$script::https_checks.js<<
 // ---- ---- ---- ---- ----
-$$for-humans::human_frame_client.js<<
+
+$$script::base_string.js<<
+$$script::crypto-wraps.js<<
+
+$$script::cwid.js<<
+
+$$script::ucwid.js<<
+
+$$script::one_table_db.js<<
+
+$$script::file_ops.js<<
+
+$$script::[for-humans]/shared_constants_m.js<<
+
+$$script::[for-humans]/msg_vars.js<<
+
+$$script::[for-humans]/human_frame_client.js<<
+
+$$script::[for-humans]/id_builder_page_tab_com.js<<
 
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === ---------------------------------------
@@ -64,8 +87,9 @@ function set_user_title(u_name) {
 }
 
 }
-$$script::[app<scripts>]/window_app.js<<
 
-// independent floating box..
+$$script::user_db.js<<
+
+$$script::[app<scripts>]/window_app.js<<
 
 $$html:end_script<<

@@ -26,7 +26,6 @@ $$html:start_style<<
 $$css::style-human-page.css<<
 $$html:end_style<<
 $$bundle::bundle_13.js
-$$bundle::human_page_bundle.js
 
 $$html:end_head<<
 $$html:start_body<<
@@ -79,6 +78,27 @@ $$files::drop_click.tmplt<<
 
 $$html:end_body_html<<
 $$html:start_script<<
+
+$$script::pc_location.js<<
+$$script::crypto-wraps.js<<
+
+$$script::common.js<<
+
+$$script::https_checks.js<<
+$$script::file_ops.js<<
+
+$$script::one_table_db.js<<
+
+$$script::[for-humans]/shared_constants_m.js<<
+
+$$script::[for-humans]/msg_vars.js<<
+
+$$script::[for-humans]/human_frame_client.js<<
+
+$$script::[for-humans]/frame_page_tab_com.js<<
+
+$$script::user_db.js<<
+
 $$script::[app<scripts>]/window_app.js<<
 
 $$html:end_script<<

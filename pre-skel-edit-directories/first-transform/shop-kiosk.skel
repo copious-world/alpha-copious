@@ -45,7 +45,7 @@ $$files::params::nav_bar_V.smplt<< {
     $@{logout}$files::logout.tmplt<<
 }
 
-$$files::list::MAP-special_frame.smplt<el><<@!{groups}
+$$files::list::MAP-sections_frame.smplt<el><<@!{groups}
 
 $$files::flexy_items_A-main.tmplt<<
 
@@ -82,9 +82,6 @@ $$html:end_body_html<<
 //
 $$html:start_script<<
 
-// global defs of some static topology
-$$script::[alt-script]/flexy_items_A-top.js<<
-
 $$script::common.js<<
 
 $$script::field_checks.js<<
@@ -105,14 +102,7 @@ $$script::one_table_db.js<<
 
 $$script::file_ops.js<<
 
-$$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
 
-$$script::[alt-script]/flexy_items_A-animation.js<<
-
-
-// CAPTCHA PERFORMANT
-
-$$script::captcha_app.js<<
 
 $$verbatim::{
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
@@ -134,8 +124,14 @@ $$script::[for-humans]/site_page_tab_com.js<<
 
 $$script::user_db.js<<
 
-$$script::[app<scripts>]/site_app.js<<
 
-$$script::[alt-script]/flexy_items_A-app-finalize.js<<
+// global defs of some static topology
+$$script::[alt-script]/floating_window_controls.js<<
+
+
+$$script::[alt-script]/pin_and_scroll_vars.tjs<<@#{groups}
+$$script::[alt-script]/section_scrolling.js<<
+
+
 
 $$html:end_script<<
