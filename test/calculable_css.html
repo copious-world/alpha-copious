@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<header>
+
+<style>
+:root {
+  --min-size: 12;
+  --max-size: 18;
+  --container-min: 300;
+  --container-max: 2400;
+  --container-diff: (var(--container-max) - var(--container-min));
+}
+
+/* Setup size calculation for all max utilities */
+.h1-max, .h2-max, .h3-max, .h4-max, .h5-max, .h6-max, .h7-max, .h8-max {
+  --font-size: calc(var(--min-size) * 1px + (var(--max-size) - var(--min-size)) * (100cqi - var(--container-min) * 1px) / var(--container-diff));
+  font-size: clamp(var(--min-size) * 1px, var(--font-size), var(--max-size) * 1px);
+}
+
+.h1-max { --max-size: 128; }
+.h2-max { --max-size: 96; }
+.h3-max { --max-size: 64; }
+.h4-max { --max-size: 48; }
+.h5-max { --max-size: 32; }
+.h6-max { --max-size: 24; }
+.h7-max { --max-size: 16; }
+.h8-max { --max-size: 12; }
+
+.h1-min { --min-size: 128; }
+.h2-min { --min-size: 96; }
+.h3-min { --min-size: 64; }
+.h4-min { --min-size: 48; }
+.h5-min { --min-size: 32; }
+.h6-min { --min-size: 24; }
+.h7-min { --min-size: 16; }
+.h8-min { --min-size: 12; }
+
+
+.container {
+  container-type: inline-size;
+  width: 100%; /* Can be any size */
+  min-width: 94vw;
+  border:solid 1px green;
+}
+
+.title {
+  /* Fluid font size: 5% of container width */
+  font-size: clamp(1rem, 0.875rem + 2cqi, 1.5rem);
+  font-weight: 600;
+}
+
+.subtitle {
+  /* Fluid font size: 3% of container width */  
+  font-size: clamp(0.75rem, 0.875rem + 0.5cqi, 1.25rem);
+}
+
+.box {
+  /* Fluid padding: 2% of container width */
+  margin: 1px;
+  padding: 2cqw;
+  border: 1px solid black;
+}
+
+
+</style>
+</header>
+<body>
+  <div class="container">
+    <div class="box" >
+      <div class="title">Next experiment</div>
+      <span class="subtitle">After the first experiment</span>
+    </div>
+  </div>
+    <div style="display: inline-block;min-width:45%;--container-diff: 3000">
+<!-- Mix and match as you wish -->
+<h2 class="h6-min h2-max">...This is a test</h2>
+<h3 class="h7-min h3-max">...This is a test</h3>
+<h4 class="h8-min h4-max">...This is a test</h4>
+
+    </div>
+    <div style="display: inline-block;min-width:35%;--container-diff: 6000">
+<!-- Mix and match as you wish -->
+<h2 class="h6-min h2-max">...This is a test</h2>
+<h3 class="h7-min h3-max">...This is a test</h3>
+<h4 class="h8-min h4-max">...This is a test</h4>
+
+    </div>
+<div style="width: 100%;">
+<!-- Mix and match as you wish -->
+<h1 class="h5-min h1-max">...This is a test</h1>
+<h2 class="h6-min h2-max">...This is a test</h2>
+<h3 class="h7-min h3-max">...This is a test</h3>
+<h4 class="h8-min h4-max">...This is a test</h4>
+</div>
+</body>
+</html>
