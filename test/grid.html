@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+<style>
+:root {
+    --cl_nav_border : rgb(79, 94, 79);
+
+	--el_mainNavbackground_c0 : rgba(242, 242, 210, 0.3);
+	--el_mainNavbackground_c1 : white;
+	--el_mainNavbackground_wk_c0 : rgba(242, 242, 210, 0.3);
+	--el_mainNavbackground_wk_c1 : white;
+	--el_mainNavbackground : linear-gradient(to left, var(--el_mainNavbackground_c0), var(--el_mainNavbackground_c1) );
+	--el_mainNavbackground_wk : -webkit-linear-gradient(to left, var(--el_mainNavbackground_wk_c0), var(--el_mainNavbackground_wk_c1));
+	--el_mainNavborder_bottom : rgba(252,252,255,0.7);
+
+    --cl_main_background : rgba(237, 237, 243, 0.5);
+    --cl_main_border : rgb(237, 238, 221);
+    --cl_main_border_top : #8833BB;
+
+    --el_nav_height : 40px;
+    --el_footer-height : 25px;
+    --cl_footer_border : purple;
+    --el_footerbackground_wk_c0 : rgba(252,252,255,0.5);
+	--el_footerbackground_wk_c1 : #fffbe2;
+	--el_footerbackground_c0 : rgba(252,252,255,0.5);
+	--el_footerbackground_c1 : #fffbe2;
+	--el_footerbackground_wk : -webkit-linear-gradient(to left, var(--el_footerbackground_wk_c0), var(--el_footerbackground_wk_c1) );
+	--el_footerbackground : linear-gradient(to left, var(--el_footerbackground_c0), var(--el_footerbackground_c1) );
+
+
+	--id_mainNavbackground_c0 : rgba(242, 242, 210, 0.3);
+	--id_mainNavbackground_c1 : white;
+	--id_mainNavbackground_wk_c0 : rgba(242, 242, 210, 0.3);
+	--id_mainNavbackground_wk_c1 : white;
+
+	--id_mainNavbackground : linear-gradient(to left, var(--id_mainNavbackground_c0), var(--id_mainNavbackground_c1) );
+	--id_mainNavborder_bottom : rgba(252,252,255,0.7);
+	--id_mainNavbackground_wk : -webkit-linear-gradient(to left, var(--id_mainNavbackground_wk_c0), var(--id_mainNavbackground_wk_c1));
+	--id_mainNav_table_navbarcolor : white;
+	--id_mainNav_table_navbarbackground_color : rgba(242,222,255,0.6);
+    --fs_navbar_brand : 1.1rem;
+    --ff_navbar : 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --header_padding : 0.5rem;
+ 
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100dvh;
+}
+
+body {
+    border: 1px solid black; -moz-box-sizing: border-box; box-sizing: border-box;
+    position: fixed;
+    width: 100dvw;
+}
+
+
+
+header {
+    width: 100dvw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+
+    padding: 0.8rem var(--header_padding);
+
+    background: var(--el_mainNavbackground_wk); 
+    background: var(--el_mainNavbackground);
+    border-bottom: var(--el_mainNavborder_bottom);
+	border-left: solid 3px var(--cl_nav_border);
+	border-top: solid 3px var(--cl_nav_border);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--el_nav_height);
+    min-height: var(--el_nav_height);
+
+    padding: 0px;
+
+    font-family: var(--ff_navbar); 
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    max-width: 80px;
+}
+.shroom-area {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    max-width: 80px;
+}
+
+@media (max-width: 1100px) {
+	.shroom-area {
+        display: flex;
+	}
+}
+.nav-links {
+    display: flex;
+    gap: calc(100dvw/8);
+    width:calc(100dvw - 10%);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nav-links li {
+    width:calc(50dvw/8);
+}
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+}
+.nav-link {
+    font-size: 0.85em;
+}
+
+
+
+main {
+    border: 1px var( --cl_main_border) solid;
+    bottom: 0;
+    min-height: calc(92dvh - var(--el_nav_height) - var(--el_footer-height) - var(--header_padding));
+    max-height: calc(92dvh - var(--el_nav_height) - var(--el_footer-height) - var(--header_padding));
+    overflow-y: auto;
+
+	border-left: solid 3px var(--cl_nav_border);
+	border-top: solid 1px var(--cl_main_border_top);
+    background-color: var( --cl_main_background);
+	padding : 0px;
+}
+
+footer {
+    /* */
+    width: 100%;
+    height: var(--el_footer-height);
+    bottom: 0;
+    position: fixed;
+    padding-left: 10px; padding-right: 10px; 
+    background: var(--el_footerbackground_wk); 
+    background: var(--el_footerbackground); 
+    border: 1px var( --cl_footer_border) solid;
+    text-align: center; 
+    font-size: 0.85em;
+    padding:4px;
+}
+
+
+
+</style>
+<style>
+
+:root {
+    --cl_open_btn: #333;
+    --cl_open_btn_bk: rgba(204, 252, 204, 0.699);
+    --cl_close_btn: #333;
+    --cl_close_btn_bk: white;
+    --el_drawer_background_cl: white;
+    --el_drawer_border_cl: navy;
+    --el_drawer_box_shadow_cl: rgba(0,0,0,0.2)
+}
+
+/* DRAWER */
+.drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: var(--el_drawer_background_cl);
+    border: 1px solid var(--el_drawer_border_cl);
+    box-shadow: 0 -2px 10px var(--el_drawer_box_shadow_cl);
+    /* Hide drawer off-screen */
+    transform: translateY(100%);
+    /* Smooth slide transition */
+    transition: transform 0.4s ease-in-out;
+    z-index: 1000;
+}
+
+/* Trigger animation when the URL hash matches #drawer */
+#drawer:target {
+    transform: translateY(0);
+}
+
+.drawer-content {
+    padding: 20px;
+}
+
+.open-btn {
+    font-weight: bolder;
+    text-decoration: none;
+    color: var(--cl_open_btn);
+    background-color: var(--cl_open_btn_bk);
+}
+
+.close-btn {
+    float: right;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bolder;
+    color: var(--cl_close_btn);
+    background-color: var(--cl_close_btn_bk);
+}
+
+</style>
+<style>
+    /* flexy box style */
+
+:root {
+	--cl_items_itembackground_wk_c0 : rgba(242, 242, 210, 0.3);
+	--cl_items_itembackground_wk_c1 : white;
+	--cl_items_itembackground_c0 : rgba(242, 242, 210, 0.3);
+	--cl_items_itembackground_c1 : white;
+	--cl_items_itembackground_wk : -webkit-linear-gradient(to right, var(--cl_items_itembackground_wk_c0), var(--cl_items_itembackground_wk_c1));
+	--cl_items_itembackground : linear-gradient(to right, var(--cl_items_itembackground_c0), var(--cl_items_itembackground_c1) );
+	--cl_items_itemcolor : #171e42;
+}
+
+
+
+.items {
+	margin-left: 0px;
+	margin-top: 0px;
+    width: 100%;
+    min-height:inherit;
+}
+
+
+@media screen and (min-width: 900px) {
+.items {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-content: space-evenly;
+  row-gap: 1dvh;
+  /* grid-auto-rows: minmax(94px, calc((100dvh - var(--el_nav_height) - var(--el_footer-height) - var(--header_padding))/4.8)); */
+}
+.one {
+  grid-column: 1 / 3;
+  grid-row: 1 / 4;
+}
+.two {
+  grid-column: 3/5;
+  grid-row: 1 / 3;
+}
+.three {
+  grid-column: 5/7;
+  grid-row: 1 / 3;
+}
+.four {
+  grid-column: 1/3;
+  grid-row: 4;
+}
+.five {
+  grid-column: 3/5;
+  grid-row: 3/5;
+}
+.six {
+  grid-column: 5/7;
+  grid-row: 3;
+}
+.seven {
+  grid-column: 5/7;
+  grid-row: 4;
+}
+
+}
+
+@media screen and (max-width: 900px) { 
+    .items {
+        display: grid;
+        grid-column-gap: 1dvw;
+        grid-row-gap: 10px;
+        grid-template-columns: auto auto;
+        background-color:  rgb(250, 250, 242);
+        padding: 10px;
+    }
+}
+
+
+@media screen and (max-width: 600px) { 
+    .items {
+        display: grid;
+        grid-row-gap: 10px;
+        grid-template-columns: auto;
+        background-color: rgb(250, 250, 242);
+        padding: 10px;
+    }
+}
+
+
+.item {
+	/* box-sizing: border-box; */
+	background: var(--cl_items_itembackground_wk);
+	background: var(--cl_items_itembackground);
+	color: var(--cl_items_itemcolor);
+
+}
+.item {
+    border: solid 1px green;
+    /*border-right: none;*/
+    min-height: calc((100dvh - var(--el_nav_height) - var(--el_footer-height) - var(--header_padding))/3.45);
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-area">
+<style>
+
+.PhIOtjDr_0 {
+	fill:none;
+	stroke:#1c1448;
+	stroke-width:4.59875107;
+	stroke-miterlimit:4;
+	stroke-dasharray: 2948 2950;
+	stroke-dashoffset: 2949;
+	animation: PhIOtjDr_draw 6666ms ease-in forwards;
+}
+
+@keyframes PhIOtjDr_draw {
+	100% {stroke-dashoffset: 0}
+}
+
+@keyframes PhIOtjDr_fade {
+	0% {stroke-opacity: 1}
+	97.1830985915493% {stroke-opacity: 1}
+	100% {stroke-opacity: 0}
+}
+</style>
+<a class="nav-link" href="/"  target="http://www.copious.world" >
+
+    <svg version="1.0" width="50" height="50" viewBox="0 0 250 250" preserveAspectRatio="xMidYMid meet" id="logo" >
+        <defs id="defs10"/>
+        <path class="PhIOtjDr_0"  id="path6" d="m 30.107062,7.4672872 c 4.67725,2.6985208 8.37554,8.6930958 12.94402,20.5087688 7.17904,19.072767 24.58277,67.337762 29.69511,82.950634 l 5.32989,15.9502 -13.70543,-0.25058 -10.468161,2.57106 -8.132079,2.99946 -4.78602,5.90784 0.76141,-6.91979 c 0.65264,-6.50536 0.32632,-7.85462 -5.43866,-25.31791 C 27.822822,80.549048 20.535012,60.127019 12.703332,40.215781 5.4155222,21.730904 4.4365622,15.57249 7.8085322,10.503124 11.941922,4.43145 22.384152,2.9954505 30.107062,7.4672872 Z M 238.08162,22.742849 c 3.69828,2.110631 6.52639,6.669206 6.52639,10.379672 0,1.686578 -2.93688,12.740881 -6.63517,24.469814 -19.68797,64.138095 -30.34775,107.931245 -30.34775,124.806655 0,4.6453 -1.08775,7.68113 -18.60024,50.80931 l -4.35093,10.79409 -67.76577,0 -67.765758,0 -14.35808,-35.35063 -14.35808,-35.3603 17.62128,-20.75934 17.5125,-20.75935 29.36879,0 c 32.631998,0 5.455822,5.28877 29.390108,7.16797 -3.81133,6.98972 7.16732,11.29772 7.16732,11.29772 l 2.51778,3.43975 c -1.74038,3.20932 -4.92039,6.69891 -9.3801,9.5709 l -3.2632,2.11064 -9.78959,-2.62144 c -8.593088,-2.27446 -11.312428,-2.61179 -22.080978,-2.61179 -13.0528,-0.0964 -14.35808,0.2506 -14.35808,4.29837 0,2.70817 3.15443,3.63336 12.72648,3.63336 21.42834,0 38.723308,8.01847 47.533928,22.10863 3.58951,5.73436 7.17904,15.86345 7.17904,20.50876 0,2.86236 4.45971,5.05973 7.50536,3.79721 2.82811,-1.09868 2.93687,-4.64531 0.65264,-14.01306 -2.28424,-9.36772 -7.83169,-17.88734 -15.77214,-24.29632 -5.32988,-4.30799 -6.30884,-5.49342 -5.11233,-6.24517 1.19649,-0.76135 2.06669,-0.51077 4.0246,1.08906 6.30885,5.23321 19.03534,7.00654 27.73719,3.88395 5.87377,-2.11064 11.85631,-7.17036 15.11951,-12.74088 1.52281,-2.53468 5.98253,-16.03694 9.89835,-29.9536 10.98611,-38.396111 22.08098,-72.320389 30.13021,-92.665317 5.54744,-14.176879 12.40016,-19.737762 23.16871,-18.812555 2.93688,0.250577 6.63517,1.175785 8.15801,2.023891 z m -126.72091,50.03831 c 2.28424,0.510792 5.76499,2.11063 7.72291,3.633367 5.87375,4.558576 6.20008,7.257098 3.80705,29.278954 -1.1965,10.71701 -1.94404,26.93071 -2.27035,27.1042 -0.32632,0.25057 -8.38942,-6.50868 -17.41761,-6.25812 l -16.533538,0.42407 0.65264,-6.66922 c 0.32632,-3.62372 1.19651,-13.83956 1.84915,-22.619385 0.65264,-9.19425 1.74037,-17.125977 2.50179,-18.561977 3.2632,-5.907835 10.550998,-8.269041 19.687958,-6.331889 z m 48.5129,9.454465 c 2.06668,1.011946 4.56848,3.209314 5.54744,4.89589 1.84914,2.871998 1.84914,4.22126 -0.8702,33.750816 -1.52282,17.04886 -3.37196,32.575 -4.24216,35.02295 -3.15442,8.51961 -9.13695,13.07819 -18.16513,13.67573 -4.78601,0.25056 -6.41762,0 -9.46327,-1.69622 -5.87376,-3.12256 -6.41764,-4.29838 -2.93689,-7.42094 6.20008,-5.744 4.00097,-11.09854 1.92352,-15.89687 0,0 -0.33391,-1.79223 -2.65798,-4.24016 l -2.01123,-1.92782 3.94219,-26.79768 c 1.95792,-22.869967 2.17547,-23.795174 5.11237,-26.667174 4.89478,-4.89589 16.96861,-6.24515 23.82134,-2.698522 z" />
+        <rect style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.80000019;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect4169" width="68.005806" height="55.413109" x="62.964886" y="157.3824"/>
+        <rect style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect4170" width="39.957146" height="46.691494" x="105.05587" y="172.33051"/>
+        <rect style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect4172" width="134.35677" height="7.9790406" x="49.16119" y="238.93228"/>
+        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:184.28874207px;line-height:125%;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="6.6644416" y="260.41125" id="text4161" transform="scale(1.041834,0.95984582)"><tspan id="tspan4163" x="6.6644416" y="260.41125">C</tspan></text>
+        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28.53204727px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="90" y="175.07523" id="text4165" transform="scale(0.90874022,1.1004245)"><tspan id="tspan4167" x="90" y="175.07523">opious</tspan></text>
+    </svg>
+
+</a>
+  </div>
+  <!-- Navigation -->
+  <nav>
+    <ul class="nav-links">
+      <li><a class="nav-link" href="{{relatedAsset.link}}" target="{{relatedAsset.name}}" >
+							{{{relatedAsset.content}}}
+						</a></li>
+      <li>&nbsp;</li>
+      <li>&nbsp;</li>
+    </ul>
+  </nav>
+
+  <!-- Logo, Icon, and Title -->
+  <div id="squashMenu" class="shroom-area" style="cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
+	$$icons::mushroom-menu-icon.svg<<
+  </div>
+
+</header>
+
+    <main>
+
+	<div class="items">
+        <div class="item one">One</div>
+        <div class="item two">Two</div>
+        <div class="item three">Three</div>
+        <div class="item four">Four</div>
+        <div class="item five">Five</div>
+        <div class="item six">Six</div>
+        <div class="item seven">seven</div>
+    </div>
+
+    </main>
+
+    <footer>
+<a href="#drawer" class="open-btn">&lt;&lt;&lt;</a>
+    </footer>
+
+<!-- Bottom Drawer -->
+<div id="drawer" class="drawer">
+  <div class="drawer-content">
+    <a href="#" class="close-btn">&times;</a>
+    <h2>Bottom Drawer</h2>
+    <p>This content slides up from the bottom.</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -325,6 +325,11 @@ function normalize_css_def_str_array(cssarray) {
     return cssarray
 }
 
+/**
+ * 
+ * @param {Object} salient 
+ * @returns 
+ */
 function normalize_css_def_str_all(salient) {
     for ( let ky in salient ) {
         let css_array = salient[ky]
