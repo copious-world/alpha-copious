@@ -1,0 +1,398 @@
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+
+input, textarea, .select_OK {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -khtml-user-select: text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
+
+
+
+/**
+* Always hide an element when it has the `hidden` HTML attribute.
+*/
+
+.hidden,
+[hidden] {
+	display: none !important;
+}
+
+/**
+* Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+* aspect ratio.
+*/
+.pure-img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+button {
+	cursor: pointer;
+	font-size: 101%;
+	font-weight: bold;
+	color: darkblue;
+	margin: 2px;
+	width:120px;
+}
+
+button:hover {
+	background-color : #CACAFF;
+	color: darkred;
+}
+
+body {
+	border: 1px solid black;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
+@media screen and (orientation: portrait) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+@media screen and (orientation: landscape) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+main {
+	border-left: solid 3px navy;
+	border-top: solid 1px #8833BB;
+	padding : 1px;
+	height: calc(100vh - 90px);
+	background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #f6f5ef );
+	background: linear-gradient(to left, rgba(252,252,255,0.5), #f6f5ef  );
+}
+
+iframe {
+	border: solid 3px rgb(155, 155, 178);
+	padding: 2px;
+	height : 100%;
+	width: 100%;
+}
+
+#mainNav {
+	font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 94%;
+	background: blue;
+	border-left: solid 3px navy;
+	border-top: solid 3px navy;
+	border-bottom: solid 3px rgba(252,252,255,0.7);
+	min-height: 32px;
+	padding: 2px;
+	background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
+	background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
+	
+}
+
+#mainNav table {
+	padding-left: 3%;
+}
+
+
+#mainNav  table  a:focus { outline: none; }
+#mainNav  table  .navbar-brand {
+	font-size: 1.1rem;
+	color: white;
+}
+
+#mainNav  table  .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+	color: white;
+}
+
+#mainNav  table  .navbar-nav {
+	letter-spacing: 1px; }
+
+#mainNav  table  .navbar-nav li.nav-item {
+	display:inline;
+}
+
+
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link {
+	color: darkgreen;
+	text-decoration: none;
+	vertical-align: top;
+	padding-right: 10px;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:hover {
+	color: #18BC9C;
+	outline: none;
+	
+}
+
+
+#mainNav  table  .navbar-nav a.nav-text {
+	background-color : rgba(242,222,255,0.6);
+	border-radius: 25px;
+	margin-bottom: 9px;
+	margin-right: 6px;
+	white-space: nowrap;
+}
+
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: white; }
+
+.footer-list li {
+	list-style-type: none;
+}
+
+.footer-list li a:hover { color: gold; }
+
+
+.fit-link {
+	color:rgb(5, 34, 5);
+	font-weight: bold;
+	font-size: 0.75em;
+	text-align: center;
+	margin-left: 8px;
+}
+
+
+.hover_group {
+	cursor:pointer;
+}
+
+.hover_group rect {
+	fill:#e6e6e6;
+}
+
+.hover_group:hover rect {
+	fill: #F6F6e6;
+}
+
+
+@media (min-device-width: 480px) and (orientation: portrait) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+		font-size: 0.85em;
+		vertical-align: top;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:darkgreen;
+		font-weight:bold;
+		font-style: italic;
+	}
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.85em;
+		text-align: center;
+	}
+
+}
+/* ----------- iPhone ----------- */
+
+@media only screen 
+	and (min-device-width: 320px) 
+	and (max-device-width: 480px)
+	and (-webkit-min-device-pixel-ratio: 2) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+		font-size: 0.65em;
+		vertical-align: top;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:darkgreen;
+		font-weight:bold;
+		font-style: italic;
+		font-size: 0.65em;
+	}
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.65em;
+		text-align: center;
+	}
+
+}
+
+
+/* ----------- Galaxy S3 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+	and (device-width: 360px) 
+	and (device-height: 640px) 
+	and (-webkit-device-pixel-ratio: 2) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+		font-size: 0.65em;
+		vertical-align: top;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:darkgreen;
+		font-weight:bold;
+		font-style: italic;
+		font-size: 0.65em;
+	}
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.65em;
+		text-align: center;
+		margin-left: 4px;
+	}
+
+}
+
+
+/*  Landscape */
+@media screen and (orientation: landscape)
+	and (device-width: 360px) 
+	and (device-height: 640px) 
+	and (-webkit-device-pixel-ratio: 2) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+		text-align: left;
+		font-size: 0.55em;
+		vertical-align: top;			
+	}
+
+	footer a {
+		text-decoration:none;
+		color:rgb(18, 60, 18);
+		font-weight:bold;
+		font-style: italic;
+		font-size: 0.55em;
+	}
+
+
+	.footer-list li {
+		list-style-type: none;
+	}
+
+	.footer-list li a:hover { color: gold; }
+
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.55em;
+		text-align: center;
+		margin-left: 4px;
+	}
+
+
+}
+
+
+
+/* ----------- Galaxy S4, S5 and Note 3 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+	and (device-width: 320px) 
+	and (device-height: 640px) 
+	and (-webkit-device-pixel-ratio: 3) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2  );
+		text-align: center;
+		font-size: 0.62em;
+		vertical-align: top;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:darkgreen;
+		font-weight:bold;
+		font-style: italic;
+		font-size: 0.62em;
+	}
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.55em;
+		text-align: center;
+		margin-left: 4px;
+	}
+
+}
+
+/* Landscape */
+@media screen  and (orientation: landscape)
+	and (device-width: 320px) 
+	and (device-height: 640px) 
+	and (-webkit-device-pixel-ratio: 3) {
+
+	footer {
+		padding-bottom:4px;
+		padding-left:8px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fbf4c2  );
+		text-align: left;
+		font-size: 0.55em;
+		text-decoration:none;
+		vertical-align: top;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:rgb(28, 92, 28);
+		font-weight:bolder;
+		font-style: italic;
+		font-size: 0.55em;
+	}
+
+
+	.fit-link {
+		color:rgb(5, 34, 5);
+		font-size: 0.55em;
+		text-align: center;
+		margin-left: 4px;
+	}
+
+}
+
+.copiouslink:hover {
+	fill:navy;
+}
+.copiouslink {
+	fill:black;
+}
+

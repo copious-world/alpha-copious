@@ -252,6 +252,24 @@ label {
 }
 
 
+.items {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -10px;
+	margin-top: -10px;
+}
+
+.items .item {
+	flex: 1 0 300px;
+	box-sizing: border-box;
+	background: var(--item-background-color,-webkit-linear-gradient(to right, rgba(242, 242, 250, 0.3), white));
+	color: var(--item-text-color,#171e42);
+	padding: 10px;
+	margin-left: 10px;
+	margin-top: 0px;
+}
+
+
 .pure-img { max-width: 100%; height: auto; display: block;}
 @media screen and (max-width: 950px) { .solid_able { width: 90%;}}
 
