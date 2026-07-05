@@ -23,6 +23,7 @@ $$html:start_doc_head<<
 $$files::header.tmplt<<
 $$bundle::bundle_13.js
 $$bundle::web3-boxy_bundle.js
+$$link<css>::var_lexicon.css<<
 $$link<css>::shared_styles.css<<
 $$html:end_head<<
 

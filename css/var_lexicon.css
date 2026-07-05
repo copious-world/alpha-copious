@@ -106,6 +106,10 @@
 	--cl19_ingletonssolid_ablebox_shadow : rgba(0 0 255 / 0.2);
 	--cl20_ingletonsstatusstylecolor : rgba(27, 77, 27);
 	--cl21_singletonsuseridcolor : rgba(5, 44, 5);
+	/* by hand */
+	--greet_and_meet_1_msg_color : navy;
+	--greet_and_meet_2_msg_color : darkgreen;
+	--greet_and_meet_3_msg_color : darkred;
 }
 
 
