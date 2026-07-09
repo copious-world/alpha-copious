@@ -94,6 +94,36 @@ let resizers = {}
 let current_resizer = false
 
 
+function window_resize_event(e) {
+    if (!current_resizer) return;
+
+    if ( current_resizer ) {
+        let resizer_stats = resizers[current_resizer]
+        let pnode = resizer_stats.dragged
+        // Calculate new position based on mouse movement and offsetif 
+        if ( pnode ) {
+            const newX = e.clientX;
+            const newY = e.clientY;
+            //
+            let brect = pnode.getBoundingClientRect()
+            let resizer = resizer_stats.drag_control
+            let resize_rect = resizer.getBoundingClientRect()
+            let r_h_delta = resize_rect.width
+            let r_v_detla = resize_rect.height
+            let newW = newX - brect.left + r_h_delta/2
+            let newH = newY - brect.top + r_v_detla/2
+            //
+            if ( newW > 60 ) {
+                pnode.style.width = `${newW}px`;
+            }
+            if ( newH > 60 ) {
+                pnode.style.height = `${newH}px`;
+            }
+        }
+    }
+}
+
+
 function add_resizing() {
     let sizer_bobs = document.getElementsByClassName("sizerbar")
     for ( let sb of sizer_bobs ) {
@@ -112,34 +142,16 @@ function add_resizing() {
             resizers[pnode.id].isDragging = true;
             current_resizer = pnode.id
         }
+
+        sb.onmouseout = (e) => {
+            window_resize_event(e)
+        }
   
     }
 
 
     document.addEventListener('mousemove', (e) => {
-        if (!current_resizer) return;
-
-        if ( current_resizer ) {
-            let resizer_stats = resizers[current_resizer]
-            let pnode = resizer_stats.dragged
-            // Calculate new position based on mouse movement and offsetif 
-            if ( pnode ) {
-                const newX = e.clientX;
-                const newY = e.clientY;
-                //
-                let brect = pnode.getBoundingClientRect()
-                let newW = newX - brect.left
-                let newH = newY - brect.top
-                //
-                if ( newW > 60 ) {
-                    pnode.style.width = `${newW}px`;
-                }
-                if ( newH > 60 ) {
-                    pnode.style.height = `${newH}px`;
-                }
-            }
-        }
-
+        window_resize_event(e)
     });
 
 
@@ -147,83 +159,13 @@ function add_resizing() {
         current_resizer = false
     });
 
+    window.addEventListener('mouseup',() => {
+        current_resizer = false
+    })
+
 }
 
 add_resizing() 
-
-
-
-function init_app_resize() {
-    //
-    window.addEventListener('resize',(ev) => {
-        // container it
-        let it_container = document.getElementById('sections-container')
-        if ( it_container ) {
-            let footer = document.getElementsByTagName('footer')[0]
-            if ( footer ) {
-                let ic_rect = it_container.getBoundingClientRect()
-                let ft_rect = footer.getBoundingClientRect()
-                let h = ft_rect.top - ic_rect.top - 1;
-                it_container.style.height = `${h}px`
-                it_container.style.minHeight= `${h}px`
-                //
-                // let flw = document.getElementById("sections-flc")
-                // if ( flw ) {
-                //     flw.style.height = `${h}px`
-                //     flw.style.minHeight= `${h}px`
-                // }
-                //
-                for ( let i = 0; i < g_section_count; i++ ) {
-                    let sect = document.getElementById(`section_${i+1}`)
-                    if ( sect ) {
-                        sect.style.height = `${h - 2}px`
-                        sect.style.minHeight = `${h - 2}px`
-                    }
-                }
-            }
-        }
-        //
-        for ( let wbox_id in all_windows ) {
-            let wbox = all_windows[wbox_id]
-            if ( !wbox ) continue;
-            let w = window.innerWidth*0.8;
-            let x = window.innerWidth*0.3;
-            if ( wbox.x >= (window.innerWidth-20) ) {
-                wbox.move(x)
-            }
-            if ( wbox.y >= (window.innerHeight-20) ) {
-                wbox.move(wbox.y - 60)
-            }
-            let h = window.innerHeight*0.96
-            wbox.resize(w,h)
-        }
-        //
-        for ( let dinfo of Object.values(draggers) ) {
-            let dragged = dinfo.dragged
-            if ( dragged ) {
-                //
-                let drect = dragged.getBoundingClientRect()
-                //
-                let x = window.innerWidth*0.3;
-                let h = window.innerHeight*0.8
-                let w = window.innerWidth*0.9;
-                //
-                if ( drect.x >= (window.innerWidth-20) ) {
-                    dragged.style.left = `${x}px`
-                }
-                if ( drect.y >= (window.innerHeight-20) ) {
-                    dragged.style.top = `{drect.y - 60}px`
-                }
-                w = Math.min(450,w)
-                h = Math.min(450,h)
-                dragged.style.width = `${w}px`
-                dragged.style.height = `${h}px`
-            }
-        }
-    })
-    //
-}
-
 
 
 function init_app_windows() {
