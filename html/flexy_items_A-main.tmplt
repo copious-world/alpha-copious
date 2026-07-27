@@ -17,7 +17,7 @@
 			</p>
 			</a>
 		</div>
-		<div class="item">
+		<div  id="long_viz_item"  class="item">
 			<div class="longviz"  >&nbsp;</div>
 			<p class="extra-i" style="color:var(--greet_and_meet_3_msg_color)">
 			Browse the blog or check out some demonstrations.

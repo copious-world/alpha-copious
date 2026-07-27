@@ -1,0 +1,11 @@
+
+@list<index>
+//
+<@index>
+                    <section id="section_@{index}">
+                    <div class="info-scroll-el" id="info-panel-@{index}">
+                    {{{place_section__@{index}.content}}}
+                    </div>
+                    </section>
+</@index>
+

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>for-humans/human_page_app.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Overview</a></h2><h2><a href="https://github.com/copious-world/alpha-copious" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2><a href="https://www.npmjs.com/package/alpha-copious" target="_blank" class="menu-item" id="package" >Npm package</a></h2><h3>Classes</h3>
+                        <ul id="classes-ul-overflow" class="menu-contained-nav" ><li><a href="CalendarPageAPP.html">CalendarPageAPP</a></li><li><a href="CountedPageAPP.html">CountedPageAPP</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CountedPageAPP.html#application_specific_handlers">application_specific_handlers</a></li></ul></li><li><a href="DataFromUi.html">DataFromUi</a><ul class='methods'><li data-type='method' style='display: none;'><a href="DataFromUi.html#gather_asset_fields">gather_asset_fields</a></li><li data-type='method' style='display: none;'><a href="DataFromUi.html#gather_fields">gather_fields</a></li><li data-type='method' style='display: none;'><a href="DataFromUi.html#gather_identifying_fields">gather_identifying_fields</a></li><li data-type='method' style='display: none;'><a href="DataFromUi.html#get_file">get_file</a></li><li data-type='method' style='display: none;'><a href="DataFromUi.html#put_fields">put_fields</a></li><li data-type='method' style='display: none;'><a href="DataFromUi.html#set_user_id">set_user_id</a></li></ul></li><li><a href="FrameBroadCastResponse.html">FrameBroadCastResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FrameBroadCastResponse.html#default_category_message_handlers">default_category_message_handlers</a></li><li data-type='method' style='display: none;'><a href="FrameBroadCastResponse.html#set_template_subst_id">set_template_subst_id</a></li></ul></li><li><a href="FramePageAppResponse.html">FramePageAppResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FramePageAppResponse.html#human_frame_hosted_app_to_shared_worker">human_frame_hosted_app_to_shared_worker</a></li><li data-type='method' style='display: none;'><a href="FramePageAppResponse.html#human_frame_hosted_page_use_cases">human_frame_hosted_page_use_cases</a></li><li data-type='method' style='display: none;'><a href="FramePageAppResponse.html#message_handlers">message_handlers</a></li></ul></li><li><a href="FramePageIDBuilderResponse.html">FramePageIDBuilderResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FramePageIDBuilderResponse.html#default_category_message_handlers">default_category_message_handlers</a></li></ul></li><li><a href="FramePageIDManagerResponse.html">FramePageIDManagerResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FramePageIDManagerResponse.html#add_user_public_field">add_user_public_field</a></li><li data-type='method' style='display: none;'><a href="FramePageIDManagerResponse.html#download_identity">download_identity</a></li><li data-type='method' style='display: none;'><a href="FramePageIDManagerResponse.html#message_handlers">message_handlers</a></li></ul></li><li><a href="FramePagePublisherResponse.html">FramePagePublisherResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FramePagePublisherResponse.html#default_category_message_handlers">default_category_message_handlers</a></li><li data-type='method' style='display: none;'><a href="FramePagePublisherResponse.html#publisher_performed_operation">publisher_performed_operation</a></li></ul></li><li><a href="FramePageSiteResponse.html">FramePageSiteResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#human_frame_application_load_app_page">human_frame_application_load_app_page</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#human_frame_singaling_alive">human_frame_singaling_alive</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#human_frame_site_login_capture">human_frame_site_login_capture</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#if_logging_in_capture">if_logging_in_capture</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#install_response">install_response</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#message_handlers">message_handlers</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#register_on_PWA_login_capture">register_on_PWA_login_capture</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#set_template_subst_id">set_template_subst_id</a></li><li data-type='method' style='display: none;'><a href="FramePageSiteResponse.html#update_preferences_frame">update_preferences_frame</a></li></ul></li><li><a href="GeoLocationHandler.html">GeoLocationHandler</a><ul class='methods'><li data-type='method' style='display: none;'><a href="GeoLocationHandler.html#getLocation">getLocation</a></li><li data-type='method' style='display: none;'><a href="GeoLocationHandler.html#update_geo_location">update_geo_location</a></li></ul></li><li><a href="HostedAppChangeResponse.html">HostedAppChangeResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="HostedAppChangeResponse.html#default_category_message_handlers">default_category_message_handlers</a></li></ul></li><li><a href="HostedPageResponse.html">HostedPageResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="HostedPageResponse.html#message_handlers">message_handlers</a></li></ul></li><li><a href="HumanAppPageGlobals.html">HumanAppPageGlobals</a><ul class='methods'><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#do_update_on_server">do_update_on_server</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#exists_galactic_identity">exists_galactic_identity</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#finalize_info_to_containers">finalize_info_to_containers</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#get_current_user">get_current_user</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#human_frame_application_id_installation">human_frame_application_id_installation</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#info_to_manager_container">info_to_manager_container</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#info_to_uploader_container">info_to_uploader_container</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#info_to_wallet_container">info_to_wallet_container</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#initialize_frame_status">initialize_frame_status</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#registration">registration</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#request_human_page_update">request_human_page_update</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#request_user_identity">request_user_identity</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#set_current_galactic_user">set_current_galactic_user</a></li><li data-type='method' style='display: none;'><a href="HumanAppPageGlobals.html#update_UI_user_data_present">update_UI_user_data_present</a></li></ul></li><li><a href="HumanFrameHostedApp.html">HumanFrameHostedApp</a><ul class='methods'><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#common_promise_resolution">common_promise_resolution</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#download_identity">download_identity</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#install_response">install_response</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#open_app_page_in_human_frame">open_app_page_in_human_frame</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#set_human_frame_responder">set_human_frame_responder</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#set_user_title">set_user_title</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#tell_frame_page">tell_frame_page</a></li><li data-type='method' style='display: none;'><a href="HumanFrameHostedApp.html#tell_site_page">tell_site_page</a></li></ul></li><li><a href="MailPageAPP.html">MailPageAPP</a></li><li><a href="ManagerPageAPP.html">ManagerPageAPP</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ManagerPageAPP.html#application_specific_handlers">application_specific_handlers</a></li></ul></li><li><a href="Messages.html">Messages</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Messages.html#add_accepted_receiver">add_accepted_receiver</a></li><li data-type='method' style='display: none;'><a href="Messages.html#add_message_queue">add_message_queue</a></li><li data-type='method' style='display: none;'><a href="Messages.html#add_promise_handler">add_promise_handler</a></li><li data-type='method' style='display: none;'><a href="Messages.html#add_receiver">add_receiver</a></li><li data-type='method' style='display: none;'><a href="Messages.html#promise_handling">promise_handling</a></li><li data-type='method' style='display: none;'><a href="Messages.html#remove_promise_handler">remove_promise_handler</a></li><li data-type='method' style='display: none;'><a href="Messages.html#tell_concerned_app_loaded">tell_concerned_app_loaded</a></li><li data-type='method' style='display: none;'><a href="Messages.html#tell_requesting_page">tell_requesting_page</a></li></ul></li><li><a href="NewUserResponse.html">NewUserResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="NewUserResponse.html#default_category_message_handlers">default_category_message_handlers</a></li></ul></li><li><a href="PageResponse.html">PageResponse</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PageResponse.html#install_response">install_response</a></li><li data-type='method' style='display: none;'><a href="PageResponse.html#message_handlers">message_handlers</a></li><li data-type='method' style='display: none;'><a href="PageResponse.html#responding_alive">responding_alive</a></li><li data-type='method' style='display: none;'><a href="PageResponse.html#set_globals">set_globals</a></li></ul></li><li><a href="Proxy.html">Proxy</a></li><li><a href="UCWID_UIPageAPP.html">UCWID_UIPageAPP</a><ul class='methods'><li data-type='method' style='display: none;'><a href="UCWID_UIPageAPP.html#application_specific_handlers">application_specific_handlers</a></li><li data-type='method' style='display: none;'><a href="UCWID_UIPageAPP.html#load_human_url_with_identity">load_human_url_with_identity</a></li><li data-type='method' style='display: none;'><a href="UCWID_UIPageAPP.html#request_human_page">request_human_page</a></li></ul></li><li><a href="UploaderPageGlobals.html">UploaderPageGlobals</a><ul class='methods'><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#app_check_session">app_check_session</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#app_get_file">app_get_file</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#app_run_file_op">app_run_file_op</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#application_specific_handlers">application_specific_handlers</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#create_entry">create_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#delete_entry">delete_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#get_all_user_files">get_all_user_files</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#get_entry">get_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#get_secondary_transition_uploader_endpoint">get_secondary_transition_uploader_endpoint</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#prep_send_new_entry">prep_send_new_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#publish_entry">publish_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#send_new_entry">send_new_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#send_publication_command">send_publication_command</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#unpublish_entry">unpublish_entry</a></li><li data-type='method' style='display: none;'><a href="UploaderPageGlobals.html#update_entry">update_entry</a></li></ul></li><li><a href="WalletPageAPP.html">WalletPageAPP</a></li></ul>
+                    <h3>Global</h3><ul><li><a href="global.html#DEFAULT_DOWNLOAD_LINK">DEFAULT_DOWNLOAD_LINK</a></li><li><a href="global.html#addscript">addscript</a></li><li><a href="global.html#addstyle">addstyle</a></li><li><a href="global.html#adjust_dashboard_frame_top">adjust_dashboard_frame_top</a></li><li><a href="global.html#blobToBase64">blobToBase64</a></li><li><a href="global.html#check_frame_status">check_frame_status</a></li><li><a href="global.html#clear_counted">clear_counted</a></li><li><a href="global.html#clonify">clonify</a></li><li><a href="global.html#concatTypedArrays">concatTypedArrays</a></li><li><a href="global.html#concat_all_to_array">concat_all_to_array</a></li><li><a href="global.html#convertDataURIToBinary">convertDataURIToBinary</a></li><li><a href="global.html#crypto_ready_counted">crypto_ready_counted</a></li><li><a href="global.html#db_startup">db_startup</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#exists_galactic_identity">exists_galactic_identity</a></li><li><a href="global.html#ext_from_audio_download_format">ext_from_audio_download_format</a></li><li><a href="global.html#ext_of_file">ext_of_file</a></li><li><a href="global.html#fetchEndPoint">fetchEndPoint</a></li><li><a href="global.html#fetchTextFile">fetchTextFile</a></li><li><a href="global.html#fetchUrl">fetchUrl</a></li><li><a href="global.html#finalize_media_array_storage_deep_json">finalize_media_array_storage_deep_json</a></li><li><a href="global.html#finalize_user_identity">finalize_user_identity</a></li><li><a href="global.html#fix_keys">fix_keys</a></li><li><a href="global.html#fussy_url">fussy_url</a></li><li><a href="global.html#get_blob_file_from_file_element">get_blob_file_from_file_element</a></li><li><a href="global.html#get_complete_user_identity">get_complete_user_identity</a></li><li><a href="global.html#get_file_from_file_element">get_file_from_file_element</a></li><li><a href="global.html#get_known_users">get_known_users</a></li><li><a href="global.html#get_user_public_signer_key">get_user_public_signer_key</a></li><li><a href="global.html#get_user_public_wrapper_key">get_user_public_wrapper_key</a></li><li><a href="global.html#hide_box">hide_box</a></li><li><a href="global.html#hide_div">hide_div</a></li><li><a href="global.html#hide_interface_box">hide_interface_box</a></li><li><a href="global.html#hide_special_dash_entry">hide_special_dash_entry</a></li><li><a href="global.html#hide_special_link_entry">hide_special_link_entry</a></li><li><a href="global.html#identity_from_user">identity_from_user</a></li><li><a href="global.html#identity_from_user_name">identity_from_user_name</a></li><li><a href="global.html#inialize_user_resources">inialize_user_resources</a></li><li><a href="global.html#intergalactic_session_going">intergalactic_session_going</a></li><li><a href="global.html#logout_process">logout_process</a></li><li><a href="global.html#lst_insert_before">lst_insert_before</a></li><li><a href="global.html#lst_remove">lst_remove</a></li><li><a href="global.html#make_host_request">make_host_request</a></li><li><a href="global.html#media_startup">media_startup</a></li><li><a href="global.html#navigate_to_uploader">navigate_to_uploader</a></li><li><a href="global.html#normalized_launch_url">normalized_launch_url</a></li><li><a href="global.html#postData">postData</a></li><li><a href="global.html#postDataWithRefer">postDataWithRefer</a></li><li><a href="global.html#post_submit">post_submit</a></li><li><a href="global.html#pre_user_keys">pre_user_keys</a></li><li><a href="global.html#remove_last_appended_script_child">remove_last_appended_script_child</a></li><li><a href="global.html#restore_identity">restore_identity</a></li><li><a href="global.html#set_current_galactic_user">set_current_galactic_user</a></li><li><a href="global.html#setupCaptchaClose">setupCaptchaClose</a></li><li><a href="global.html#setup_iframe_readiness_response">setup_iframe_readiness_response</a></li><li><a href="global.html#show_application">show_application</a></li><li><a href="global.html#show_box">show_box</a></li><li><a href="global.html#show_controls">show_controls</a></li><li><a href="global.html#show_div">show_div</a></li><li><a href="global.html#show_id_manager">show_id_manager</a></li><li><a href="global.html#show_local_data">show_local_data</a></li><li><a href="global.html#show_special_dash_entry">show_special_dash_entry</a></li><li><a href="global.html#show_special_link_entry">show_special_link_entry</a></li><li><a href="global.html#show_uploader">show_uploader</a></li><li><a href="global.html#show_wallet_manager">show_wallet_manager</a></li><li><a href="global.html#sleep">sleep</a></li><li><a href="global.html#store_external_transaction">store_external_transaction</a></li><li><a href="global.html#store_sessions_to_keys">store_sessions_to_keys</a></li><li><a href="global.html#subst">subst</a></li><li><a href="global.html#tell_wallet_page">tell_wallet_page</a></li><li><a href="global.html#unstore_user">unstore_user</a></li><li><a href="global.html#update_identity">update_identity</a></li><li><a href="global.html#update_selected_frame_title">update_selected_frame_title</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">for-humans/human_page_app.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+// ---- ---- ---- ---- ---- ---- ----
+
+// This is to be part of an application file...
+
+// ---- ---- ---- ---- ---- ---- ----
+
+// BEFORE FINAL LOADING
+
+// FUNTIONS REQUIRED :: dependency
+/*
+    get_complete_user_identity  -- use db
+    store_user
+    check_frame_status
+    make_host_request
+*/
+
+const APLLICATION_HUMAN_PAGE_SERVER = "{{human_url}}" // 'https://{{namer}}.of-this.world'
+const DEFAULT_APP_CONTAINER_FRAME_ID = 'content-frame'
+const DEFAULT_APP_UPLOADER_FRAME_ID = 'humans-uploader-frame'
+
+const CUSTOMIZED_FOR_HUMAN_NAME = "{{who_am_I}}"
+
+
+/**
+ * 
+ */
+class HumanAppPageGlobals {
+
+    constructor() {
+        //
+        this.supported_workers = false
+        this.current_session = false
+
+        this.contacts = {}
+
+        this.site_page = false
+        this.hosted_app_page = false      // child iframe
+        this.id_builder_page = false
+        this.publisher_page = false
+
+        this.frame_page_service_worker = false
+        this.frame_broadcast_channel = false
+
+        this.app_worker = false
+        // // // 
+
+        this.this_page_instance_is_session_owner = false
+
+        this.window_in_frame = false
+
+        this.human_user_storage = false
+        this.human_user_storage_ref = [false]
+
+        this.human_user_transaction_lostorage = false
+        this.human_user_transaction_lostorage_ref = [false]
+
+        this.human_user_signer_storage = false
+        this.human_user_signer_storage_ref = [false]
+
+        this.user_current_session = false
+        this.current_user_id = false
+        this.current_user_name = false
+        this.current_pub_identity = false
+
+        this.hash_session_map = {}
+        this.my_current_session = false
+
+        this.captured_domain = false
+        this.captured_app_domain = false
+
+        this.app_message_queue = []
+        this.publisher_message_queue = []
+        this.identity_installed = false
+        //
+
+
+        this._site_responder = false
+
+
+        this.tout_count = 0
+        this.wout_count = 0 
+        this.uout_count = 0 
+
+
+        this.initialize_frame_status()
+
+    }
+
+    set_current_session(session) {
+        this.current_session = session
+    }
+
+
+    async get_file() {
+        return await get_file_from_file_element(`drop-click-file_loader`)
+    }
+
+
+    async load_blob_as_url() {
+        return await get_blob_file_from_file_element(`drop-click-file_loader`)
+    }
+
+    capture_app(source) {
+        this.captured_app_domain = source
+    }
+
+
+
+    // Carefull not to overwrite a complete user ID
+    /**
+     * 
+     * @param {object} u_info 
+     * @param {boolean} check -- (optional)
+\     */
+    async human_frame_application_id_installation(u_info,check = false){
+        //
+        try {
+            if ( this.human_user_storage == false ) {
+            }
+            if ( check ) {
+                let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
+                if ( identity !== false ) {
+                    if ( identity.private &amp;&amp; identity.private.axiom_priv_key) {
+                        await this.update_UI_user_data_present()
+                        return
+                    }
+                }
+            }
+            await store_user(u_info)     // the id_packet has the update in it
+            await this.update_UI_user_data_present()
+        } catch (e) {
+        }
+        //
+    }
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- request_human_page_update
+
+
+/*
+	let postable = {
+		"post_url" : `/intake-update`,
+		"ccwids" : {
+			"replace" : temporary_ccwid,
+			"new" : new_ccwid
+		},
+		"user_info" : {
+			"public_component" : { "ccwid" : new_ccwid }
+		}
+	}
+
+	//
+	let fields = [ "name_as_uri" ]
+*/
+
+
+    // called by the window app component of the builder app (see template/scripts)
+    /**
+     * 
+     * @param {string} temporary_ccwid 
+     * @param {string} new_ccwid 
+     * @param {string} name_as_uri 
+     * @param {object} user_info 
+     * @returns {boolean}
+     */
+    async request_human_page_update(temporary_ccwid,new_ccwid,name_as_uri,user_info) {
+        if ( name_as_uri ) {
+            if ( name_as_uri.length ) {
+                let postable = {
+                    "ccwids" : {
+                        "replace" : temporary_ccwid,
+                        "new" : new_ccwid,
+                    },
+                    "name_as_uri" : name_as_uri,
+                    "user_info" : user_info
+                }
+                //
+                let srver = APLLICATION_HUMAN_PAGE_SERVER
+                let data_stem = "intake-update"
+                //
+                try {
+                    let response = await postDataWithRefer(`${srver}/${data_stem}/`,postable)
+                    if ( response.status === "OK" ) {
+                        return true
+                    }    
+                } catch(e) {}
+
+            } else {
+                messages("please enter a value")
+            }
+        }
+        return false
+    }
+
+
+
+    /**
+     * 
+     */
+    async update_UI_user_data_present() {
+        let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
+        if ( identity !== false ) {
+            if ( identity.private &amp;&amp; identity.private.axiom_priv_key) {
+                //
+                this.identity_installed = true
+
+                let goner = document.getElementById("signer-upper-controller")
+                let keeper = document.getElementById("dashboard-frame")
+
+                goner.style.display = "none"
+                keeper.style.visibility = "visible"
+                //
+            } else {
+                let next_steps = document.getElementById("waiting-for-key-state")
+                next_steps.innerText = "complete this step to activate your application"
+            }
+        } else {
+            if ( this.window_in_frame ) {
+                this.request_user_identity()
+            }
+        }
+        
+        if ( this.identity_installed ) {
+            show_application()
+        } else {
+            show_local_data()
+        }
+
+        await this.finalize_info_to_containers()
+    }
+
+
+    /**
+     * 
+     */
+    request_user_identity() {
+        let msg = {
+            "category" : HOST_APP_PERSONALIZATION,
+            "action" : ID_MANAGER_ACTION_TO_FRAME
+        }
+        tell_site_page(msg)
+    }
+
+
+    /**
+     * 
+     * @returns {object}
+     */
+    async get_current_user() {
+        let userObj = await this.human_user_storage.get_user(CUSTOMIZED_FOR_HUMAN_NAME)
+        if ( userObj &amp;&amp; (userObj.public_component === undefined) ) {
+            try {
+                let real_data = JSON.parse(userObj.data["user-meta"])
+                let pdata = real_data.public_component
+                userObj.public_component = pdata
+                userObj.private = real_data.private
+            } catch (e) {
+                userObj.public_component = {}
+            }
+        }
+        return userObj
+    }
+
+
+    /**
+     * 
+     */
+    async finalize_info_to_containers() {
+        //
+        await this.info_to_manager_container()
+        await this.info_to_wallet_container()
+        await this.info_to_uploader_container()
+        //
+    }
+
+
+    //
+    /**
+     * 
+     * @param {object} public_id 
+     */
+    set_current_galactic_user(public_id) {
+        this.current_user_id = public_id.ccwid
+        this.current_user_name = public_id.name
+        this.current_pub_identity = public_id
+    }
+
+
+    /**
+     * 
+     * @returns {object|boolean}
+     */
+    async exists_galactic_identity() {
+        if ( (typeof this.human_user_storage === "undefined") || !this.human_user_storage ) { return false }
+        if ( this.current_pub_identity !== false ) {
+            return this.current_pub_identity
+        }
+        let users = await this.human_user_storage.get_known_users()
+        if ( Array.isArray(users) ) {
+            for ( let u of users ) {
+                let u_obj = u[0]
+                if ( u_obj !== undefined ) {  // and is this the current user??
+                    let name_key = u_obj.name
+                    let public_id = await this.human_user_storage.get_user(name_key)
+                    if ( public_id ) {
+                        if ( (typeof public_id.data === "object") &amp;&amp; (typeof public_id.data["user-meta"] === "string")) {
+                            public_id = JSON.parse(public_id.data["user-meta"])
+                            if ( public_id.public_component ) {
+                                public_id = public_id.public_component
+                            }
+                        }
+                        this.set_current_galactic_user(public_id)
+                        return this.current_pub_identity
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+
+    /**
+     * 
+     * @param {object} public_info 
+     * @returns {object}
+     */
+    async registration(public_info) {
+        if ( this.captured_domain ) {
+            let url = g_captured_domain.replace("@","captcha/users/register")
+            let data = {
+                "action" : "register",
+                "name" : public_info.name,
+                "ucwid" : public_info.ccwid,
+                "public_derivation" : public_info.axiom_public_key,
+                "signer_public_key" : public_info.signer_public_key
+            }
+            return await make_host_request(url,data)
+        }
+    }
+
+
+    /**
+     * this is the ID manager of a person...
+     */
+    async info_to_manager_container() {
+        if ( !this.human_user_storage ) {
+            this.tout_count++
+            if ( this.tout_count > 10 ) return
+            setTimeout(this.info_to_manager_container,500)
+            return
+        }
+        let gid = await this.exists_galactic_identity()
+        let framel = document.getElementById("id-manager-frame")
+        if ( framel &amp;&amp; gid ) {
+            let jmsg = JSON.stringify(gid)
+            framel.contentWindow.postMessage(jmsg, '*');
+        }
+    }
+
+
+    /**
+     * Loads a user's prefered wallet manager
+     */
+    async info_to_wallet_container() {
+        if ( !g_human_user_storage ) {
+            this.wout_count++
+            if ( this.wout_count > 10 ) return
+            setTimeout(this.info_to_wallet_container,500)
+            return
+        }
+        let gid = await this.exists_galactic_identity()
+        let framel = document.getElementById("id-wallet-frame")
+        if ( framel &amp;&amp; gid ) {
+            let jmsg = JSON.stringify(gid)
+            framel.contentWindow.postMessage(jmsg, '*');
+        }
+    }
+
+
+    /**
+     * Each user can pick an uploader application to make arrangements with the 
+     * site being used. Public information about the user can be provided to the 
+     * uploader for working within sessions.
+     */
+    async info_to_uploader_container() {
+        //
+        if ( !this.human_user_storage ) {
+            this.uout_count++
+            if ( this.uout_count > 10 ) return
+            setTimeout(this.info_to_uploader_container,500)
+            return
+        }
+        let gid = await this.exists_galactic_identity()
+        let framel = document.getElementById(DEFAULT_APP_UPLOADER_FRAME_ID)
+        if ( framel &amp;&amp; gid ) {
+            let jmsg = JSON.stringify(gid.public_component)
+            framel.contentWindow.postMessage(jmsg, '*');
+        }
+        //
+    }
+
+
+    // initialize the frame status
+    /**
+     * 
+     */
+    initialize_frame_status() {
+        let fstats = check_frame_status()
+        this.window_in_frame = fstats.in_frame
+        if ( this.window_in_frame ) {
+            this.site_page = fstats.from_site
+        }
+    }
+
+
+
+    /**
+     * 
+     * @param {object} bio_data 
+     * @returns 
+     */
+    async do_update_on_server(bio_data) {
+        let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
+        if ( identity !== false ) {
+            let temporary_ccwid = identity.public_component.ccwid
+            if ( identity.private === undefined ) {
+                identity.private = {"biometric" : false }
+            }
+            identity.private.biometric = bio_data
+            try {
+                let id_packet = await user_keys(identity)   // keys as in EC/RSA - updates the ccwid to an intergalactic identity
+                let new_ccwid = id_packet.public_component.ccwid
+                let uri_name = id_packet.public_component.name_as_uri
+                let user_info = Object.assign({},id_packet)
+                delete user_info.private        // complete the storage of the identity
+                let status = await this.request_human_page_update(temporary_ccwid,new_ccwid,uri_name,user_info) 
+                if ( status ) {
+                    return id_packet
+                }
+            } catch (e) {
+                // 
+            }
+        }
+        return false
+    }
+
+
+
+    set_site_responder(srep) {
+        this._site_responder = srep
+    }
+
+
+    async startup() {
+        //
+        await db_startup()
+        //
+        if ( this.window_in_frame ) {
+            //
+            let identity = await get_complete_user_identity(CUSTOMIZED_FOR_HUMAN_NAME)
+            //
+            let has_identity = identity == false ? false : true
+            let complete_identity = true
+            if ( identity.private === undefined ) {
+                complete_identity = false
+            }
+            //
+            let identity_state_data = {
+                "has_identity" : has_identity,
+                "identity_complete" : complete_identity,
+                "app_ready" : false,
+                "public_component" : (has_identity ? identity.public_component : undefined)
+            }
+            this._site_responder.human_frame_singaling_alive(identity_state_data)
+            if ( complete_identity !== false ) {
+                await this.update_UI_user_data_present()
+            }
+            return
+        }
+        await this.update_UI_user_data_present()
+        //
+    }
+
+
+}
+
+
+
+let G_human_page_app_globals = new HumanAppPageGlobals()
+
+// ---- ---- ---- ---- ---- ---- ----
+
+//
+// FRAME PAGE SITE RESPONSE  -- handle messages from the site --
+// either as a child window or as a page within an iframe
+// 
+
+let frame_page_site_responder = new FramePageSiteResponse({
+    "direction" : SITE_PAGE_TO_FRAME,
+    "category" : false,
+    "relationship" : SITE_RELATES_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING,
+    "app_container"  :  'content-frame',
+    "upload_container" : 'humans-uploader-frame'
+})
+
+frame_page_site_responder.set_globals(G_human_page_app_globals)
+frame_page_site_responder.set_template_subst_id(CUSTOMIZED_FOR_HUMAN_NAME)
+//
+frame_page_site_responder.add_accepted_receiver("hosted-app")
+frame_page_site_responder.add_accepted_receiver("site-page")
+frame_page_site_responder.add_accepted_receiver("service-worker")
+frame_page_site_responder.add_accepted_receiver("publisher")
+frame_page_site_responder.install_response()
+//
+G_human_page_app_globals.set_site_responder(frame_page_site_responder)
+//
+
+//
+// FRAME PAGE APP RESPONSE  -- handle messages from the hosted application
+// 
+let frame_page_app_responder = new FramePageAppResponse({
+    "direction" : HOSTED_APP_TO_FRAME,
+    "category" : false,
+    "relationship" : APP_RELATES_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_app_responder.set_globals(G_human_page_app_globals)
+
+if ( window.g_known_worker !== undefined ) {
+    frame_page_app_responder.add_receiver(g_known_worker,"app_worker")  // one worker for general cases
+}
+//
+frame_page_app_responder.add_accepted_receiver("hosted-app")
+frame_page_app_responder.add_accepted_receiver("site-page")
+frame_page_app_responder.add_message_queue("hosted-app")
+frame_page_app_responder.install_response()
+
+
+//
+// FRAME PAGE PUBLISHER RESPONSE  -- handle messages from the hosted publisher
+// 
+let frame_page_publisher_responder = new FramePagePublisherResponse({
+    "direction" : HOSTED_PUBLISHER_TO_FRAME,
+    "category" : FRAME_ACTION_FROM_PUBLISHER,
+    "relationship" : PUBLISHER_RELATES_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_publisher_responder.set_globals(G_human_page_app_globals)
+//
+frame_page_publisher_responder.add_accepted_receiver("hosted-app")
+frame_page_publisher_responder.add_accepted_receiver("site-page")
+frame_page_publisher_responder.add_accepted_receiver("publisher")
+frame_page_publisher_responder.add_message_queue("publisher")
+frame_page_publisher_responder.install_response()
+
+
+//
+// FRAME PAGE ID MANAGER RESPONSE  -- handle messages from the hosted publisher
+// 
+let frame_page_id_manager_responder = new FramePageIDManagerResponse({
+    "direction" : MANAGER_PAGE_TO_FRAME,
+    "category" : false,
+    "relationship" : ID_MANAGER_ACTION_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_id_manager_responder.set_globals(G_human_page_app_globals)
+//
+frame_page_id_manager_responder.set_download_link("identity-download-link")
+frame_page_id_manager_responder.set_production_application_location("https://www.of-this.world")
+//
+frame_page_id_manager_responder.add_accepted_receiver("manager")
+frame_page_id_manager_responder.install_response()
+
+//
+
+// FRAME PAGE ID BUILDER RESPONSE  -- handle messages from the hosted publisher
+// 
+let frame_page_id_builder_responder = new FramePageIDBuilderResponse({
+    "direction" : BUILDER_PAGE_TO_FRAME,
+    "category" : FRAME_COMPONENT_MANAGE_ID,
+    "relationship" : BUILDER_ACTION_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_id_builder_responder.set_globals(G_human_page_app_globals)
+//
+frame_page_id_builder_responder.add_accepted_receiver("id-builder")
+frame_page_id_builder_responder.install_response()
+
+
+// FRAME PAGE ID BUILDER RESPONSE  -- handle messages from the hosted publisher
+// 
+let frame_page_broadcast_responder = new FrameBroadCastResponse({
+    "direction" : WORKER_TO_FRAME,
+    "category" : WORKER_TO_FRAME_SESSIONS,
+    "relationship" : WORKER_RELATES_TO_FRAME,
+    "alive_category" : FRAME_COMPONENT_SAY_ALIVE,
+    "alive_requires_response" : FRAME_COMPONENT_RESPOND,
+    "signal_responding" : FRAME_COMPONENT_RESPONDING
+})
+
+frame_page_broadcast_responder.set_globals(G_human_page_app_globals)
+//
+frame_page_broadcast_responder.add_accepted_receiver("broadcaster")
+frame_page_broadcast_responder.install_response()
+
+//
+
+
+// FUNTIONS REQUIRED :: dependency
+/*
+    FramePageSiteResponse.human_frame_application_load_app_page
+    FramePageSiteResponse.human_frame_application_load_uploader
+*/
+
+function surf_to_link(link_src) {
+    if ( link_src ) {
+        let link_el = document.getElementById(link_src)
+        if ( link_el ) {
+            let link = link_el.value
+            if ( link &amp;&amp; link.length ) {
+                //console.log(link)
+                let data = {
+                    "revise_source" : link
+                }
+                frame_page_site_responder.human_frame_application_load_app_page(data)
+                show_application()
+            }
+        }
+    }
+}
+
+
+
+function surf_to_uploader(link_src) {
+    if ( link_src ) {
+        let link_el = document.getElementById(link_src)
+        if ( link_el ) {
+            let link = link_el.value
+            if ( link &amp;&amp; link.length ) {
+                //console.log(link)
+                let data = {
+                    "publications" : link
+                }
+                frame_page_site_responder.human_frame_application_load_uploader(data)
+                show_uploader()
+            }
+        }
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Jul 16 2026 23:04:25 GMT-0700 (Pacific Daylight Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

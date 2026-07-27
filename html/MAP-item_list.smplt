@@ -1,0 +1,10 @@
+
+@list<el><{ id_name <- @<el[1]>, content_template <- @<el[2]>, plus_style <- @<el[3]>}>
+//
+<@el>
+		<div id="@{id_name}" class="item" >>@{plus_style} ? style="@{plus_style}" : @nothing<< >
+            @{content_template}
+		</div>
+</@el>
+
+
