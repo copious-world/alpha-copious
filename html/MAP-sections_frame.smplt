@@ -1,9 +1,9 @@
 
-@list<el><{ group_name <- @<el[1]>, SOURCE-LINK <- @<el[2]>}>
+@list<el><{ group_name <- @<el[1]>, section_description <- @<el[2]>}>
 //
 <@el>
 <section id="@{group_name}_container" class="content-container" {{@{group_name}_styles}} >
-{{{SOURCE_LINK}}}
+{{{ @{section_description}.content }}}
 </section>
 //
 </@el>

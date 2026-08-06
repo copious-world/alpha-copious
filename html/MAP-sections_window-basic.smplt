@@ -1,0 +1,16 @@
+@list<el><{ group_name <- @<el[1]>, section_description <- @<el[2]>}>
+//
+<@el>
+<div id="@{group_name}" class="fade_able" style="z-index:102" >
+	<div class="togglebar" >
+		<span class="closer_x" onmousedown="closefader('@{group_name}')">X</span>
+	</div>
+	<div class="sizerbar" > S </div>
+	<div class="fade_able_content" >
+        <div style="padding:3%">
+            {{{@{section_description}.content}}}
+        </div>
+    </div>
+</div>
+//
+</@el>

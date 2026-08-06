@@ -87,7 +87,11 @@ $$verbatim::{
 }
 
 // global defs of some static topology
-$$script::[alt-script]/floating_window_controls.js<<
+$$script::params::[alt-script]/floating_window_controls.js<<{
+    $@{frame_windows}$script::list::[alt-script]/MAP-window_list.jsmplt<el><<{@!{all_windows}}
+}
+
+
 $$script::params::[alt-script]/pin_and_scroll_vars.tjs<<{
     $@{scroll_section_count}$<<@#{groups}
 }

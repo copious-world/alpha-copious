@@ -1,0 +1,18 @@
+
+@params<{sub_sections : %string%, group_name : %string%, read_qualifier : %string%}>
+
+{{#each @{sub_sections}.list }}
+					<section id="section_{{index++}}">
+						<div class="info-scroll-el" id="info-panel-{{index++}}">
+                            <div class="togglebar-sect" >&dot;</div>
+                            <div class="scroll-section-banner" >@{group_name}</div>
+                            <div class="button-container">
+							{{button_list.content}}
+                            </div>
+                            <div class="button-container">
+                                <button id="section_2-btn-all" class="doc-access-button" style="text-align: center;" onmouseup="pinBox('#{{@{group_name}}}')" >{{@{group_name}}} >>@{read_qualifier} ? style="{{ @{read_qualifier} }}" : @nothing<< </button>
+                            </div>
+                            <br>
+						</div>
+					</section>
+{{/each}}

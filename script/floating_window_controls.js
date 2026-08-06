@@ -1,3 +1,4 @@
+@params<{frame_windows : %file%}>
 
 window.all_windows = false
 
@@ -172,7 +173,7 @@ function init_app_windows() {
 
     let left = "30%",
         height = "96%",
-        width = "60%"
+        width = "50%"
     //
     let ref_el = document.getElementById("sections-container")
     if ( ref_el ) {
@@ -191,49 +192,7 @@ function init_app_windows() {
         }
     }
     //
-    let winbox = new WinBox("extra-file-class",{
-        "url" : "http://localhost/doc/extra-file-class",
-        "x" : left,
-        "height" : height,
-        "width" : width,
-        "hidden" : true,
-        "onclose" : () => {
-            let winbox = all_windows["extra-file-class"]
-            winbox.hide(true)
-            return true
-        }
-    })
-    //
-    all_windows["extra-file-class"] = winbox
-    //
-    winbox = new WinBox("roll-right",{
-        "url" : "http://localhost/doc/index.html",
-        "x" : left,
-        "height" : height,
-        "width" : width,
-        "hidden" : true,
-        "onclose" : () => {
-            let winbox = all_windows["roll-right"]
-            winbox.hide(true)
-            return true
-        }
-    })
-    all_windows["roll-right"] = winbox
-    //
-    //
-    winbox = new WinBox("release-lite",{
-        "url" : "http://localhost/doc/index.html",
-        "x" : left,
-        "height" : height,
-        "width" : width,
-        "hidden" : true,
-        "onclose" : () => {
-            let winbox = all_windows["release-lite"]
-            winbox.hide(true)
-            return true
-        }
-    })
-    all_windows["release-lite"] = winbox
+    @{frame_windows}
     //
     init_app_resize()
 

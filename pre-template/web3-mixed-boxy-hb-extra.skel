@@ -1,6 +1,6 @@
 $$defs:{
     "top_level" : true,
-    "uses_config_vars" : "mixed",
+    "uses_config_vars" : "mixed_hbe",
     "path_abreviations" : {
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/GitHub",
@@ -49,7 +49,11 @@ $$files::params::nav_bar_V.smplt<< {
 
 
 $$files::params::flexy_items_B-main.smplt<<{
-    $@{sections}$files::list::INDEXED-MAP-section_list.smplt<el><<{@#!{groups}}
+    $@{sections}$files::params::LOOPER-structure.smplt<<{
+        $@{sub_sections}$<<@!{main_section_list}
+        $@{group_name}$<<@!{main_section_list.subgroup}
+        $@{read_qualifier}$<<@!{main_section_list.explain_token}
+    }
     $@{fixed_items}$files::list::MAP-item_list.smplt<el><<{@!{items}}
 }
 

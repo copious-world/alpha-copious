@@ -1,6 +1,6 @@
 $$defs:{
     "top_level" : true,
-    "uses_config_vars" : "shops",
+    "uses_config_vars" : "boxy",
     "path_abreviations" : {
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/GitHub",

@@ -1,0 +1,21 @@
+
+@list<el><{ window_title <- @<el[1]>, hosted_url <- @<el[2]>}>
+
+<@el>
+    //
+    let winbox = new WinBox("@{window_title}",{
+        "url" : "@{hosted_url}",
+        "x" : left,
+        "height" : height,
+        "width" : width,
+        "hidden" : true,
+        "onclose" : () => {
+            let winbox = all_windows["@{window_title}"]
+            winbox.hide(true)
+            return true
+        }
+    })
+    //
+    all_windows["@{window_title}"] = winbox
+</@el>
+
