@@ -1,0 +1,13 @@
+
+@params<{list_name : %string, topic_field : %string%}>
+
+                            <div class="button-container">
+                                <span style="font-weight: bold;color:rgb(16, 32, 16)">pinned</span>
+                                <ul>
+{{#each @{list_name}.list }}
+                                    <li style="margin-bottom: 2px;">
+                                        <button id="{{container_id}}-{{bindex++}}" class="doc-access-button" onmouseup="pinBox('{{@{topic_field}}}')" >{{@{topic_field}}}</button>
+                                    </li>
+{/each}}
+                                </ul>
+                            </div>

@@ -1,0 +1,128 @@
+$$defs:{
+    "top_level" : true,
+    "uses_config_vars" : "mixed_hbe",
+    "path_abreviations" : {
+        "[alpha-copious]" : "[github]/alphas/alpha-copious",
+        "[github]" : "~/GitHub",
+        "[websites]" : "[alphas]/websites"
+    },
+    "ext_default_dir" : {
+        "tmplt" : "[alpha-copious]/html",
+        "js" : "[alpha-copious]/client",
+        "svg" : "[alpha-copious]/icons",
+        "css" : "[alpha-copious]/css"
+    },
+    "top_dir_location" : {
+        "script" : "[alpha-copious]/client",
+        "for-humans" : "[alpha-copious]/for-humans",
+        "files" : "[alpha-copious]/html"
+    }
+}
+//  ----
+$$html:start_doc_head<<
+$$files::header.tmplt<<
+$$bundle::bundle_13.js
+$$bundle::web3-mixed-boxy_bundle.js
+$$link<css>::shared_styles.css<<
+$$html:end_head<<
+
+$$html:start_style<<
+$$css::quick_view.css<<
+$$html:end_style<<
+
+$$html:start_script<<
+$$files<js>::top_vars<<
+$$html:end_script<<
+
+$$html:start_body<<
+
+$$files::params::nav_bar_V.smplt<< {
+    $@{lr_div}$files::params::left-right-div.smplt<<    {
+        $@{logo}$files::logo.tmplt<<
+        $@{spacer}$files::spacer.tmplt<<
+        $@{menu}$files::params::shroom.tmplt<<{
+             $@{mushroom}$icons::mushroom-menu-icon.svg<<
+        }
+    }
+    $@{logout}$files::logout.tmplt<<
+}
+
+
+$$files::params::flexy_items_B-main.smplt<<{
+    $@{sections}$files::params::NESTED-LOOPER-structure.smplt<<{
+        $@{sub_sections}$<<@!{main_section_list}
+        $@{group_name}$<<@!{main_section_list.subgroup}
+        $@{read_qualifier}$<<@!{main_section_list.explain_token}
+        $@{sub_data}$files::params::LOOPER-button-list.smplt<<{
+            $@{list_name}$<<@!{sub_section_list}
+            $@{topic_field}$<<@!{sub_section_list.topic}
+        }
+    }
+    $@{fixed_items}$files::list::MAP-item_list.smplt<el><<{@!{items}}
+}
+
+
+$$files::footer_A.tmplt<<
+
+$$verbatim::{
+<!-- start dynamic content -->
+}
+
+$$files::squashable_menu_A.tmplt<<
+
+$$files::calc::contact_box<<${box_i=100}
+
+$$files::calc::about_box<<${box_i++}
+
+$$files::calc::thankyou_box<<${box_i++}
+
+$$files::loop::calc::topicBox_<1,@!{topic_count}><<${box_i++}
+
+$$files::calc::register<<${box_i++}
+
+$$files::calc::login<<${box_i++}
+
+$$files::intergalactic-explain.tmplt<<
+
+$$template::{
+{{{advertPopups.content}}}
+}
+
+$$files::list::MAP-sections_window-basic.smplt<el><<@!{groups}
+
+$$html:end_body_html<<
+//
+//
+$$html:start_script<<
+
+// global defs of some static topology
+$$script::[alt-script]/flexy_items_A-top.js<<
+
+//
+
+$$script::[alt-script]/flexy_items_A-layout-and-menu.js<<
+
+$$script::[alt-script]/flexy_items_A-animation.js<<
+// CAPTCHA PERFORMANT
+$$verbatim::{
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------
+// APPLICATIONS
+// -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+}
+$$script::[app<scripts>]/site_app.js<<
+
+$$script::[alt-script]/flexy_items_A-app-finalize.js<<
+
+
+// global defs of some static topology
+$$script::params::[alt-script]/floating_window_controls.js<<{
+    $@{frame_windows}$script::list::[alt-script]/MAP-window_list.jsmplt<el><<{@!{all_windows}}
+}
+
+$$script::params::[alt-script]/pin_and_scroll_vars.tjs<<{
+    $@{scroll_section_count}$<<@#{groups}
+}
+$$script::[alt-script]/section_scrolling.js<<
+
+
+$$html:end_script<<
