@@ -1,4 +1,3 @@
-
 @params<{sub_sections : %string%, group_name : %string%, read_qualifier : %string%, sub_data : %file%}>
 
 {{#each @{sub_sections}.list }}
@@ -6,7 +5,7 @@
 						<div class="info-scroll-el" id="info-panel-{{index++}}">
                             <div class="togglebar-sect" >&dot;</div>
                             <div class="scroll-section-banner" >@{group_name}</div>
-							{{@{sub_data}}}
+							@{sub_data}
                             <div class="button-container">
                                 <button id="section_2-btn-all" class="doc-access-button" style="text-align: center;" onmouseup="pinBox('#{{@{group_name}}}')" >{{@{group_name}}} >>@{read_qualifier} ? style="{{ @{read_qualifier} }}" : @nothing<< </button>
                             </div>
